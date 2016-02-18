@@ -1,0 +1,197 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{{ title }}</title>
+		<meta charset="UTF-8"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- Bootstrap -->
+		<link rel="stylesheet" href="{% static 'map/bower_components/bootstrap/dist/css/bootstrap.css' %}">
+		<!-- Mapbox -->
+		<script>
+			L_PREFER_CANVAS = true;
+		</script>
+		<script src='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.js'></script>
+		<link href='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.css' rel='stylesheet' />
+		<!-- Custom styles -->
+		<style>
+			body {
+			    margin: 0;
+			    padding: 50px 0 0 0;
+			}
+			html, body, #map {
+			    height: 100%;
+			}
+
+			#map {
+				padding-top: 4em;
+			}
+
+			.infobox-control {
+				width: 400px;
+				height: 650px;
+				background-color: white;
+				display: block;
+				box-shadow: 0px 3px 15px #404040;
+				padding: 10px;
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="container-fluid">
+			    <div class="navbar-header navbar-left">
+      				<a class="navbar-brand" href="#">{{ title }}</a>
+    			</div>
+			</div>
+		</nav>
+		<div id="map"></div>
+
+		{% load geojson_tags %}
+
+		
+
+		<script type="text/javascript" src="{% static 'map/bower_components/jquery/dist/jquery.js' %}"></script>
+		<script type="text/javascript" src="{% static 'map/bower_components/bootstrap/dist/js/bootstrap.js' %}"></script>
+
+		<script>
+
+		L.mapbox.accessToken = 'pk.eyJ1IjoiZGR1bmMyMyIsImEiOiJxQVhaaVhjIn0.T7vhn1bLeeQoHCsWZ_mp2g';
+
+		var geojson = {{ os_features|geojsonfeature:"osm_id,count,address"|safe }}
+
+		var infobox = L.Control.extend({
+			options: {
+				position: 'topright',
+			},
+			onAdd: function(map) {
+				var container = L.DomUtil.create('div', 'infobox-control row');
+				return container;
+			}
+		});
+
+		var myStyle = {
+			"color": "#F58D16",
+			"weight": 1,
+			"opacity": 0.4
+		};
+
+		var hoverStyle = {
+			"opacity": 1,
+			"weight": 1.5
+		}
+
+		var highlightStyle = {
+			"color": "#2262cc",
+			"weight": 1.5
+		};
+
+		
+		function setDocNumberStyle(layer) {
+			if (layer.feature.properties.count == 0) {
+				layer.setStyle({opacity: 0.2});
+			} else if (layer.feature.properties.count > 0) {
+				layer.setStyle({fillOpacity: 0.6});
+			}
+		}
+		
+		function resetColours(polys) {
+			polys.eachLayer(function(layer) {
+				layer.setStyle(myStyle);
+			})
+		}
+
+		function getDocument(id) {
+			$.get('feature/' + id + '/', function(data) {
+				$('.infobox-control').html(data);
+			});
+		}
+
+		function onEachFeature(feature, layer) {
+			if (feature.properties && feature.properties.address) {
+				layer.bindPopup(feature.properties.address);
+			}
+			layer.on("mouseover", function(e) {
+				layer.setStyle(hoverStyle);
+			})
+			layer.on("mouseout", function(e) {
+				if (layer.options['color'] != '#2262cc') {
+					layer.setStyle(myStyle);
+				}
+			})
+			setDocNumberStyle(layer);
+			layer.on("click", function(e) {
+				resetColours(buildings);
+				layer.setStyle(highlightStyle);
+				map.panTo(e.latlng);
+				getDocument(feature.id);
+				$('.infobox-control').show();
+			});
+		}
+		
+		var oslayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop/{z}/{x}/{y}.png');
+
+		var streetlayer = L.mapbox.tileLayer('mapbox.streets');
+
+		var buildings = L.geoJson(geojson, {
+			onEachFeature: onEachFeature,
+			style: myStyle
+		});
+
+		var map = L.map('map', {
+			center: [51.5155, -0.0650],
+			zoom: 17,
+			layers: [oslayer, buildings],
+		});
+
+		var baseMaps = {
+			"Ordnance Survey OpenMap Local": oslayer,
+		};
+
+		var overlayMaps = {
+			"Buildings": buildings
+		};
+
+		L.control.layers(baseMaps, overlayMaps, {
+			"position": "bottomleft"
+		}).addTo(map);
+
+		map.addControl(new infobox());
+
+		$('.infobox-control').mouseover(function() {
+			buildings.eachLayer(function(layer) {
+				if (layer.options['color'] != '#2262cc') {
+					layer.setStyle(myStyle);
+				}
+				layer.removeEventListener();
+			})
+		})
+		$('.infobox-control').mouseout(function() {
+			buildings.eachLayer(function(layer) {			
+				layer.bindPopup(layer.feature.properties.address);
+				layer.on("mouseover", function(e) {
+					layer.setStyle(hoverStyle);
+				})
+				layer.on("mouseout", function(e) {
+					if (layer.options['color'] != '#2262cc') {
+						layer.setStyle(myStyle);
+					}
+				})
+				layer.on("click", function(e) {
+					layer.openPopup(e.latlng);
+					resetColours(buildings);
+					layer.setStyle(highlightStyle);
+					map.panTo(e.latlng);
+					getDocument(layer.feature.id);
+					$('.infobox-control').show();
+				})
+			})
+		});
+
+		</script>
+
+	</body>
+</html>
+

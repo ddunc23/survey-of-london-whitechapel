@@ -1,0 +1,15 @@
+{
+"type": "FeatureCollection",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+                                                                                
+"features": [
+{ "type": "Feature", "properties": { "ID": "0D4F70C44B0E27B3E050A00A568A259B", "FEATCODE": 15014.000000, "ADDRESS": "London Metropolitan University, Goulston Street, London E1 8AH\nUnited Kingdom" }, "geometry": { "type": "Point", "coordinates": [ -0.074227249916008, 51.514794045230815 ] } },
+{ "type": "Feature", "properties": { "ID": "0D4F70C44B1727B3E050A00A568A259B", "FEATCODE": 15014.000000, "ADDRESS": "Gwynne House, Turner Street, London E1 2AG\nUnited Kingdom" }, "geometry": { "type": "Point", "coordinates": [ -0.061124586134206, 51.517158924429665 ] } },
+{ "type": "Feature", "properties": { "ID": "0D4F70C44B1C27B3E050A00A568A259B", "FEATCODE": 15014.000000, "ADDRESS": "Elan Court, 36 Newark Street, London E1 1AA\nUnited Kingdom" }, "geometry": { "type": "Point", "coordinates": [ -0.060262769879219, 51.516887721352262 ] } },
+{ "type": "Feature", "properties": { "ID": "0D4F70C44B1B27B3E050A00A568A259B", "FEATCODE": 15014.000000, "ADDRESS": "Yvonne Carter Building, 58 Turner Street, London E1\nUnited Kingdom" }, "geometry": { "type": "Point", "coordinates": [ -0.060252484312315, 51.516699626462575 ] } },
+{ "type": "Feature", "properties": { "ID": "0D4F70C44B1627B3E050A00A568A259B", "FEATCODE": 15014.000000, "ADDRESS": "Wingate Building, Ashfield Street, London E1 1AA\nUnited Kingdom" }, "geometry": { "type": "Point", "coordinates": [ -0.060403220287386, 51.516443847103325 ] } },
+{ "type": "Feature", "properties": { "ID": "0D4F70C44B1827B3E050A00A568A259B", "FEATCODE": 15014.000000, "ADDRESS": "Kent House, Walden Street, London E1 2JP\nUnited Kingdom" }, "geometry": { "type": "Point", "coordinates": [ -0.059641673415047, 51.515947555286026 ] } },
+{ "type": "Feature", "properties": { "ID": "0D4F70C44B1927B3E050A00A568A259B", "FEATCODE": 15014.000000, "ADDRESS": "Postgraduate Centre, 48 Ashfield Street, London E1 2JA\nUnited Kingdom" }, "geometry": { "type": "Point", "coordinates": [ -0.059718614660018, 51.516548410672996 ] } },
+{ "type": "Feature", "properties": { "ID": "0D4F70C44B1527B3E050A00A568A259B", "FEATCODE": 15014.000000, "ADDRESS": "Bridgen House, Philpot Street, London E1 2JP\nUnited Kingdom" }, "geometry": { "type": "Point", "coordinates": [ -0.058430808648556, 51.515640039601585 ] } },
+{ "type": "Feature", "properties": { "ID": "0D4F70C44B1A27B3E050A00A568A259B", "FEATCODE": 15014.000000, "ADDRESS": "IM&T Clinical Psychology, Ashfield Street, London E1 1AA\nUnited Kingdom" }, "geometry": { "type": "Point", "coordinates": [ -0.058312029658493, 51.516445903664035 ] } },
+{ "type": "Feature", "properties": { "ID": "0D4F70C4783227B3E050A00A568A259B", "FEATCODE": 15014.000000, "ADDRESS": "Thomas Neale, Watney Market, London E1 2JP\nUnited Kingdom" }, "geometry": { "type": "Point", "coordinates": [ -0.056240937786083, 51.513655065281448 ] } }]}

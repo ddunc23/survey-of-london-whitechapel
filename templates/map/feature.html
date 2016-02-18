@@ -1,0 +1,26 @@
+<button type="button" class="btn btn-default btn-sm pull-right closeThis" aria-label="Left Align">
+  <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+</button>
+
+<h4>{{ feature.address }}</h4>
+
+{% if not documents %}
+<h3>Apologies!</h3>
+<p>We don't have any information about this building</p>
+{% endif %}
+
+{% for document in documents %}
+	<h3>{{ document.title }}</h3>
+	<p>{{ document.body|truncatewords:64 }}</p>
+{% endfor %}
+
+{% if documents %}
+<a href="#" class="btn btn-default btn-sm">Read more</a>
+{% endif %}
+
+<script>
+	$('.closeThis').click(function() {
+		$('.infobox-control').hide();
+		resetColours(buildings);
+	});
+</script>
