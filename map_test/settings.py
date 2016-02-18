@@ -38,6 +38,8 @@ INSTALLED_APPS = (
     'map',
     'djgeojson',
     'leaflet',
+    'ckeditor',
+    'ckeditor_uploader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -108,8 +110,20 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
+# Media Settings
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL = '/media/'
+
+
+# Django-ckeditory Settings
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
+
 # Django-leaflet Settings
 
 LEAFLET_CONFIG = {
-    'TILES': 'http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop/{z}/{x}/{y}.png',
+    'TILES': 'http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop/{z}/{x}/{y}.png'
 }

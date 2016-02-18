@@ -9,13 +9,13 @@
 <p>We don't have any information about this building</p>
 {% endif %}
 
-{% for document in documents %}
-	<h3>{{ document.title }}</h3>
-	<p>{{ document.body|truncatewords:64 }}</p>
-{% endfor %}
+<h5>{{ documents.0.title }}</h5>
+{{ documents.0.body|truncatewords:120|safe }}
+
+<br /><br />
 
 {% if documents %}
-<a href="#" class="btn btn-default btn-sm">Read more</a>
+<a href="{% url 'detail' feature.id %}" class="btn btn-default btn-sm more">Read more</a>
 {% endif %}
 
 <script>
@@ -23,4 +23,9 @@
 		$('.infobox-control').hide();
 		resetColours(buildings);
 	});
+
+	$('.more').click(function() {
+		//		
+	})
+
 </script>

@@ -1,58 +1,9 @@
-{% load staticfiles %}
-
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>{{ title }}</title>
-		<meta charset="UTF-8"> 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<!-- Bootstrap -->
-		<link rel="stylesheet" href="{% static 'map/bower_components/bootstrap/dist/css/bootstrap.css' %}">
-		<!-- Mapbox -->
-		<script>
-			L_PREFER_CANVAS = true;
-		</script>
-		<script src='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.js'></script>
-		<link href='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.css' rel='stylesheet' />
-		<!-- Custom styles -->
-		<style>
-			body {
-			    margin: 0;
-			    padding: 50px 0 0 0;
-			}
-			html, body, #map {
-			    height: 100%;
-			}
-
-			#map {
-				padding-top: 4em;
-			}
-
-			.infobox-control {
-				width: 400px;
-				height: 650px;
-				background-color: white;
-				display: block;
-				box-shadow: 0px 3px 15px #404040;
-				padding: 10px;
-				display: none;
-			}
-		</style>
-	</head>
-	<body>
-		<nav class="navbar navbar-default navbar-fixed-top">
-			<div class="container-fluid">
-			    <div class="navbar-header navbar-left">
-      				<a class="navbar-brand" href="#">{{ title }}</a>
-    			</div>
-			</div>
-		</nav>
+{% extends 'map/base.html' %}
+{% block content %}
 		<div id="map"></div>
 
 		{% load geojson_tags %}
-
-		
-
+		{% load staticfiles %}
 		<script type="text/javascript" src="{% static 'map/bower_components/jquery/dist/jquery.js' %}"></script>
 		<script type="text/javascript" src="{% static 'map/bower_components/bootstrap/dist/js/bootstrap.js' %}"></script>
 
@@ -141,10 +92,9 @@
 		});
 
 		var map = L.map('map', {
-			center: [51.5155, -0.0650],
 			zoom: 17,
 			layers: [oslayer, buildings],
-		});
+		}).fitBounds(buildings);
 
 		var baseMaps = {
 			"Ordnance Survey OpenMap Local": oslayer,
@@ -192,6 +142,4 @@
 
 		</script>
 
-	</body>
-</html>
-
+{% endblock %}

@@ -14,6 +14,9 @@ class FeatureAdmin(LeafletGeoAdmin):
 		DocumentInline,
 	]
 	search_fields = ['address']
+	settings_overrides = {
+		'DEFAULT_ZOOM': 5
+	}
 
 admin.site.register(OS_Feature, FeatureAdmin)
 

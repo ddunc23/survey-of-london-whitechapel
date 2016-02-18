@@ -1,5 +1,6 @@
 from django.db import models
 from djgeojson.fields import PolygonField
+from ckeditor_uploader.fields import RichTextUploadingField
 
 # Create your models here.
 
@@ -22,15 +23,15 @@ class OS_Feature(models.Model):
 class Document(models.Model):
 	os_id = models.ForeignKey(OS_Feature)
 	title = models.CharField(max_length=128)
-	body = models.TextField(blank=True)
+	body = RichTextUploadingField(blank=True)
 
 	def __unicode__(self):
 		return self.title
 
 	def save(self, *args, **kwargs):
+		super(Document, self).save(*args, **kwargs)
 		documents = Document.objects.filter(os_id=self.os_id)
 		print(self.os_id.id)
 		feature = OS_Feature.objects.get(id=self.os_id.id)
 		feature.count = len(documents)
 		feature.save()
-		super(Document, self).save(*args, **kwargs)

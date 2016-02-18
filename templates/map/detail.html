@@ -1,0 +1,60 @@
+{% extends 'map/base.html' %}
+
+{% block content %}
+<div id="small_map"></div>
+<div class="container">
+	<div class="row">
+		<div class="col-xs-8 col-xs-offset-2">
+			<h1>{{ feature.address }}</h1>
+
+			{% if not documents %}
+			<h3>Apologies!</h3>
+			<p>We don't have any information about this building</p>
+			{% endif %}
+
+			{% for document in documents %}
+			<h2>{{ document.title }}</h2>
+			{{ document.body|safe }}
+			{% endfor %}
+		</div>
+	</div>
+</div>
+
+
+
+<script>
+	{% load geojson_tags %}
+	feature_geojson = {{ feature|geojsonfeature:"osm_id,count,address"|safe }}
+
+	var myStyle = {
+		"color": "#2262cc",
+		"weight": 1,
+		"opacity": 0.8,
+		"fillOpacity": 0.8,
+	};
+
+	var oslayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop/{z}/{x}/{y}.png');
+
+	var feature = L.geoJson(feature_geojson, {
+		style: myStyle
+	});
+
+	var centre = feature.getBounds().getCenter();
+
+	var map = L.map('small_map', {
+		center: centre,
+		zoom: 17,
+		zoomControl: false,
+		layers: [oslayer, feature],
+	});
+
+	map.dragging.disable();
+	map.touchZoom.disable();
+	map.doubleClickZoom.disable();
+	map.scrollWheelZoom.disable();
+	map.keyboard.disable();
+
+
+</script>
+
+{% endblock %}
