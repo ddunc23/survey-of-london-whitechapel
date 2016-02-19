@@ -12,10 +12,22 @@
 			<p>We don't have any information about this building</p>
 			{% endif %}
 
+
 			{% for document in documents %}
 			<h2>{{ document.title }}</h2>
 			{{ document.body|safe }}
+			<hr />
 			{% endfor %}
+
+			{% for story in stories %}
+
+			<h2>{{ story.title }}</h2>
+			<h4>{{ story.author }}</h3>
+			{{ story.body|safe }}
+
+			{% endfor %}
+
+
 		</div>
 	</div>
 </div>

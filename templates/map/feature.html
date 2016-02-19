@@ -14,6 +14,19 @@
 
 <br /><br />
 
+{% if feature.neighbourhood %}
+	{% if stories %}
+		<h4>Stories About This Neighbourhood | {{ feature.neighbourhood }}</h4>
+		{% for story in stories %}
+
+			{{ story.title }}
+
+		{% endfor %}
+
+	{% endif %}
+{% endif %}
+
+<br /><br />
 {% if documents %}
 <a href="{% url 'detail' feature.id %}" class="btn btn-default btn-sm more">Read more</a>
 {% endif %}
