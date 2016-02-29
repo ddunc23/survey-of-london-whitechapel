@@ -1,44 +1,55 @@
-<button type="button" class="btn btn-default btn-sm pull-right closeThis" aria-label="Left Align">
-  <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span>
-</button>
+<div class="feature-overview">
+	<button type="button" class="btn btn-default btn-sm pull-right closeThis" aria-label="Left Align">
+	  <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+	</button>
 
-<h4>{{ feature.address }}</h4>
-
-{% if not documents %}
-<h3>Apologies!</h3>
-<p>We don't have any information about this building</p>
-{% endif %}
-
-<h5>{{ documents.0.title }}</h5>
-{{ documents.0.body|truncatewords:120|safe }}
-
-<br /><br />
-
-{% if feature.neighbourhood %}
-	{% if stories %}
-		<h4>Stories About This Neighbourhood | {{ feature.neighbourhood }}</h4>
-		{% for story in stories %}
-
-			{{ story.title }}
-
-		{% endfor %}
-
+	{% if feature.name %}
+	<h3>{{ feature.name }}</h3>
+	<h4><small>{{ feature.address }}</small></h4>
+	{% else %}
+	<h3>{{ feature.address }}</h3>
 	{% endif %}
-{% endif %}
 
-<br /><br />
-{% if documents %}
-<a href="{% url 'detail' feature.id %}" class="btn btn-default btn-sm more">Read more</a>
-{% endif %}
+	{% if feature.thumbnail %}
+	<img src="/media/{{ feature.thumbnail }}" class="thumbnail">
+	{% endif %}
 
-<script>
-	$('.closeThis').click(function() {
-		$('.infobox-control').hide();
-		resetColours(buildings);
-	});
 
-	$('.more').click(function() {
-		//		
-	})
+	{% if feature.short_description %}
+	<p>{{ feature.short_description }}</p>
+	{% endif %}
 
-</script>
+	{% if documents %}
+		<h4>Documents</h4>
+		<ul class="feature-attachments-list">
+		{% for document in documents %}
+			<li><a href="{% url 'detail' feature.id %}#{{ document.start_year }}"><span class="glyphicon glyphicon-file bigicon"></span><br />{{ document.title }}</a></li>
+		{% endfor %}
+		</ul>
+	{% endif %}
+
+	{% if not documents %}
+	<h3>Apologies!</h3>
+	<p>We don't have any information about this building</p>
+	{% endif %}
+
+
+
+	<br /><br />
+
+	{% if documents %}
+	<!--<a href="{% url 'detail' feature.id %}" class="btn btn-default btn-sm more">Read more</a>-->
+	{% endif %}
+
+	<script>
+		$('.closeThis').click(function() {
+			$('.infobox-control').hide();
+			resetColours(buildings);
+		});
+
+		$('.more').click(function() {
+			//		
+		})
+
+	</script>
+</div>

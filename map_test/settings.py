@@ -40,6 +40,8 @@ INSTALLED_APPS = (
     'leaflet',
     'ckeditor',
     'ckeditor_uploader',
+    'rest_framework',
+    'rest_framework_gis',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -119,11 +121,21 @@ MEDIA_URL = '/media/'
 
 # Django-ckeditory Settings
 
-CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_UPLOAD_PATH = 'uploads/'
 
 
 # Django-leaflet Settings
 
 LEAFLET_CONFIG = {
-    'TILES': 'http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop/{z}/{x}/{y}.png'
+    'TILES': 'http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop_Sketchy/{z}/{x}/{y}.png'
+}
+
+# Django-rest-framework Settings
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
 }

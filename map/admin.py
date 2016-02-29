@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import OS_Feature, Document, Neighbourhood, Category, Story
+from .models import Feature, Document, Category, Story, Document
 from djgeojson.fields import GeoJSONField
 from leaflet.admin import LeafletGeoAdmin
 
@@ -18,14 +18,14 @@ class FeatureAdmin(LeafletGeoAdmin):
 		DocumentInline,
 		StoryInline
 	]
-	search_fields = ['address']
+	search_fields = ['address','name']
 	settings_overrides = {
 		'DEFAULT_ZOOM': 5
 	}
 
 admin.site.register(Story)
-admin.site.register(Neighbourhood)
 admin.site.register(Category)
-admin.site.register(OS_Feature, FeatureAdmin)
+admin.site.register(Feature, FeatureAdmin)
+admin.site.register(Document)
 
 

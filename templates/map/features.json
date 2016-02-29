@@ -1,0 +1,2 @@
+{% load geojson_tags %}
+{{ features|geojsonfeature:"os_id,count,address,postcode,year_built,name"|safe }}

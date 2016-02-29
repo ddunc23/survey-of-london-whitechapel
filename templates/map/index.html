@@ -4,14 +4,14 @@
 
 		{% load geojson_tags %}
 		{% load staticfiles %}
-		<script type="text/javascript" src="{% static 'map/bower_components/jquery/dist/jquery.js' %}"></script>
 		<script type="text/javascript" src="{% static 'map/bower_components/bootstrap/dist/js/bootstrap.js' %}"></script>
+		<script type="text/javascript" src="{% static 'map/js/map_functions.js' %}"></script>
 
 		<script>
-
+		/*
 		L.mapbox.accessToken = 'pk.eyJ1IjoiZGR1bmMyMyIsImEiOiJxQVhaaVhjIn0.T7vhn1bLeeQoHCsWZ_mp2g';
 
-		var geojson = {{ os_features|geojsonfeature:"osm_id,count,address"|safe }}
+		var geojson = {{ features|geojsonfeature:"osm_id,count,address"|safe }}
 
 		var infobox = L.Control.extend({
 			options: {
@@ -82,7 +82,9 @@
 			});
 		}
 		
-		var oslayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop/{z}/{x}/{y}.png');
+		// var oslayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop_06cade/{z}/{x}/{y}.png');
+
+		oslayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop/{z}/{x}/{y}.png');
 
 		var streetlayer = L.mapbox.tileLayer('mapbox.streets');
 
@@ -139,7 +141,7 @@
 				})
 			})
 		});
-
+		*/
 		</script>
 
 {% endblock %}

@@ -7,6 +7,8 @@
 		<!-- Bootstrap -->
 		{% load staticfiles %}
 		<link rel="stylesheet" href="{% static 'map/bower_components/bootstrap/dist/css/bootstrap.css' %}">
+		<script type="text/javascript" src="{% static 'map/bower_components/jquery/dist/jquery.js' %}"></script>
+		<script type="text/javascript" src="{% static 'map/bower_components/bootstrap/dist/js/bootstrap.js' %}"></script>
 		<!-- Mapbox -->
 		<script>
 			L_PREFER_CANVAS = true;
@@ -18,6 +20,7 @@
 			body {
 			    margin: 0;
 			    padding: 50px 0 0 0;
+			    position: relative;
 			}
 			p {
 				font-family: Georgia;
@@ -34,25 +37,76 @@
 			}
 
 			#small_map {
-				height: 200px;
+				height: 300px;
+				border-bottom: 1px solid #e7e7e7;
 			}
 
 			.infobox-control {
 				width: 400px;
-				/*height: 650px;*/
+				min-height: 450px;
 				background-color: white;
 				display: block;
 				box-shadow: 0px 1px 5px #404040;
-				padding: 10px;
+				padding: 10px 10px 20px 10px;
 				display: none;
+				background-image: url("{% static 'map/img/ajax-loader.gif' %}");
+				background-repeat: no-repeat;
+				background-position: center;
 			}
 
 			.infobox-control img {
 				width: 100%;
 			}
+
+			.detail_anchor {
+				display: block;
+    			position: relative;
+    			top: -70px;
+    			visibility: hidden;
+			}
+			.feature-attachments-list {
+				padding-left: 0;
+			}
+			.feature-attachments-list li {
+				width: 25%;
+				list-style-type: none;
+				float: left;
+				border: 1px solid white;
+				text-align: center;
+			}
+			.bigicon {
+				font-size: 28px;
+			}
+			.affix {
+				top: 120px;
+			}
+			.affix-top {
+				margin-top: 135px;
+			}
+			.affix {
+				width: 18%;
+			}
+			#fixed-nav .active {
+				font-size: 20px;
+			}
+			#fixed-nav li {
+				width: 100;
+			}
+			.nav > li a:hover {
+				background-color: white;
+			}
+			.feature-overview {
+				background-color: white;
+				min-height: 300px;
+				display: block;
+			}
+			.feature-detail img {
+				max-width: 100%;
+				height: auto;
+			}
 		</style>
 	</head>
-	<body>
+	<body data-spy="scroll" data-target="#fixed-nav">
 		<nav class="navbar navbar-default navbar-fixed-top">
 			<div class="container-fluid">
 			    <div class="navbar-header navbar-left">

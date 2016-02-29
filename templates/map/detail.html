@@ -4,8 +4,20 @@
 <div id="small_map"></div>
 <div class="container">
 	<div class="row">
-		<div class="col-xs-8 col-xs-offset-2">
+		<div class="col-xs-3" id="fixed-nav">
+			<ul data-spy="affix" data-offset-top="300" data-offset-bottom="0" class="nav nav-stacked">
+				{% for document in documents %}
+					<li><a href="#{{ document.start_year }}">{{ document.start_year }} - {{ document.end_year }}<br /><span class="small">{{ document.title }}</span></a></li>
+				{% endfor %}
+			</ul>
+		</div>
+		<div class="col-xs-7 feature-detail">
+			{% if feature.name %}
+			<h1>{{ feature.name }}</h1>
+			<h2><small>{{ feature.address }}</small></h2>
+			{% else %}
 			<h1>{{ feature.address }}</h1>
+			{% endif %}
 
 			{% if not documents %}
 			<h3>Apologies!</h3>
@@ -14,9 +26,11 @@
 
 
 			{% for document in documents %}
-			<h2>{{ document.title }}</h2>
-			{{ document.body|safe }}
-			<hr />
+			<div>
+				<span id="{{ document.start_year }}" class="detail_anchor"></span>
+				<h2>{{ document.title }}</h2>
+				{{ document.body|safe }}
+			</div>
 			{% endfor %}
 
 			{% for story in stories %}
@@ -45,7 +59,7 @@
 		"fillOpacity": 0.8,
 	};
 
-	var oslayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop/{z}/{x}/{y}.png');
+	var oslayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop_Sketchy/{z}/{x}/{y}.png');
 
 	var feature = L.geoJson(feature_geojson, {
 		style: myStyle
