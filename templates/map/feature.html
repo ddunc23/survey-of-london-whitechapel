@@ -1,55 +1,85 @@
 <div class="feature-overview">
-	<button type="button" class="btn btn-default btn-sm pull-right closeThis" aria-label="Left Align">
+	<button type="button" class="btn btn-default btn-xs pull-right closeThis" aria-label="Left Align">
 	  <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span>
 	</button>
 
 	{% if feature.name %}
-	<h3>{{ feature.name }}</h3>
-	<h4><small>{{ feature.address }}</small></h4>
+	<h3><a href="{% url 'detail' feature.id %}">{{ feature.name }}</h3></a>
 	{% else %}
-	<h3>{{ feature.address }}</h3>
+	<h3><a href="{% url 'detail' feature.id %}">{{ feature.address }}</h3></a>
 	{% endif %}
 
 	{% if feature.thumbnail %}
-	<img src="/media/{{ feature.thumbnail }}" class="thumbnail">
+	<a href="{% url 'detail' feature.id %}"><img src="/media/{{ feature.thumbnail }}" class="thumbnail"></a>
 	{% endif %}
-
 
 	{% if feature.short_description %}
 	<p>{{ feature.short_description }}</p>
 	{% endif %}
 
-	{% if documents %}
+	<ul>
+		<li>Construction Date: <a href="#" class="date_btn">{{ feature.year_built }}</a><br /></li>
+	</ul>
+
+	<h3>Categories</h3>
+	<ul>
+	{% for category in categories %}
+		<li><a href="{% url 'features_by_category' category.pk %}" class="category_btn">{{ category.name }}</a></li>
+	{% endfor %}
+	</ul>
+
+	<!--{% if documents %}
 		<h4>Documents</h4>
 		<ul class="feature-attachments-list">
 		{% for document in documents %}
-			<li><a href="{% url 'detail' feature.id %}#{{ document.start_year }}"><span class="glyphicon glyphicon-file bigicon"></span><br />{{ document.title }}</a></li>
+			<li><a href="{% url 'detail' feature.id %}#{{ document.title|slugify }}"><span class="glyphicon glyphicon-file bigicon"></span><br />{{ document.title }}</a></li>
 		{% endfor %}
 		</ul>
-	{% endif %}
+	{% endif %}-->
+
+	<a href="{% url 'detail' feature.id %}#description">Description</a>
 
 	{% if not documents %}
 	<h3>Apologies!</h3>
 	<p>We don't have any information about this building</p>
 	{% endif %}
-
-
-
-	<br /><br />
-
-	{% if documents %}
-	<!--<a href="{% url 'detail' feature.id %}" class="btn btn-default btn-sm more">Read more</a>-->
-	{% endif %}
+	
+	<!--<a href="#" class="date_btn btn btn-default btn-xs">{{ feature.year_built }}</a>
+	<a href="#" class="street_btn btn btn-default btn-xs">Zoom to {{ feature.street }}</a>
+	<a href="#" class="all_btn btn btn-default btn-xs">Show All Buildings</a>-->
+	
 
 	<script>
 		$('.closeThis').click(function() {
 			$('.infobox-control').hide();
 			resetColours(buildings);
 		});
+		
+		$('.category_btn').click(function(e) {
+			e.preventDefault();
+			var jsonUrl = $(this).attr('href');
+			loadFeatures(jsonUrl);
+		})
 
+		/*
 		$('.more').click(function() {
 			//		
-		})
+		});
+
+		$('.date_btn').click(function() {
+			var jsonUrl = "{% url 'features_by_date_range' build_range.lower build_range.upper %}";
+			loadFeatures(jsonUrl);
+		});
+
+		$('.street_btn').click(function() {
+			var jsonUrl = "{% url 'features_by_street_name' feature.street %}";
+			loadFeatures(jsonUrl);
+		});
+
+		$('.all_btn').click(function() {
+			var jsonUrl = 'api/features/';
+			loadFeatures(jsonUrl);
+		});*/
 
 	</script>
 </div>
