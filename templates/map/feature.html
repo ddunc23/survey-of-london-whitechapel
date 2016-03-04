@@ -10,40 +10,38 @@
 	{% endif %}
 
 	{% if feature.thumbnail %}
-	<a href="{% url 'detail' feature.id %}"><img src="/media/{{ feature.thumbnail }}" class="thumbnail"></a>
+	<a href="{% if documents %}{% url 'detail' feature.id %}{% else %}#{% endif %}"><img src="/media/{{ feature.thumbnail }}" class="thumbnail"></a>
 	{% endif %}
 
 	{% if feature.short_description %}
 	<p>{{ feature.short_description }}</p>
 	{% endif %}
 
-	<ul>
-		<li>Construction Date: <a href="#" class="date_btn">{{ feature.year_built }}</a><br /></li>
-	</ul>
-
-	<h3>Categories</h3>
-	<ul>
-	{% for category in categories %}
-		<li><a href="{% url 'features_by_category' category.pk %}" class="category_btn">{{ category.name }}</a></li>
-	{% endfor %}
-	</ul>
-
-	{% if documents %}
-		<h4>Documents</h4>
-		<!--<ul class="feature-attachments-list">-->
+	{% if categories %}
+		<h3>Categories</h3>
 		<ul>
-		{% for document in documents %}
-			<li><a href="{% url 'detail' feature.id %}#{{ document.title|slugify }}"><!--<span class="glyphicon glyphicon-file bigicon"></span><br />-->{{ document.title }}</a></li>
+		{% for category in categories %}
+			<li><a href="{% url 'features_by_category' category.pk %}" class="category_btn">{{ category.name }}</a></li>
 		{% endfor %}
 		</ul>
 	{% endif %}
 
+	{% if histories %}
+		<h4>History</h4>
+		<ul>
+		{% for document in histories %}
+			<li><a href="{% url 'detail' feature.id %}#{{ document.title|slugify }}">{{ document.title }}</a></li>
+		{% endfor %}
+		</ul>
+	{% endif %}
+
+	{% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %}
+
 	<!--<a href="{% url 'detail' feature.id %}#description">Description</a>-->
 
-	{% if not documents %}
-	<h3>Apologies!</h3>
-	<p>We don't have any information about this building</p>
-	{% endif %}
+	<!--{% if not documents %}
+	<a href="#" class="btn btn-default btn-sm">Submit stories about {% if feature.name %}{{ feature.name }}{% else %}{{ feature.address }}{% endif %}</a>
+	{% endif %}-->
 	
 	<!--<a href="#" class="date_btn btn btn-default btn-xs">{{ feature.year_built }}</a>
 	<a href="#" class="street_btn btn btn-default btn-xs">Zoom to {{ feature.street }}</a>

@@ -35,13 +35,16 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'map',
+    'whitechapel_pages',
     'djgeojson',
     'leaflet',
     'ckeditor',
     'ckeditor_uploader',
     'rest_framework',
     'rest_framework_gis',
+    'taggit',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -79,10 +82,22 @@ WSGI_APPLICATION = 'map_test.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#    }
+#}
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        #'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'map_geodb',
+        'USER': 'geodjango',
+        'PASSWORD': 'whitechapel',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
@@ -112,6 +127,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    'static/',
+]
+
 
 # Media Settings
 
@@ -127,7 +149,9 @@ CKEDITOR_UPLOAD_PATH = 'uploads/'
 # Django-leaflet Settings
 
 LEAFLET_CONFIG = {
-    'TILES': 'http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop_Sketchy/{z}/{x}/{y}.png'
+    'TILES': 'http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop_Sketchy/{z}/{x}/{y}.png',
+    'DEFAULT_CENTER': (51.5161, -0.067),
+    'DEFAULT_ZOOM': 16,
 }
 
 # Django-rest-framework Settings

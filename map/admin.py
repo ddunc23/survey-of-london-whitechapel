@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Feature, Document, Category, Story, Document
+from map.models import Feature, Document, Category, Story, Document, DocumentType
 from djgeojson.fields import GeoJSONField
 from leaflet.admin import LeafletGeoAdmin
 
@@ -27,5 +27,6 @@ admin.site.register(Story)
 admin.site.register(Category)
 admin.site.register(Feature, FeatureAdmin)
 admin.site.register(Document)
+admin.site.register(DocumentType)
 
 

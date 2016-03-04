@@ -1,0 +1,15 @@
+{% extends 'map/base.html' %}
+{% block content %}
+		<div id="map"></div>
+
+		{% load geojson_tags %}
+		{% load staticfiles %}
+		<script type="text/javascript" src="{% static 'bower_components/bootstrap/dist/js/bootstrap.js' %}"></script>
+		<script type="text/javascript" src="{% static 'js/map_functions.js' %}"></script>
+
+		<script>
+			var jsonUrl = '{% url "features_by_category" category.id %}';
+			loadFeatures(jsonUrl);
+		</script>
+
+{% endblock %}

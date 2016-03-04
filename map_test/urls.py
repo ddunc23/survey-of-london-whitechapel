@@ -5,14 +5,7 @@ from django.conf.urls.static import static
 from map.models import Feature
 from rest_framework import routers, serializers, viewsets
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
-
-# Django REST Framework Serializers
-class FeatureSerializer(GeoFeatureModelSerializer):
-	
-    class Meta:
-        model = Feature
-        geo_field = 'geom'
-        fields = ('id', 'name', 'address', 'postcode')
+from map.serializers import FeatureSerializer
 
 # Django REST Framework Viewsets
 class FeatureViewSet(viewsets.ReadOnlyModelViewSet):
@@ -30,7 +23,8 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^', include('map.urls')),
+    url(r'^map/', include('map.urls')),
+    url(r'^', include('whitechapel_pages.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/', include(router.urls)),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),

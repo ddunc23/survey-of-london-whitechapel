@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{{ title }}</title>
+		<meta charset="UTF-8"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- Bootstrap -->
+		{% load staticfiles %}
+		<link rel="stylesheet" href="{% static 'bower_components/bootstrap/dist/css/bootstrap.css' %}">
+		<script type="text/javascript" src="{% static 'bower_components/jquery/dist/jquery.js' %}"></script>
+		<script type="text/javascript" src="{% static 'bower_components/bootstrap/dist/js/bootstrap.js' %}"></script>
+		<!-- Mapbox -->
+		<script>
+			L_PREFER_CANVAS = true;
+		</script>
+		<script src='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.js'></script>
+		<link href='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.css' rel='stylesheet' />
+		<!-- Custom styles -->
+		<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+	</head>
+	<body data-spy="scroll" data-target="#fixed-nav">
+		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="container-fluid">
+			    <div class="navbar-header navbar-left">
+      				<a class="navbar-brand" href="/">{{ title }}</a>
+    			</div>
+			</div>
+		</nav>
+
+		{% block content %}{% endblock %}
+
+		{% block footer %}
+
+		{% endblock %}
+
+	</body>
+</html>

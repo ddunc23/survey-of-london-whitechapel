@@ -13,7 +13,12 @@ django-leaflet==0.18.0
 djangorestframework==3.3.2
 djangorestframework-gis==0.10.1
 jsonfield==1.0.3
+Markdown==2.6.5
+mbutil==0.2.0
 Pillow==3.1.1
+psycopg2==2.6.1
+six==1.10.0
+wheel==0.26.0
 
 ### Tileserver
 
