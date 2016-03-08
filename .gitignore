@@ -12,3 +12,9 @@ secret_settings.pyc
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Media and Databases #
+######################
+*.sqlite3
+/media/
+/media/*

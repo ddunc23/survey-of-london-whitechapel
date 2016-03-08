@@ -23,7 +23,7 @@
 	});
 
 	$('.all_btn').click(function() {
-		var jsonUrl = 'api/features/';
+		var jsonUrl = "{% url 'features' %}";
 		loadFeatures(jsonUrl);
 		$('.infobox-control').hide();
 	});
