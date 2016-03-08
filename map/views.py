@@ -43,14 +43,14 @@ def detail(request, feature):
 	categories = Category.objects.filter(feature=feature)
 	similar = feature.tags.similar_objects()
 
-	return render(request, 'map/detail.html', {'title': 'Survey of London Whitechapel', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar })
+	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar })
 
 
 def category(request, category):
 	"""Features by catgory"""
 	category = Category.objects.get(id=category)
 
-	return render(request, 'map/category.html', {'title': 'Survey of London Whitechapel', 'category': category })
+	return render(request, 'map/category.html', {'title': 'Survey of London', 'category': category })
 
 #def features(request):
 #	"""All Features as geoJson"""
