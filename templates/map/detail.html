@@ -4,23 +4,22 @@
 <div id="small_map" {% if feature.thumbnail %} style="background: url('/media/{{ feature.banner }}'); background-size: cover; background-position: center;" {% endif %}></div>
 <div class="container">
 	<div class="row">
-		<div class="col-xs-3">
+		<div class="col-md-3">
 		</div>
-		<div class="col-xs-7">
+		<div class="col-xs-12 col-md-7">
 			{% if feature.name %}
-			<h1>{{ feature.name }}{% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a></span>{% endif %}</h1>
-			<h2><small>{{ feature.address }}</small></h2>
+			<h1>{{ feature.name }}</h1>
+			<h2><small>{{ feature.address }}</small> <a href="{% url 'home' %}?highlight={{ feature.id }}" class="btn btn-default btn-sm">Show on Map</a> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
 			{% else %}
 			<h1>{{ feature.address }}</h1>
 			{% endif %}
 		</div>
 		<div class="col-xs-2">
-			<a href="{% url 'home' %}?highlight={{ feature.id }}" class="btn btn-default btn-lg">Back to Map</a>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-xs-3"></div>
-		<div class="col-xs-7">
+		<div class="col-md-3"></div>
+		<div class="col-xs-12 col-md-7">
 			<ul class="nav nav-tabs" role="tablist" id="docTabs">
 				<li role="presentation" class="active"><a href="#history" aria-controls="home" role="tab">History</a></li>
 				{% if descriptions %}
@@ -30,8 +29,8 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-xs-3" id="fixed-nav">
-			<ul data-spy="affix" data-offset-top="300" data-offset-bottom="0" class="nav nav-stacked">
+		<div class="col-md-3" id="fixed-nav">
+			<ul data-spy="affix" data-offset-top="300" data-offset-bottom="0" class="nav nav-stacked hidden-sm hidden-xs">
 				{% for document in histories %}
 					{% if document.start_year %}
 						<li><a href="#{{ document.title|slugify }}">{{ document.title }}<br /><span class="small">{{ document.start_year }} - {{ document.end_year }}</span></a></li>
@@ -41,7 +40,7 @@
 				{% endfor %}
 			</ul>
 		</div>
-		<div class="col-xs-7 feature-detail">
+		<div class="col-xs-12 col-md-7 feature-detail">
 			<div class="tab-content">
 				<div role="tabpanel" class="tab-pane active" id="history">
 				{% for document in histories %}
@@ -63,14 +62,28 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-xs-2">
+		<div class="col-xs-12 col-md-2">
 			{% if similar %}
-				<h4>Places Like This</h4>
+				<h4>Similar Places</h4>
 				<ul class="list-unstyled">
 				{% for feature in similar %}
 					<li><a href="{% url 'detail' feature.id %}">{{ feature.name }}</a></li>
 				{% endfor %}
 				</ul>
+			{% endif %}
+			{% if feature.categories.all.0 %}
+				<h4>Categories</h4>
+				<ul class="list-unstyled">
+				{% for category in feature.categories.all %}
+					<li><a href="{% url 'category' category.name %}">{{ category }}</a></li>
+				{% endfor %}
+				</ul>
+			{% endif %}
+			{% if feature.tags %}
+				<h4>Tags</h4>
+				{% for tag in feature.tags.all %}
+					<a href="{% url 'tag' tag %}" class="btn btn-default btn-xs">{{ tag }}</a> 
+				{% endfor %}
 			{% endif %}
 		</div>
 	</div>

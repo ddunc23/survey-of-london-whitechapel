@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from djgeojson.fields import PolygonField
 from django.contrib.gis.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -55,6 +56,7 @@ class DocumentType(models.Model):
 
 class Document(models.Model):
 	feature = models.ForeignKey(Feature)
+	author = models.ForeignKey(User)
 	title = models.CharField(max_length=128)
 	body = RichTextUploadingField(blank=True)
 	start_year = models.PositiveSmallIntegerField(null=True, blank=True)

@@ -4,7 +4,8 @@ from map.models import Feature, Document, Story, Category
 from map.serializers import FeatureSerializer
 from rest_framework.renderers import JSONRenderer
 
-# Create your views here.
+
+# Map Views
 
 def home(request):
 	"""Base map"""
@@ -17,12 +18,13 @@ def feature(request, feature):
 	feature = Feature.objects.get(id=feature)
 	documents = Document.objects.filter(feature=feature)
 	histories = documents.filter(document_type__name='History').order_by('order')
+	stories = Story.objects.filter(feature=feature)
 	categories = Category.objects.filter(feature=feature)
 	lower = feature.year_built - 10
 	upper = feature.year_built + 10
 	build_range ={'upper': upper, 'lower': lower}
 
-	return render(request, 'map/feature.html', {'feature': feature, 'documents': documents, 'categories': categories, 'build_range': build_range, 'histories': histories })
+	return render(request, 'map/feature.html', {'feature': feature, 'documents': documents, 'categories': categories, 'build_range': build_range, 'histories': histories, 'stories': stories })
 
 def feature_legend(request, feature):
 	"""Update the legend control buttons for year, street"""
@@ -45,18 +47,17 @@ def detail(request, feature):
 
 	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar })
 
-
 def category(request, category):
-	"""Features by catgory"""
-	category = Category.objects.get(id=category)
+	"""Features by category"""
+	category = Category.objects.get(name__iexact=category)
 
 	return render(request, 'map/category.html', {'title': 'Survey of London', 'category': category })
 
-#def features(request):
-#	"""All Features as geoJson"""
-#	features = Feature.objects.all()
-#
-#	return render(request, 'map/features.json', {'features': features })
+def tag(request, tag):
+	"""Feetures by tag"""
+	tag = tag
+
+	return render(request, 'map/tag.html', {'title': 'Survey of London', 'tag': tag })
 
 
 # API Views
@@ -100,5 +101,11 @@ def features_by_street_name(request, street):
 def features_by_category(request, category):
 	if request.method == 'GET':
 		features = Feature.objects.filter(categories__pk=category)
+		serializer = FeatureSerializer(features, many=True)
+		return JSONResponse(serializer.data)
+
+def features_by_tag(request, tag):
+	if request.method == 'GET':
+		features = Feature.objects.filter(tags__name__in=[tag])
 		serializer = FeatureSerializer(features, many=True)
 		return JSONResponse(serializer.data)

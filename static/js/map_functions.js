@@ -1,7 +1,5 @@
 L.mapbox.accessToken = 'pk.eyJ1IjoiZGR1bmMyMyIsImEiOiJxQVhaaVhjIn0.T7vhn1bLeeQoHCsWZ_mp2g';
 
-// var geojson = {{ os_features|geojsonfeature:"osm_id,count,address"|safe }}
-
 var infobox = L.Control.extend({
 	options: {
 		position: 'topright',
@@ -99,7 +97,6 @@ function onEachFeature(feature, layer) {
 			highlight = layer;
 			layer.setStyle(highlightStyle);
 			getDocument(feature.id);
-			console.log(highlight);
 		}
 	}
 	layer.on("mouseover", function(e) {
@@ -169,7 +166,7 @@ function loadFeatures(jsonUrl) {
 
 			map.fitBounds(buildings);
 
-			map.attributionControl.addAttribution("Contains OS data &copy; Crown copyright and OpenMap Local 2016 | Address Information &copy; OpenStreetMap Contributors, ODBL www.opendatacommons.org/licenses/odbl");
+			map.attributionControl.addAttribution("Contains OS data &copy; Crown copyright and OpenMap Local 2016 | Addresses &copy; OpenStreetMap Contributors");
 
 			var baseMaps = {
 				/*"Ordnance Survey OpenMap Local": oslayer,*/
@@ -182,7 +179,9 @@ function loadFeatures(jsonUrl) {
 			};
 
 			if (highlight != undefined) {
-				map.fitBounds(highlight.getBounds());
+				var bounds = highlight.getBounds();
+				map.fitBounds(bounds);
+				highlight.openPopup();
 			}
 
 			L.control.layers(baseMaps, overlayMaps, {

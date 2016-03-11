@@ -1,20 +1,14 @@
 <div class="feature-overview">
-	<button type="button" class="btn btn-default btn-xs pull-right closeThis" aria-label="Left Align">
-	  <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span>
-	</button>
-
-	{% if feature.name %}
-	<h3><a href="{% url 'detail' feature.id %}">{{ feature.name }}</h3></a>
-	{% else %}
-	<h3><a href="{% url 'detail' feature.id %}">{{ feature.address }}</h3></a>
-	{% endif %}
+	<button type="button" class="btn btn-default btn-xs close-this"><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
 
 	{% if feature.thumbnail %}
-	<a href="{% if documents %}{% url 'detail' feature.id %}{% else %}#{% endif %}"><img src="/media/{{ feature.thumbnail }}" class="thumbnail"></a>
+		<a href="{% if documents %}{% url 'detail' feature.id %}{% else %}#{% endif %}"><img src="/media/{{ feature.thumbnail }}"></a>
 	{% endif %}
 
-	{% if feature.short_description %}
-	<p>{{ feature.short_description }}</p>
+	{% if feature.name %}
+		<p><a href="{% url 'detail' feature.id %}">{{ feature.name }}</a><br />
+		{% else %}
+		<p><a href="{% url 'detail' feature.id %}">{{ feature.address }}</a><br />
 	{% endif %}
 	<!--
 	{% if categories %}
@@ -35,8 +29,9 @@
 		</ul>
 	{% endif %}
 	-->
+
 	
-	{% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %}
+		{% if documents %}<span class="glyphicon glyphicon-file"></span> {% endif %}{% if feature.thumbnail %}<span class="glyphicon glyphicon-picture"></span> {% endif %}{% if stories %}<span class="glyphicon glyphicon-comment"></span> {% endif %}{% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm pull-right">Edit</a>{% endif %}</p>
 
 	<!--<a href="{% url 'detail' feature.id %}#description">Description</a>-->
 
@@ -50,7 +45,7 @@
 	
 
 	<script>
-		$('.closeThis').click(function() {
+		$('.close-this').click(function() {
 			$('.infobox-control').hide();
 			resetColours(buildings);
 		});
@@ -60,26 +55,5 @@
 			var jsonUrl = $(this).attr('href');
 			loadFeatures(jsonUrl);
 		})
-
-		/*
-		$('.more').click(function() {
-			//		
-		});
-
-		$('.date_btn').click(function() {
-			var jsonUrl = "{% url 'features_by_date_range' build_range.lower build_range.upper %}";
-			loadFeatures(jsonUrl);
-		});
-
-		$('.street_btn').click(function() {
-			var jsonUrl = "{% url 'features_by_street_name' feature.street %}";
-			loadFeatures(jsonUrl);
-		});
-
-		$('.all_btn').click(function() {
-			var jsonUrl = 'api/features/';
-			loadFeatures(jsonUrl);
-		});*/
-
 	</script>
 </div>
