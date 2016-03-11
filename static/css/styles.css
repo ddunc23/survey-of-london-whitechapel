@@ -105,17 +105,27 @@ html, body, #map {
 .affix-top {
 	margin-top: 15px;
 }
-.affix {
-	width: 15%;
-	padding-right: 25px;
+
+@media (min-width: 992px) {
+	.affix {
+		width: 25%;
+	}
 }
+
+@media (min-width: 1200px) {
+	.affix {
+		width: 16%;
+		padding-right: 25px;
+	}
+}
+
 #fixed-nav .active {
-    font-size: 28px;
+    font-size: 21px;
     margin-left: 10px;
     border-left: 2px solid #337ab7;
 }
 #fixed-nav li {
-	font-size: 21px;
+	font-size: 14px;
 }
 .nav > li a:hover {
 	background-color: white;
