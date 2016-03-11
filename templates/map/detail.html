@@ -13,15 +13,20 @@
 			{% else %}
 			<h1>{{ feature.address }}</h1>
 			{% endif %}
-			
-			<div>
-				<ul class="nav nav-tabs" role="tablist" id="docTabs">
-    				<li role="presentation" class="active"><a href="#history" aria-controls="home" role="tab">History</a></li>
-    				{% if descriptions %}
-    				<li role="presentation"><a href="#description" aria-controls="home" role="tab">Description</a></li>
-    				{% endif %}
-    			</ul>
-			</div>
+		</div>
+		<div class="col-xs-2">
+			<a href="{% url 'home' %}?highlight={{ feature.id }}" class="btn btn-default btn-lg">Back to Map</a>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-3"></div>
+		<div class="col-xs-7">
+			<ul class="nav nav-tabs" role="tablist" id="docTabs">
+				<li role="presentation" class="active"><a href="#history" aria-controls="home" role="tab">History</a></li>
+				{% if descriptions %}
+				<li role="presentation"><a href="#description" aria-controls="home" role="tab">Description</a></li>
+				{% endif %}
+			</ul>
 		</div>
 	</div>
 	<div class="row">
@@ -84,7 +89,7 @@
 		"fillOpacity": 0.8,
 	}
 
-	var oslayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop_Sketchy/{z}/{x}/{y}.png').setOpacity(0.9);
+	var oslayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop_New_Fonts/{z}/{x}/{y}.png').setOpacity(0.9);
 
 	var feature = L.geoJson(feature_geojson, {
 		style: myStyle

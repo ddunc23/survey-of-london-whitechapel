@@ -16,7 +16,7 @@
 	{% if feature.short_description %}
 	<p>{{ feature.short_description }}</p>
 	{% endif %}
-
+	<!--
 	{% if categories %}
 		<h3>Categories</h3>
 		<ul>
@@ -34,7 +34,8 @@
 		{% endfor %}
 		</ul>
 	{% endif %}
-
+	-->
+	
 	{% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %}
 
 	<!--<a href="{% url 'detail' feature.id %}#description">Description</a>-->

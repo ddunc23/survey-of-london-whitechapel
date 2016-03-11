@@ -24,18 +24,18 @@ var feature_legend = L.Control.extend({
 
 var myStyle = {
 	"color": "#F58D16",
-	"weight": 1.5,
+	"weight": 2,
 	"opacity": 0.4
 };
 
 var hoverStyle = {
 	"opacity": 1,
-	"weight": 2
+	"weight": 2.5
 }
 
 var highlightStyle = {
 	"color": "#1AA9FF",
-	"weight": 2
+	"weight": 2.5
 };
 
 
@@ -81,7 +81,7 @@ function setFootprintColour(layer, e) {
 	} else if (e.type == 'click') {
 		resetColours(buildings);
 		layer.setStyle(highlightStyle);
-		map.panTo(e.latlng);
+		map.fitBounds(layer.getBounds());
 		getDocument(layer.feature.id);
 	}
 }
@@ -93,6 +93,13 @@ function onEachFeature(feature, layer) {
 		}
 		else if (feature.properties.address) {
 			layer.bindPopup(feature.properties.address);
+		}
+		var hl = getUrlVars()['highlight'];
+		if (feature.id == hl) {
+			highlight = layer;
+			layer.setStyle(highlightStyle);
+			getDocument(feature.id);
+			console.log(highlight);
 		}
 	}
 	layer.on("mouseover", function(e) {
@@ -107,21 +114,35 @@ function onEachFeature(feature, layer) {
 	});
 }
 
+
+function getUrlVars() {
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
+
+
 var map;
 var geojson;
 var oslayer;
 var neonlayer;
 var sketchylayer;
 var buildings;
+var highlight;
 
 function loadFeatures(jsonUrl) {
 
 	function initMap(layers) {
 		map = L.map('map', {
 			zoom: 17,
-			layers: layers,
 			minZoom: 15,
 			zoomControl: false,
+			layers: layers
 		});
 	};
 
@@ -131,9 +152,9 @@ function loadFeatures(jsonUrl) {
 
 			geojson = data;
 
-			sketchylayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop_Sketchy/{z}/{x}/{y}.png');
+			sketchylayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop_New_Fonts/{z}/{x}/{y}.png');
 
-			oslayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop/{z}/{x}/{y}.png');
+			// oslayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop/{z}/{x}/{y}.png');
 
 			// neonlayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Neon/{z}/{x}/{y}.png');
 
@@ -141,17 +162,17 @@ function loadFeatures(jsonUrl) {
 				onEachFeature: onEachFeature,
 				style: myStyle
 			});
-			
-			layers = [oslayer, /*neonlayer,*/ sketchylayer, buildings];
+
+			layers = [/*oslayer,*/ /*neonlayer,*/ sketchylayer, buildings];
 
 			initMap(layers);
-			
+
 			map.fitBounds(buildings);
-			
+
 			map.attributionControl.addAttribution("Contains OS data &copy; Crown copyright and OpenMap Local 2016 | Address Information &copy; OpenStreetMap Contributors, ODBL www.opendatacommons.org/licenses/odbl");
 
 			var baseMaps = {
-				"Ordnance Survey OpenMap Local": oslayer,
+				/*"Ordnance Survey OpenMap Local": oslayer,*/
 				// "Neon Layer": neonlayer,
 				"Sketchy Layer": sketchylayer,
 			};
@@ -159,7 +180,11 @@ function loadFeatures(jsonUrl) {
 			var overlayMaps = {
 				"Buildings": buildings
 			};
-			
+
+			if (highlight != undefined) {
+				map.fitBounds(highlight.getBounds());
+			}
+
 			L.control.layers(baseMaps, overlayMaps, {
 				"position": "bottomleft"
 			}).addTo(map);
@@ -171,7 +196,7 @@ function loadFeatures(jsonUrl) {
 			map.addControl(new infobox());
 			map.addControl(new feature_legend());
 
-			$('.infobox-control').mouseover(function() {
+			$('.leaflet-control').mouseover(function() {
 				buildings.eachLayer(function(layer) {
 					if (layer.options['color'] != '#1AA9FF') {
 						layer.setStyle(myStyle);
@@ -180,7 +205,7 @@ function loadFeatures(jsonUrl) {
 				})
 			});
 
-			$('.infobox-control').mouseout(function() {
+			$('.leaflet-control').mouseout(function() {
 				buildings.eachLayer(function(layer) {			
 					if (layer.feature.properties) {
 						if (layer.feature.properties.name) {
