@@ -1,0 +1,84 @@
+{% extends 'map/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="text-center">Search</h2>
+        </div>
+    </div>
+    {% if query %}
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="text-center"><small>Results for "{{ query }}"</small></h2>
+        </div>
+    </div>
+    <div id="small_map"></div>
+    <div class="row featured-content">
+        {% for result in page.object_list %}
+
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <div>
+                <a href="{% url 'map.views.detail' result.object.id %}"><img src="/media/{{ result.object.thumbnail }}"></a>
+                <p><a href="{% url 'map.views.detail' result.object.id %}">{{ result.object.name }}</a></p>
+            </div>
+        </div>
+    
+        {% empty %}
+            <p>No results found.</p>
+        {% endfor %}
+
+        {% if page.has_previous or page.has_next %}
+            <div>
+                {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+                |
+                {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        {# Show some example queries to run, maybe query syntax, something else? #}
+    {% endif %}
+    </div>
+</div>
+<script>
+{% load geojson_tags %}
+
+var myStyle = {
+    "color": "#2262cc",
+    "weight": 1,
+    "opacity": 0.8,
+    "fillOpacity": 0.8,
+}
+
+var oslayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop_New_Fonts/{z}/{x}/{y}.png').setOpacity(0.9);
+
+/*
+var feature = L.geoJson(feature_geojson, {
+    style: myStyle
+})
+
+*/
+// var centre = feature.getBounds().getCenter();
+
+var map = L.map('small_map', {
+    zoom: 17,
+    zoomControl: false,
+    layers: [oslayer],
+})
+
+var buildings = L.geoJson();
+
+{% for result in page.object_list %}
+
+buildings.addData({{ result.object|geojsonfeature:"osm_id,count,address"|safe }})
+
+
+{% endfor %}
+
+buildings.addTo(map);
+buildings.setStyle(myStyle);
+map.fitBounds(buildings.getBounds());
+
+
+</script>
+{% endblock %}

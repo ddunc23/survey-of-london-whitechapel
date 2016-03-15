@@ -21,6 +21,7 @@
 * psycopg2==2.6.1
 * six==1.10.0
 * wheel==0.26.0
+* Whoosh==2.7.2
 
 ### Tileserver
 

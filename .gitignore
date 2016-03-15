@@ -18,3 +18,5 @@ Thumbs.db
 *.sqlite3
 /media/
 /media/*
+/whoosh_index/
+/whoosh_index/*

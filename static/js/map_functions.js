@@ -1,3 +1,15 @@
+/* Search */
+
+/*$(document).ready(function() {
+	$('.search').click(function(e) {
+		e.preventDefault();
+		console.log($('.search-input').val());
+	})
+})*/
+
+
+/* Leaflet Functions */
+
 L.mapbox.accessToken = 'pk.eyJ1IjoiZGR1bmMyMyIsImEiOiJxQVhaaVhjIn0.T7vhn1bLeeQoHCsWZ_mp2g';
 
 var infobox = L.Control.extend({

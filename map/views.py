@@ -3,7 +3,7 @@ from django.shortcuts import render
 from map.models import Feature, Document, Story, Category
 from map.serializers import FeatureSerializer
 from rest_framework.renderers import JSONRenderer
-
+from haystack.query import SearchQuerySet
 
 # Map Views
 
@@ -59,6 +59,19 @@ def tag(request, tag):
 
 	return render(request, 'map/tag.html', {'title': 'Survey of London', 'tag': tag })
 
+def date_range(request, build_date):
+	"""Features by date range"""
+	date = int(build_date)
+	lower = date - 20
+	upper = date + 20
+	build_range = {'upper': upper, 'lower': lower}
+
+	return render(request, 'map/date_range.html', {'title': 'Survey of London', 'build_range': build_range }) 
+
+def search_map(request):
+	"""Show search results on map"""
+
+	return render(request, 'map/search_map.html')
 
 # API Views
 
@@ -109,3 +122,14 @@ def features_by_tag(request, tag):
 		features = Feature.objects.filter(tags__name__in=[tag])
 		serializer = FeatureSerializer(features, many=True)
 		return JSONResponse(serializer.data)
+
+def search_features(request):
+	sqs = SearchQuerySet().all()
+	if request.method == 'GET':
+		if request.GET['q']:
+			results = sqs.filter(content=request.GET['q'])
+			features = []
+			for result in results:
+				features.append(result.object)
+			serializer = FeatureSerializer(features, many=True)
+			return JSONResponse(serializer.data)
