@@ -7,6 +7,7 @@ class FeatureIndex(indexes.SearchIndex, indexes.Indexable):
 	street = indexes.CharField(model_attr='street', null=True)
 	postcode = indexes.CharField(model_attr='postcode')
 	name = indexes.CharField(model_attr='name', null=True)
+	tags = indexes.MultiValueField()
 
 	def get_model(self):
 		return Feature

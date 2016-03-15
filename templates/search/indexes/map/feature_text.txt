@@ -1,3 +1,4 @@
 {{ object.name }}
 {{ object.address }}
+{% for tag in object.tags.all %} {{ tag.name }} {% endfor %}
 {{ object.postcode }}

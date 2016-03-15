@@ -1,7 +1,7 @@
 {% extends 'map/base.html' %}
 
 {% block content %}
-<div id="small_map" {% if feature.thumbnail %} style="background: url('/media/{{ feature.banner }}'); background-size: cover; background-position: center;" {% endif %}></div>
+<div id="small_map" {% if feature.thumbnail %} style="background: url('/media/{{ feature.banner }}'); background-size: cover; background-position: center;" {% endif %} class="hidden-sm hidden-xs"></div>
 <div class="container">
 	<div class="row">
 		<div class="col-md-3">
@@ -82,7 +82,7 @@
 			{% if feature.tags %}
 				<h4>Tags</h4>
 				{% for tag in feature.tags.all %}
-					<a href="{% url 'tag' tag %}" class="btn btn-default btn-xs">{{ tag }}</a> 
+					<a href="{% url 'tag' tag %}" class="btn btn-default btn-xs tag">{{ tag }}</a> 
 				{% endfor %}
 			{% endif %}
 		</div>

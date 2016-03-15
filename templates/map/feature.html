@@ -6,9 +6,9 @@
 	{% endif %}
 
 	{% if feature.name %}
-		<p><a href="{% url 'detail' feature.id %}">{{ feature.name }}</a><br />
+		<p><span class="small"><a href="{% url 'detail' feature.id %}">{{ feature.name }}</a></span><br />
 		{% else %}
-		<p><a href="{% url 'detail' feature.id %}">{{ feature.address }}</a><br />
+		<p><span class="small"><a href="{% url 'detail' feature.id %}">{{ feature.address }}</a></span><br />
 	{% endif %}
 	<!--
 	{% if categories %}

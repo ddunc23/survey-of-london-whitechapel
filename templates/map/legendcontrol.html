@@ -1,6 +1,5 @@
 <a href="#" class="date_btn btn btn-default btn-sm">{{ feature.year_built }}</a>
 <a href="#" class="street_btn btn btn-default btn-sm">Zoom to {{ feature.street }}</a>
-<a href="#" class="all_btn btn btn-default btn-sm">Show All Buildings</a>
 
 <script>
 	$('.closeThis').click(function() {
@@ -8,23 +7,17 @@
 		resetColours(buildings);
 	});
 
-	$('.more').click(function() {
-		//		
-	});
-
 	$('.date_btn').click(function() {
 		var jsonUrl = "{% url 'features_by_date_range' build_range.lower build_range.upper %}";
 		loadFeatures(jsonUrl);
+		$('.titlebox-control').html('Showing all places built between {{ build_range.lower }} and {{ build_range.upper }}')
+		$('.titlebox-control').show();
 	});
 
 	$('.street_btn').click(function() {
 		var jsonUrl = "{% url 'features_by_street_name' feature.street %}";
 		loadFeatures(jsonUrl);
-	});
-
-	$('.all_btn').click(function() {
-		var jsonUrl = "{% url 'features' %}";
-		loadFeatures(jsonUrl);
-		$('.infobox-control').hide();
+		$('.titlebox-control').html('Showing all places on {{ feature.street }}')
+		$('.titlebox-control').show();
 	});
 </script>

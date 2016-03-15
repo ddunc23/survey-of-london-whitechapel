@@ -24,7 +24,7 @@ class Category(models.Model):
 
 class Feature(models.Model):
 	os_id = models.CharField(max_length=128)
-	#geom = PolygonField()
+	# geom = PolygonField()
 	geom = models.PolygonField()
 	featcode = models.PositiveSmallIntegerField(null=True)
 	name = models.CharField(max_length=128, null=True)

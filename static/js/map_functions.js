@@ -1,13 +1,3 @@
-/* Search */
-
-/*$(document).ready(function() {
-	$('.search').click(function(e) {
-		e.preventDefault();
-		console.log($('.search-input').val());
-	})
-})*/
-
-
 /* Leaflet Functions */
 
 L.mapbox.accessToken = 'pk.eyJ1IjoiZGR1bmMyMyIsImEiOiJxQVhaaVhjIn0.T7vhn1bLeeQoHCsWZ_mp2g';
@@ -31,6 +21,29 @@ var feature_legend = L.Control.extend({
 		return container;
 	}
 })
+
+var show_all_buildings = L.Control.extend({
+	options: {
+		position: 'bottomright'
+	},
+	onAdd: function(map) {
+		var container = L.DomUtil.create('div', 'show-buildings');
+		container.innerHTML += '<a href="#" class="all_btn btn btn-default btn-sm">Show All Buildings</a>';
+		return container;
+	}
+})
+
+var titlebox = L.Control.extend({
+	options: {
+		position: 'bottomright',
+	},
+	onAdd: function(map) {
+		var container = L.DomUtil.create('div', 'titlebox-control row');
+		container.innerHTML += title_box_title;
+		return container;
+	}
+});
+
 
 var myStyle = {
 	"color": "#F58D16",
@@ -196,16 +209,31 @@ function loadFeatures(jsonUrl) {
 				highlight.openPopup();
 			}
 
-			L.control.layers(baseMaps, overlayMaps, {
-				"position": "bottomleft"
-			}).addTo(map);
-
 			L.control.zoom({
 				"position": "bottomleft",
+			}).addTo(map);
+
+			L.control.layers(baseMaps, overlayMaps, {
+				"position": "bottomleft"
 			}).addTo(map);
 			
 			map.addControl(new infobox());
 			map.addControl(new feature_legend());
+			map.addControl(new show_all_buildings());
+			
+			
+			if (typeof title_box_title != 'undfined') {
+				map.addControl(new titlebox());
+				$('.titlebox-control').show();
+			}
+		
+
+			$('.all_btn').click(function() {
+				var jsonUrl = "/map/api/features/";
+				loadFeatures(jsonUrl);
+				$('.infobox-control').hide();
+				$('.titlebox-control').hide();
+			});
 
 			$('.leaflet-control').mouseover(function() {
 				buildings.eachLayer(function(layer) {

@@ -49,7 +49,7 @@
 	<div class="row themed-content">
 		{% for category in categories %}
 		{% if category.thumbnail %}
-		<div class="col-xs-12 col-lg-6">
+		<div class="col-xs-12 col-md-6">
 			<div>
 				<a href="{% url 'map.views.category' category.name %}"><img src="/media/{{ category.thumbnail }}"></a>
 				<p><a href="{% url 'map.views.category' category.name %}">{{ category.name }}</a></p>

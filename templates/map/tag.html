@@ -1,13 +1,10 @@
 {% extends 'map/base.html' %}
 {% block content %}
 		<div id="map"></div>
-
-		{% load geojson_tags %}
-		{% load staticfiles %}
-		<script type="text/javascript" src="{% static 'bower_components/bootstrap/dist/js/bootstrap.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/map_functions.js' %}"></script>
-
 		<script>
+
+			var title_box_title = 'All places tagged "{{ tag }}"';
+
 			var jsonUrl = '{% url "features_by_tag" tag %}';
 			loadFeatures(jsonUrl);
 		</script>

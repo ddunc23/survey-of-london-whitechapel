@@ -4,10 +4,11 @@
 
 		{% load geojson_tags %}
 		{% load staticfiles %}
-		<script type="text/javascript" src="{% static 'bower_components/bootstrap/dist/js/bootstrap.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/map_functions.js' %}"></script>
 
 		<script>
+
+			var title_box_title = 'Showing all places categorised by &ldquo;{{ category.name }}&rdquo;';
+
 			var jsonUrl = '{% url "features_by_category" category.id %}';
 			loadFeatures(jsonUrl);
 		</script>

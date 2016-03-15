@@ -1,18 +1,14 @@
 {% extends 'map/base.html' %}
 {% block content %}
 		<div id="map"></div>
-
-		{% load geojson_tags %}
-		{% load staticfiles %}
-		<script type="text/javascript" src="{% static 'bower_components/bootstrap/dist/js/bootstrap.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/map_functions.js' %}"></script>
-
 		<script>
 			
-			var vars = getUrlVars();
+			var jsonUrl = '{% url "search_features" %}' + '?q=' + '{{ query }}';
+			
+			var title_box_title = 'Showing Results for &ldquo;{{ query }}&rdquo;';
 
-			var jsonUrl = '{% url "search_features" %}' + '?q=' + vars['q'];
 			loadFeatures(jsonUrl);
+
 		</script>
 
 {% endblock %}

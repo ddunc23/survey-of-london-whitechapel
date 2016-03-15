@@ -62,16 +62,18 @@ def tag(request, tag):
 def date_range(request, build_date):
 	"""Features by date range"""
 	date = int(build_date)
-	lower = date - 20
-	upper = date + 20
+	lower = date - 10
+	upper = date + 10
 	build_range = {'upper': upper, 'lower': lower}
 
 	return render(request, 'map/date_range.html', {'title': 'Survey of London', 'build_range': build_range }) 
 
 def search_map(request):
 	"""Show search results on map"""
+	if request.GET['q']:
+		query = request.GET['q']
 
-	return render(request, 'map/search_map.html')
+	return render(request, 'map/search_map.html', {'query': query})
 
 # API Views
 
