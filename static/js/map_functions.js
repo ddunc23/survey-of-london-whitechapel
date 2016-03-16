@@ -47,17 +47,20 @@ var titlebox = L.Control.extend({
 
 var myStyle = {
 	"color": "#F58D16",
+	"fillColor": "#F58D16",
 	"weight": 2,
 	"opacity": 0.4
 };
 
 var hoverStyle = {
 	"opacity": 1,
-	"weight": 2.5
+	"weight": 2.5,
+	"color": "#1AA9FF",
 }
 
 var highlightStyle = {
 	"color": "#1AA9FF",
+	"fillColor": "#1AA9FF",
 	"weight": 2.5
 };
 
@@ -98,7 +101,7 @@ function setFootprintColour(layer, e) {
 	if (e.type == 'mouseover') {
 		layer.setStyle(hoverStyle);
 	} else if (e.type == 'mouseout') {
-		if (layer.options['color'] != '#1AA9FF') {
+		if (layer.options['fillColor'] != '#1AA9FF') {
 			layer.setStyle(myStyle);
 		}
 	} else if (e.type == 'click') {
