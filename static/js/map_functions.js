@@ -67,9 +67,9 @@ function setDocNumberStyle(layer) {
 	if (count == 0) {
 		layer.setStyle({fillOpacity: 0});
 	} else if (count >= 1 && count <= 2) {
-		layer.setStyle({fillOpacity: 0.2});
+		layer.setStyle({fillOpacity: 0.8});
 	} else if (count >= 3 && count <= 6) {
-		layer.setStyle({fillOpacity: 0.3});
+		layer.setStyle({fillOpacity: 0.8});
 	} else if (count >= 7 && count <= 10) {
 		layer.setStyle({fillOpacity: 0.8});
 	}
@@ -221,8 +221,9 @@ function loadFeatures(jsonUrl) {
 			map.addControl(new feature_legend());
 			map.addControl(new show_all_buildings());
 			
-			
-			if (typeof title_box_title != 'undfined') {
+			title_box_title = '';
+
+			if (title_box_title != '') {
 				map.addControl(new titlebox());
 				$('.titlebox-control').show();
 			}

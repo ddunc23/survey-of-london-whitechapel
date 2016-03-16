@@ -18,7 +18,7 @@ def feature(request, feature):
 	feature = Feature.objects.get(id=feature)
 	documents = Document.objects.filter(feature=feature)
 	histories = documents.filter(document_type__name='History').order_by('order')
-	stories = Story.objects.filter(feature=feature)
+	stories = documents.filter(document_type__name='Story')
 	categories = Category.objects.filter(feature=feature)
 	lower = feature.year_built - 10
 	upper = feature.year_built + 10

@@ -2,13 +2,13 @@
 	<button type="button" class="btn btn-default btn-xs close-this"><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
 
 	{% if feature.thumbnail %}
-		<a href="{% if documents %}{% url 'detail' feature.id %}{% else %}#{% endif %}"><img src="/media/{{ feature.thumbnail }}"></a>
+		{% if documents %}<a href="{% if documents %}{% url 'detail' feature.id %}{% else %}#{% endif %}"><img src="/media/{{ feature.thumbnail }}"></a>{% else %}<img src="/media/{{ feature.thumbnail }}">{% endif %}
 	{% endif %}
 
 	{% if feature.name %}
-		<p><span class="small"><a href="{% url 'detail' feature.id %}">{{ feature.name }}</a></span><br />
+		<p><span class="small">{% if documents %}<a href="{% url 'detail' feature.id %}">{{ feature.name }}</a>{% else %}{{ feature.name }}{% endif %}</span><br />
 		{% else %}
-		<p><span class="small"><a href="{% url 'detail' feature.id %}">{{ feature.address }}</a></span><br />
+		<p><span class="small">{% if documents %}<a href="{% url 'detail' feature.id %}">{{ feature.address }}{% else %}{{ feature.address }}{% endif %}</a></span><br />
 	{% endif %}
 	<!--
 	{% if categories %}
