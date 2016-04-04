@@ -101,7 +101,7 @@ function setFootprintColour(layer, e) {
 	if (e.type == 'mouseover') {
 		layer.setStyle(hoverStyle);
 	} else if (e.type == 'mouseout') {
-		if (layer.options['fillColor'] != '#1AA9FF') {
+		if (layer._options['fillColor'] != '#1AA9FF') {
 			layer.setStyle(myStyle);
 		}
 	} else if (e.type == 'click') {
@@ -114,8 +114,8 @@ function setFootprintColour(layer, e) {
 
 function onEachFeature(feature, layer) {
 	if (feature.properties) {
-		if (feature.properties.name) {
-			layer.bindPopup(feature.properties.name);
+		if (feature.properties.b_name) {
+			layer.bindPopup(feature.properties.b_name);
 		}
 		else if (feature.properties.address) {
 			layer.bindPopup(feature.properties.address);
@@ -241,7 +241,7 @@ function loadFeatures(jsonUrl) {
 
 			$('.leaflet-control').mouseover(function() {
 				buildings.eachLayer(function(layer) {
-					if (layer.options['color'] != '#1AA9FF') {
+					if (layer._options['color'] != '#1AA9FF') {
 						layer.setStyle(myStyle);
 					}
 				layer.removeEventListener();
@@ -251,8 +251,8 @@ function loadFeatures(jsonUrl) {
 			$('.leaflet-control').mouseout(function() {
 				buildings.eachLayer(function(layer) {			
 					if (layer.feature.properties) {
-						if (layer.feature.properties.name) {
-							layer.bindPopup(layer.feature.properties.name);
+						if (layer.feature.properties.b_name) {
+							layer.bindPopup(layer.feature.properties.b_name);
 						}
 						else if (layer.feature.properties.address) {
 							layer.bindPopup(layer.feature.properties.address);

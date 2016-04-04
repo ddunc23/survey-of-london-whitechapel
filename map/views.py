@@ -20,8 +20,8 @@ def feature(request, feature):
 	histories = documents.filter(document_type__name='History').order_by('order')
 	stories = documents.filter(document_type__name='Story')
 	categories = Category.objects.filter(feature=feature)
-	lower = feature.year_built - 10
-	upper = feature.year_built + 10
+	lower = feature.original - 10
+	upper = feature.original + 10
 	build_range ={'upper': upper, 'lower': lower}
 
 	return render(request, 'map/feature.html', {'feature': feature, 'documents': documents, 'categories': categories, 'build_range': build_range, 'histories': histories, 'stories': stories })
@@ -29,8 +29,8 @@ def feature(request, feature):
 def feature_legend(request, feature):
 	"""Update the legend control buttons for year, street"""
 	feature = Feature.objects.get(id=feature)
-	lower = feature.year_built - 20
-	upper = feature.year_built + 20
+	lower = feature.original - 20
+	upper = feature.original + 20
 	build_range ={'upper': upper, 'lower': lower}
 
 	return render(request, 'map/legendcontrol.html', {'feature': feature, 'build_range': build_range })
@@ -103,7 +103,7 @@ def features_by_build_date(request, build_date):
 def features_by_date_range(request, start_date, end_date):
 	"""Get all Features built between two years"""
 	if request.method == 'GET':
-		features = Feature.objects.filter(year_built__range=[start_date, end_date])
+		features = Feature.objects.filter(original__range=[start_date, end_date])
 		serializer = FeatureSerializer(features, many=True)
 		return JSONResponse(serializer.data)
 
