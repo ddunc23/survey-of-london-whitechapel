@@ -7,9 +7,9 @@
 		<div class="col-md-3">
 		</div>
 		<div class="col-xs-12 col-md-7">
-			{% if feature.name %}
-			<h1>{{ feature.name }}</h1>
-			<h2><small>{{ feature.address }} {% if feature.year_built %}| Constructed <a href="{% url 'date_range' feature.year_built %}">{{ feature.year_built }}{% endif %}</a></small> <a href="{% url 'home' %}?highlight={{ feature.id }}" class="btn btn-default btn-sm">Show on Map</a> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
+			{% if feature.b_name %}
+			<h1>{{ feature.b_name }}</h1>
+			<h2><small>{{ feature.address }} {% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a></small> <a href="{% url 'home' %}?highlight={{ feature.id }}" class="btn btn-default btn-sm">Show on Map</a> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
 			{% else %}
 			<h1>{{ feature.address }}</h1>
 			{% endif %}

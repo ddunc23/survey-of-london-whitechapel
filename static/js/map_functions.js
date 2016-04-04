@@ -101,8 +101,11 @@ function setFootprintColour(layer, e) {
 	if (e.type == 'mouseover') {
 		layer.setStyle(hoverStyle);
 	} else if (e.type == 'mouseout') {
-		if (layer._options['fillColor'] != '#1AA9FF') {
-			layer.setStyle(myStyle);
+		for (var prop in layer._layers) {
+			if (layer._layers[prop].options.fillColor != '#1AA9FF') {
+				layer.setStyle(myStyle);
+			}
+			break;
 		}
 	} else if (e.type == 'click') {
 		resetColours(buildings);
@@ -125,6 +128,8 @@ function onEachFeature(feature, layer) {
 			highlight = layer;
 			layer.setStyle(highlightStyle);
 			getDocument(feature.id);
+		} else {
+			layer.setStyle(myStyle);
 		}
 	}
 	layer.on("mouseover", function(e) {
@@ -185,7 +190,7 @@ function loadFeatures(jsonUrl) {
 
 			buildings = L.geoJson(geojson, {
 				onEachFeature: onEachFeature,
-				style: myStyle
+				// style: myStyle
 			});
 
 			layers = [/*oslayer,*/ /*neonlayer,*/ sketchylayer, buildings];
