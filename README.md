@@ -9,6 +9,8 @@
 * django-ckeditor==5.0.3
 * django-filter==0.12.0
 * django-geojson==2.8.1
+* django-grappelli==2.7.3
+* django-haystack==2.4.1
 * django-leaflet==0.18.0
 * django-taggit==0.18.0
 * djangorestframework==3.3.2
