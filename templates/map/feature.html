@@ -10,40 +10,9 @@
 		{% else %}
 		<p><span class="small">{% if documents %}<a href="{% url 'detail' feature.id %}">{{ feature.address }}{% else %}{{ feature.address }}{% endif %}</a></span><br />
 	{% endif %}
-	<!--
-	{% if categories %}
-		<h3>Categories</h3>
-		<ul>
-		{% for category in categories %}
-			<li><a href="{% url 'features_by_category' category.pk %}" class="category_btn">{{ category.name }}</a></li>
-		{% endfor %}
-		</ul>
-	{% endif %}
-
-	{% if histories %}
-		<h4>History</h4>
-		<ul>
-		{% for document in histories %}
-			<li><a href="{% url 'detail' feature.id %}#{{ document.title|slugify }}">{{ document.title }}</a></li>
-		{% endfor %}
-		</ul>
-	{% endif %}
-	-->
-
 	
 		{% if documents %}<span class="glyphicon glyphicon-file"></span> {% endif %}{% if feature.thumbnail %}<span class="glyphicon glyphicon-picture"></span> {% endif %}{% if stories %}<span class="glyphicon glyphicon-comment"></span> {% endif %}{% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm pull-right">Edit</a>{% endif %}</p>
-
-	<!--<a href="{% url 'detail' feature.id %}#description">Description</a>-->
-
-	<!--{% if not documents %}
-	<a href="#" class="btn btn-default btn-sm">Submit stories about {% if feature.name %}{{ feature.name }}{% else %}{{ feature.address }}{% endif %}</a>
-	{% endif %}-->
 	
-	<!--<a href="#" class="date_btn btn btn-default btn-xs">{{ feature.year_built }}</a>
-	<a href="#" class="street_btn btn btn-default btn-xs">Zoom to {{ feature.street }}</a>
-	<a href="#" class="all_btn btn btn-default btn-xs">Show All Buildings</a>-->
-	
-
 	<script>
 		$('.close-this').click(function() {
 			$('.infobox-control').hide();

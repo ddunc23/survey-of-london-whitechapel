@@ -171,6 +171,7 @@ function loadFeatures(jsonUrl) {
 		map = L.map('map', {
 			zoom: 17,
 			minZoom: 15,
+			maxZoom: 20,
 			zoomControl: false,
 			layers: layers
 		});
@@ -182,7 +183,7 @@ function loadFeatures(jsonUrl) {
 
 			geojson = data;
 
-			sketchylayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop_New_Fonts/{z}/{x}/{y}.png');
+			sketchylayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/sketchymap_lidar_footprints/{z}/{x}/{y}.png', {maxZoom: 20});
 
 			// oslayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop/{z}/{x}/{y}.png');
 

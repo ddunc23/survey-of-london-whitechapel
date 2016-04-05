@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -142,7 +143,7 @@ CKEDITOR_UPLOAD_PATH = 'uploads/'
 # Django-leaflet Settings
 
 LEAFLET_CONFIG = {
-    'TILES': 'http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop_Sketchy/{z}/{x}/{y}.png',
+    'TILES': 'http://dev.local/tileserver.php?/index.json?/sketchymap_lidar_footprints/{z}/{x}/{y}.png',
     'DEFAULT_CENTER': (51.5161, -0.067),
     'DEFAULT_ZOOM': 16,
 }
@@ -165,3 +166,11 @@ HAYSTACK_CONNECTIONS = {
         'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
     },
 }
+
+# Grapelli
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.core.context_processors.request",
+)
+
+GRAPPELLI_ADMIN_TITLE = 'Survey of London Whitechapel'

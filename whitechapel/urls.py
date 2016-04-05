@@ -30,4 +30,6 @@ urlpatterns = [
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     # Search
     url(r'^search/', include('haystack.urls')),
+    # Grappelli
+    url(r'^grappelli/', include('grappelli.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

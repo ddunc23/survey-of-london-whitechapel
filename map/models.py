@@ -22,54 +22,41 @@ class Category(models.Model):
 		return self.name
 
 
-class Feature(models.Model):
-	# os_id = models.CharField(max_length=128)
-	# geom = PolygonField()
-	# geom = models.PolygonField()
-	# featcode = models.PositiveSmallIntegerField(null=True)
-	# name = models.CharField(max_length=128, null=True)
-	# address = models.CharField(max_length=255)
-	# house_nmbr = models.PositiveSmallIntegerField(null=True, blank=True)
-	# street = models.CharField(max_length=128, null=True, blank=True)
-	# postcode = models.CharField(max_length=8)
-	# short_description = models.CharField(max_length=140, null=True, blank=True)
-	# year_built = models.PositiveSmallIntegerField(null=True)
-	# count = models.PositiveSmallIntegerField(default=0)
-	# categories = models.ManyToManyField(Category, blank=True)
-	# thumbnail = models.ImageField(upload_to=feature_directory_path, null=True, blank=True)
-	# tags = TaggableManager(blank=True)
-	# banner = models.ImageField(upload_to=feature_directory_path, null=True, blank=True)
+class Feature(models.Model):	
 	id = models.PositiveSmallIntegerField(primary_key=True)
-	geom = models.MultiPolygonField()
-	b_number = models.PositiveSmallIntegerField(null=True, blank=True)
-	b_name = models.CharField(max_length=100, null=True, blank=True)
+	geom = models.MultiPolygonField(verbose_name='Footprint Geometry')
+	b_number = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Building Number')
+	b_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='Building Name')
 	street = models.CharField(max_length=100, null=True, blank=True)
 	postcode = models.CharField(max_length=8)
-	address = models.CharField(max_length=100)
+	address = models.CharField(max_length=100, verbose_name='Formatted Address')
 	b_type = models.CharField(max_length=100, null=True, blank=True)
 	original = models.PositiveSmallIntegerField(null=True, blank=True)
 	rebuild_1 = models.PositiveSmallIntegerField(null=True, blank=True)
 	rebuild_2 = models.PositiveSmallIntegerField(null=True, blank=True)
-	f_date = models.PositiveSmallIntegerField(null=True, blank=True)
+	f_date = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Facade Data')
 	storeys = models.PositiveSmallIntegerField(null=True, blank=True)
-	basement = models.PositiveSmallIntegerField(null=True, blank=True)
+	basement = models.CharField(max_length=8,null=True, blank=True)
 	architect = models.CharField(max_length=100, null=True, blank=True)
 	builders = models.CharField(max_length=100, null=True, blank=True)
 	materials = models.CharField(max_length=100, null=True, blank=True)
 	type = models.CharField(max_length=100, null=True, blank=True)
-	c_area = models.PositiveSmallIntegerField(null=True, blank=True)
-	listed = models.PositiveSmallIntegerField(null=True, blank=True)
+	c_area = models.CharField(max_length=8,null=True, blank=True, verbose_name='Conservation Area')
+	listed = models.CharField(max_length=8,null=True, blank=True, verbose_name='Listed')
 	count = models.PositiveSmallIntegerField(default=0)
 	categories = models.ManyToManyField(Category, blank=True)
-	thumbnail = models.ImageField(upload_to=feature_directory_path, null=True, blank=True)
+	thumbnail = models.ImageField(upload_to=feature_directory_path, null=True, blank=True, verbose_name='Thumbnail Image')
 	tags = TaggableManager(blank=True)
-	banner = models.ImageField(upload_to=feature_directory_path, null=True, blank=True)
+	banner = models.ImageField(upload_to=feature_directory_path, null=True, blank=True, verbose_name='Banner Image')
 
 	def __unicode__(self):
 		if self.b_name != None:
 			return self.b_name
 		else:
 			return self.address
+
+	class Meta:
+		verbose_name = 'Building'
 
 # Auto-generated `LayerMapping` dictionary for Feature model
 feature_mapping = {
