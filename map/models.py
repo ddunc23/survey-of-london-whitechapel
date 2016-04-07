@@ -4,11 +4,20 @@ from djgeojson.fields import PolygonField
 from django.contrib.gis.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 from taggit.managers import TaggableManager
+import bleach
 
 
 def feature_directory_path(instance, filename):
 	"""File will be uploaded to /uploads/features/<feature.id>/filename"""
 	return 'uploads/features/{0}/{1}'.format(instance.id, filename)
+
+class UserProfile(models.Model):
+	"""Additional Attributes for the User model"""
+	user = models.OneToOneField(User)
+	display_name = models.CharField(max_length=100, blank=True, null=True)
+
+	def __unicode__(self):
+		return self.user.username
 
 class Category(models.Model):
 	name = models.CharField(max_length=128)
@@ -104,8 +113,8 @@ class Document(models.Model):
 
 	def save(self, *args, **kwargs):
 		super(Document, self).save(*args, **kwargs)
+		self.body = bleach.clean(self.body, tags=['p', 'b', 'strong', 'em', 'img', 'a', 'blockquote', 'i', 'li', 'ul', 'ol',])
 		documents = Document.objects.filter(feature=self.feature)
-		print(self.feature.id)
 		feature = Feature.objects.get(id=self.feature.id)
 		feature.count = len(documents)
 		feature.save()

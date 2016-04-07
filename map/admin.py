@@ -1,8 +1,10 @@
 from django.contrib import admin
-from map.models import Feature, Document, Category, Story, Document, DocumentType
+from map.models import Feature, Document, Category, Story, Document, DocumentType, UserProfile
 from djgeojson.fields import GeoJSONField
 from leaflet.admin import LeafletGeoAdmin
 from map.forms import FeatureForm
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
 
 # Register your models here.
 
@@ -47,10 +49,20 @@ class FeatureAdmin(LeafletGeoAdmin):
 		'DEFAULT_ZOOM': 5
 	}
 
+class UserProfileInline(admin.StackedInline):
+	model = UserProfile
+	can_delete = False
+	verbose_name_plural = 'Profile'
+
+class UserAdmin(BaseUserAdmin):
+	inlines = (UserProfileInline, )
+
 admin.site.register(Story)
 admin.site.register(Category)
 admin.site.register(Feature, FeatureAdmin)
 admin.site.register(Document)
 admin.site.register(DocumentType)
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
 
 

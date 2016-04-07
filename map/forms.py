@@ -1,5 +1,5 @@
 from django import forms
-from map.models import Feature
+from map.models import Feature, Document
 
 class FeatureForm(forms.ModelForm):
 	class Meta:
@@ -9,4 +9,13 @@ class FeatureForm(forms.ModelForm):
 			'basement': forms.CheckboxInput(),
 			'c_area': forms.CheckboxInput(),
 			'listed':  forms.CheckboxInput(),
+		}
+
+class DocumentForm(forms.ModelForm):
+	class Meta:
+		model = Document
+		fields = ('title', 'body',)
+		labels = {
+			'title': '',
+			'body': '',
 		}

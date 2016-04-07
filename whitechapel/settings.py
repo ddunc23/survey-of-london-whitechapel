@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework_gis',
     'taggit',
+    'crispy_forms',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -174,3 +175,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 GRAPPELLI_ADMIN_TITLE = 'Survey of London Whitechapel'
+
+# Crispy Forms
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'

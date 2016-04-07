@@ -1,9 +1,12 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.contrib.auth.models import User
 from map.models import Feature, Document, Story, Category
 from map.serializers import FeatureSerializer
+from map.forms import DocumentForm
 from rest_framework.renderers import JSONRenderer
 from haystack.query import SearchQuerySet
+from django.contrib.auth.decorators import login_required
 
 # Map Views
 
@@ -74,6 +77,59 @@ def search_map(request):
 		query = request.GET['q']
 
 	return render(request, 'map/search_map.html', {'query': query})
+
+@login_required
+def user_overview(request, user):
+	"""Show an overview of a user's details and documents"""
+	user = User.objects.get(username=user)
+	documents = Document.objects.filter(author=user)
+
+	return render(request, 'map/user_overview.html', {'user': user, 'documents': documents})
+
+
+# Forms
+
+@login_required
+def edit_document(request, feature, document=None):
+	"""View to allow users to add new documents. This doesn't work for editing yet so you need to fix it."""
+	if document:
+		document = Document.objects.get(id=document)
+	else:
+		document = None
+
+	if request.method == 'POST':
+		form = DocumentForm(request.POST, instance=document)
+		if form.is_valid():
+			d = form.save(commit=False)
+			
+			try:
+				feature = Feature.objects.get(id=feature)
+				d.feature = feature
+			except Feature.DoesNotExist:
+				pass
+
+			d.author = request.user
+			if document != None:
+				d.id = document.id
+
+			d.save()
+
+			return detail(request, feature.id)
+
+		else:
+			print form.errors
+
+	else:
+		if document == None:
+			form = DocumentForm(initial={'title': 'Title'}, instance=document)
+		else:
+			form = DocumentForm(instance=document)
+		feature = Feature.objects.get(id=feature)
+
+	return render(request, 'map/add_document.html', {'feature': feature, 'form': form, 'document': document })
+
+
+
 
 # API Views
 

@@ -18,6 +18,10 @@
 		<script type="text/javascript" src="{% static 'js/map_functions.js' %}"></script>
 		<!-- Custom styles -->
 		<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+		<!-- Medium Editor -->
+		<script src="{% static 'js/medium-editor/medium-editor.js'%}"></script>
+		<link rel="stylesheet" href="{% static 'css/medium-editor/medium-editor.css' %}">
+		<link rel="stylesheet" href="{% static 'css/medium-editor/themes/default.css' %}">
 	</head>
 	<body data-spy="scroll" data-target="#fixed-nav">
 		<nav class="navbar navbar-default navbar-fixed-top">
@@ -34,6 +38,9 @@
 			      	</form>
 			      	<ul class="nav navbar-nav navbar-right">
 	    				<li><a href="{% url 'map.views.home' %}">Map</a></li>
+	    				{% if user.is_authenticated %}
+	    				<li><a href="{% url 'user_overview' user.username %}"><span class="glyphicon glyphicon-user"></span></a></li>
+	    				{% endif %}
 	    			</ul>
 	    		</div>
 			</div>

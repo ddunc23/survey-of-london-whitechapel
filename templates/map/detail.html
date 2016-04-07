@@ -8,10 +8,10 @@
 		</div>
 		<div class="col-xs-12 col-md-7">
 			{% if feature.b_name %}
-			<h1>{{ feature.b_name }}</h1>
+			<h1>{{ feature.b_name }} {% if user.is_authenticated %}<a href="{% url 'add_document' feature.id %}" class="btn btn-default">Add a Story</a>{% endif %}</h1>
 			<h2><small>{{ feature.address }} {% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a></small> <a href="{% url 'home' %}?highlight={{ feature.id }}" class="btn btn-default btn-sm">Show on Map</a> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
 			{% else %}
-			<h1>{{ feature.address }}</h1>
+			<h1>{{ feature.address }} {% if user.is_authenticated %}<a href="{% url 'add_document' feature.id %}" class="btn btn-default">Add a Story</a>{% endif %}</h1>
 			{% endif %}
 		</div>
 		<div class="col-xs-2">
@@ -78,7 +78,7 @@
 				{% for document in histories %}
 					<div>
 						<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-						<h2>{{ document.title }}</h2>
+						<h2>{{ document.title }}<br /><span class="small">{{ document.author.userprofile.display_name }}</span></h2>
 						{{ document.body|safe }}
 					</div>				
 				{% endfor %}
