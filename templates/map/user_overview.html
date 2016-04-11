@@ -3,18 +3,37 @@
 {% block content %}
 <div class="container">
 	<div class="row">
-		<div class="col-md-3"></div>
-		<div class="col-xs-12 col-md-7 content">
-			<h1>{{ user.userprofile.display_name }}</h1>
-			<h2>Your Stories</h2>
-			{% if documents %}
-				<ul class="list-unstyled">
-					{% for document in documents %}
-						<li><a href="{% url 'edit_document' document.feature.id document.id %}">{{ document.title }}</a></li>
-					{% endfor %}
-				</ul>
-			{% else %}
-				<p>You haven't written any stories yet.</p>
+		<div class="col-xs-12 col-md-12 content">
+			{% if request.user = user %}
+				<h1>{{ user.userprofile.display_name }}</h1>
+				<hr />
+				<h2>Stories</h2>
+				{% if documents %}
+					<ul class="list-unstyled">
+						{% if draft_docs %}
+							<h3>Drafts</h3>
+							{% for document in draft_docs %}
+								{% if document.pending != True %}
+									<li><a href="{% url 'edit_document' document.feature.id document.id %}">{{ document.title }}</a><span class="text-muted"> | {{ document.feature }}</span><br /><span class="small text-muted">Last edited {{ document.last_edited }}</span></li>
+								{% endif %}
+							{% endfor %}
+						{% endif %}
+						{% if pending_docs %}
+							<h3>Pending</h3>
+							{% for document in pending_docs %}
+								<li><a href="{% url 'edit_document' document.feature.id document.id %}">{{ document.title }}</a><span class="text-muted"> | {{ document.feature }}</span></li>
+							{% endfor %}
+						{% endif %}
+						{% if published_docs %}
+							<h3>Published</h3>
+							{% for document in published_docs %}
+								<li><a href="{% url 'edit_document' document.feature.id document.id %}">{{ document.title }}</a><span class="text-muted"> | {{ document.feature }}</span></li>
+							{% endfor %}
+						{% endif %}
+					</ul>
+				{% else %}
+					<p>You haven't written any stories yet.</p>
+				{% endif %}
 			{% endif %}
 		</div>
 	</div>

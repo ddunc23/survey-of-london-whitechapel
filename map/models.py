@@ -107,6 +107,9 @@ class Document(models.Model):
 	end_year = models.PositiveSmallIntegerField(null=True, blank=True)
 	order = models.PositiveSmallIntegerField(default=0)
 	document_type = models.ForeignKey(DocumentType, blank=True, null=True)
+	published = models.BooleanField(default=False)
+	pending = models.BooleanField(default=False)
+	last_edited = models.DateField(auto_now=True, null=True, blank=True)
 
 	def __unicode__(self):
 		return self.feature.b_name + ' | ' + self.title

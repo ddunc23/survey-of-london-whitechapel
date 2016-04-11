@@ -83,15 +83,18 @@ def user_overview(request, user):
 	"""Show an overview of a user's details and documents"""
 	user = User.objects.get(username=user)
 	documents = Document.objects.filter(author=user)
+	published_docs = documents.filter(published=True)
+	pending_docs = documents.filter(pending=True)
+	draft_docs = documents.filter(published=False)
 
-	return render(request, 'map/user_overview.html', {'user': user, 'documents': documents})
+	return render(request, 'map/user_overview.html', {'user': user, 'documents': documents, 'published_docs': published_docs, 'draft_docs': draft_docs, 'pending_docs': pending_docs})
 
 
 # Forms
 
 @login_required
 def edit_document(request, feature, document=None):
-	"""View to allow users to add new documents. This doesn't work for editing yet so you need to fix it."""
+	"""View to allow users to add new documents."""
 	if document:
 		document = Document.objects.get(id=document)
 	else:
@@ -112,9 +115,16 @@ def edit_document(request, feature, document=None):
 			if document != None:
 				d.id = document.id
 
+			published = request.POST.get('publish')
+
+			print published
+
+			if published != None:
+				d.pending = True
+
 			d.save()
 
-			return detail(request, feature.id)
+			return user_overview(request, request.user.username)
 
 		else:
 			print form.errors

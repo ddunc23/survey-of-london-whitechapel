@@ -4,15 +4,15 @@
 
 <div class="container">
 	<div class="row">
-		<div class="col-md-3"></div>
 		<div class="col-xs-12 col-md-7">
-			<h1>Add a Story About {{ feature.b_name }}</h1>
+			<h1>Add a Story About {% if feature.b_name %}{{ feature.b_name }}{% else %}{{ feature.address }}{% endif %}</h1>
 			<hr />
 			<form id="document_form" method="post" {% if document.id %} action="{% url 'edit_document' feature.id document.id %}" {% else %}  action="{% url 'add_document' feature.id %}" {% endif %}>
 				{% load crispy_forms_tags %}
 				{% csrf_token %}
 				{{ form|crispy }}
 				<input type="submit" name="submit" value="Save Draft" class="btn btn-default"/>
+				<input type="submit" name="publish" value="Publish" class="btn btn-primary"/>
 			</form>
 		</div>
 	</div>
