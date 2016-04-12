@@ -10,24 +10,26 @@
 				<h2>Stories</h2>
 				{% if documents %}
 					<ul class="list-unstyled">
+						<h3>Drafts</h3>
 						{% if draft_docs %}
-							<h3>Drafts</h3>
 							{% for document in draft_docs %}
 								{% if document.pending != True %}
-									<li><a href="{% url 'edit_document' document.feature.id document.id %}">{{ document.title }}</a><span class="text-muted"> | {{ document.feature }}</span><br /><span class="small text-muted">Last edited {{ document.last_edited }}</span></li>
+									<li><a href="{% url 'edit_document' document.feature.id document.id %}">{{ document.title }}</a><span class="text-muted"> | <a href="{% url 'detail' document.feature.id %}">{{ document.feature }}</a></span><br /><span class="small text-muted">Last edited {{ document.last_edited }}</span></li>
 								{% endif %}
 							{% endfor %}
+						{% else %}
+						<p><span class="text-muted">You have no drafts.</span></p>
 						{% endif %}
 						{% if pending_docs %}
 							<h3>Pending</h3>
 							{% for document in pending_docs %}
-								<li><a href="{% url 'edit_document' document.feature.id document.id %}">{{ document.title }}</a><span class="text-muted"> | {{ document.feature }}</span></li>
+								<li><a href="{% url 'edit_document' document.feature.id document.id %}">{{ document.title }}</a><span class="text-muted"> | <a href="{% url 'detail' document.feature.id %}">{{ document.feature }}</a></span><br /><span class="small text-muted">Submitted on {{ document.last_edited }}</span></li></li>
 							{% endfor %}
 						{% endif %}
 						{% if published_docs %}
 							<h3>Published</h3>
 							{% for document in published_docs %}
-								<li><a href="{% url 'edit_document' document.feature.id document.id %}">{{ document.title }}</a><span class="text-muted"> | {{ document.feature }}</span></li>
+								<li><a href="{% url 'detail' document.feature.id %}#{{ document.title|slugify }}">{{ document.title }}</a><span class="text-muted"> | <a href="{% url 'detail' document.feature.id %}">{{ document.feature }}</a></span><br /><span class="small text-muted">Published on {{ document.last_edited }}</span></li></li>
 							{% endfor %}
 						{% endif %}
 					</ul>

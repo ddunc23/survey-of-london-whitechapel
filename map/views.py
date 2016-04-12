@@ -41,7 +41,7 @@ def feature_legend(request, feature):
 def detail(request, feature):
 	"""Detailed view of documents and media attached to a single feature"""
 	feature = Feature.objects.get(id=feature)
-	documents = Document.objects.filter(feature=feature).order_by('order')
+	documents = Document.objects.filter(feature=feature).filter(published=True).order_by('order')
 	histories = documents.filter(document_type__name='History')
 	descriptions = documents.filter(document_type__name='Description')
 	stories = documents.filter(document_type__name='Story')
@@ -116,8 +116,6 @@ def edit_document(request, feature, document=None):
 				d.id = document.id
 
 			published = request.POST.get('publish')
-
-			print published
 
 			if published != None:
 				d.pending = True

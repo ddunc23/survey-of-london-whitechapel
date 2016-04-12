@@ -203,6 +203,10 @@ form#document_form .form-control {
 	font-size: 21px;
 }
 
+form#document_form {
+	margin-bottom: 50px;
+}
+
 form#document_form #id_title {
 	font-size: 30px;
 	height: 45px;
