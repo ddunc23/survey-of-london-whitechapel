@@ -138,7 +138,7 @@ class Document(models.Model):
 			replacement = fncontent_regex.search(footnote)
 			if replacement.group(0):
 				replacement = replacement.group(0)
-				footnote_body_replacements.append('[^' + str(i+1) +']: ' + replacement.strip('<li id="fn:1234567890>\n\r<p>&#160;' + r'\r\n'))
+				footnote_body_replacements.append('[^' + str(i+1) +']: ' + replacement.strip('<li id="fn:1234567890>\n\r<p>&#160;') + r'\r\n')
 			else: 
 				pass
 
