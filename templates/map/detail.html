@@ -8,7 +8,7 @@
 		</div>
 		<div class="col-xs-12 col-md-7">
 			{% if feature.b_name %}
-			<h1>{{ feature.b_name }} {% if user.is_authenticated %}<a href="{% url 'add_document' feature.id %}" class="btn btn-default">Add a Story</a>{% endif %}</h1>
+			<h1>{{ feature.b_name }} {% if user.is_authenticated %}<a href="{% url 'ugc_choice' feature.id %}" class="btn btn-default">Add Content</a>{% endif %}</h1>
 			<h2><small>{{ feature.address }} {% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a></small> <a href="{% url 'home' %}?highlight={{ feature.id }}" class="btn btn-default btn-sm">Show on Map</a> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
 			{% else %}
 			<h1>{{ feature.address }} {% if user.is_authenticated %}<a href="{% url 'add_document' feature.id %}" class="btn btn-default">Add a Story</a>{% endif %}</h1>
@@ -76,29 +76,29 @@
 			<div class="tab-content">
 				<div role="tabpanel" class="tab-pane {% if not stories or not descriptions %}active{% endif %}" id="history">
 				{% for document in histories %}
-					<div>
+					<div class="document">
 						<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
 						<h2>{{ document.title }}<br /><span class="small">{{ document.author.userprofile.display_name }}</span></h2>
-						{{ document.body|safe }}
+						{{ document.body_processed|safe }}
 					</div>				
 				{% endfor %}
 				</div>
 				<div role="tabpanel" class="tab-pane {% if not histories  %}active{% endif %}" id="description">
 				{% for document in descriptions %}
-					<div>
+					<div class="document">
 						<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
 						<h2>{{ document.title }}</h2>
-						{{ document.body|safe }}
+						{{ document.body_processed|safe }}
 					</div>	
 				{% endfor %}
 				</div>
 				<div role="tabpanel" class="tab-pane {% if not histories and not descriptions %}active{% endif %}" id="story">
 				{% for document in stories %}
-					<div>
+					<div class="document">
 						<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
 						<h2>{{ document.title }}</h2>
 						<h2><span class="small">{% if document.author.first_name and document.author.last_name %}{{ document.author.first_name }} {{ document.author.last_name }}{% else %}{{ document.author }}{% endif %}</span></h2>
-						{{ document.body|safe }}
+						{{ document.body_processed|safe }}
 					</div>	
 				{% endfor %}
 				</div>

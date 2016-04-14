@@ -1,0 +1,24 @@
+{% extends 'map/base.html' %}
+
+{% block content %}
+
+<div class="jumbotron" style="background: url('/media/{{ feature.banner }}'); height: 100%;>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1 class="text-center">What would you like to add?</h1>
+				<br />
+				<p class="text-center">
+					<a href="" class="btn btn-default btn-lg">An Image</a> 
+					<a href="{% url 'add_document' feature.id %}" class="btn btn-default btn-lg">Text</a> 
+					<a href="" class="btn btn-default btn-lg">Audio or Video</a> 
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

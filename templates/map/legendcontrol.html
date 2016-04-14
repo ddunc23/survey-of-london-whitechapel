@@ -1,5 +1,9 @@
-<a href="#" class="date_btn btn btn-default btn-sm">{{ feature.original }}</a>
-<a href="#" class="street_btn btn btn-default btn-sm">Zoom to {{ feature.street }}</a>
+{% if feature.original %}
+	<a href="#" class="date_btn btn btn-default btn-sm">{{ feature.original }}</a>
+{% endif %}
+{% if feature.street %}
+	<a href="#" class="street_btn btn btn-default btn-sm">Zoom to {{ feature.street }}</a>
+{% endif %}
 
 <script>
 	$('.closeThis').click(function() {
@@ -7,12 +11,14 @@
 		resetColours(buildings);
 	});
 
+	{% if feature.original %}
 	$('.date_btn').click(function() {
 		var jsonUrl = "{% url 'features_by_date_range' build_range.lower build_range.upper %}";
 		loadFeatures(jsonUrl);
 		$('.titlebox-control').html('Showing all places built between {{ build_range.lower }} and {{ build_range.upper }}')
 		$('.titlebox-control').show();
 	});
+	{% endif %}
 
 	$('.street_btn').click(function() {
 		var jsonUrl = "{% url 'features_by_street_name' feature.street %}";

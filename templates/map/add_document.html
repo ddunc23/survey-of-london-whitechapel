@@ -4,7 +4,9 @@
 
 <div class="container">
 	<div class="row">
-		<div class="col-xs-12 col-md-7">
+		<div class="col-md-2">
+		</div>
+		<div class="col-xs-12 col-md-8">
 			<h1>Add a Story About {% if feature.b_name %}{{ feature.b_name }}{% else %}{{ feature.address }}{% endif %}</h1>
 			<hr />
 			<form id="document_form" method="post" {% if document.id %} action="{% url 'edit_document' feature.id document.id %}" {% else %}  action="{% url 'add_document' feature.id %}" {% endif %}>

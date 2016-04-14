@@ -3,34 +3,39 @@
 {% block content %}
 <div class="container">
 	<div class="row">
-		<div class="col-xs-12 col-md-12 content">
+		<div class="col-xs-12 col-md-8 col-md-offset-2 content">
 			{% if request.user = user %}
 				<h1>{{ user.userprofile.display_name }}</h1>
 				<hr />
 				<h2>Stories</h2>
 				{% if documents %}
-					<ul class="list-unstyled">
 						<h3>Drafts</h3>
 						{% if draft_docs %}
+							<ul class="list-unstyled doc_list">
 							{% for document in draft_docs %}
 								{% if document.pending != True %}
 									<li><a href="{% url 'edit_document' document.feature.id document.id %}">{{ document.title }}</a><span class="text-muted"> | <a href="{% url 'detail' document.feature.id %}">{{ document.feature }}</a></span><br /><span class="small text-muted">Last edited {{ document.last_edited }}</span></li>
 								{% endif %}
 							{% endfor %}
+							</ul>
 						{% else %}
 						<p><span class="text-muted">You have no drafts.</span></p>
 						{% endif %}
 						{% if pending_docs %}
 							<h3>Pending</h3>
+							<ul class="list-unstyled doc_list">
 							{% for document in pending_docs %}
-								<li><a href="{% url 'edit_document' document.feature.id document.id %}">{{ document.title }}</a><span class="text-muted"> | <a href="{% url 'detail' document.feature.id %}">{{ document.feature }}</a></span><br /><span class="small text-muted">Submitted on {{ document.last_edited }}</span></li></li>
+								<li>{{ document.title }}<span class="text-muted"> | <a href="{% url 'detail' document.feature.id %}">{{ document.feature }}</a></span><br /><span class="small text-muted">Submitted on {{ document.last_edited }}</span></li>
 							{% endfor %}
+							</ul>
 						{% endif %}
 						{% if published_docs %}
 							<h3>Published</h3>
+							<ul class="list-unstyled doc_list">
 							{% for document in published_docs %}
 								<li><a href="{% url 'detail' document.feature.id %}#{{ document.title|slugify }}">{{ document.title }}</a><span class="text-muted"> | <a href="{% url 'detail' document.feature.id %}">{{ document.feature }}</a></span><br /><span class="small text-muted">Published on {{ document.last_edited }}</span></li></li>
 							{% endfor %}
+							</ul>
 						{% endif %}
 					</ul>
 				{% else %}

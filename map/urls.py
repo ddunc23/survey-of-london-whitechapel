@@ -19,9 +19,11 @@ urlpatterns = [
     url(r'^api/features/category/(?P<category>\d+)/$', views.features_by_category, name='features_by_category'),
     url(r'^api/features/tagged/(?P<tag>.+)/$', views.features_by_tag, name='features_by_tag'),
     url(r'^api/features/search/$', views.search_features, name='search_features'),
-    # Forms
+    url(r'^api/features/author/(?P<author>\d+)/$', views.features_by_author, name='features_by_author'),
+    # User Generated Content
+    url(r'^feature/(?P<feature>\d+)/content/add/$', views.ugc_choice, name='ugc_choice'),
     url(r'^feature/(?P<feature>\d+)/document/add/$', views.edit_document, name='add_document'),
     url(r'^feature/(?P<feature>\d+)/document/(?P<document>\d+)/edit/$', views.edit_document, name='edit_document'),
-    # User Generated Content
+    # User Profile Management
     url(r'^user/(?P<user>\w+)/$', views.user_overview, name='user_overview'),
 ]

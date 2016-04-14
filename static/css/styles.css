@@ -189,10 +189,10 @@ html, body, #map {
 .jumbotron .btn {
 	box-shadow:  0px 1px 5px #404040;
 }
-footer {
+/*footer {
 	background-color: #f8f8f8;
 	height: 200px;
-}
+}*/
 .tag {
 	margin-bottom: 3px;
 }
@@ -215,4 +215,40 @@ form#document_form #id_title {
 form#document_form label {
 	font-size: 30px;
 	font-weight: normal;
+}
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  /* margin-bottom: 60px; */
+}
+.footer {
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
+/* Footnotes */
+.footnote-ref {
+  padding-top: 70px;
+  margin-top: -70px;
+  display: inline-block;
+}
+.footnote p {
+    font-size: 16px;
+    margin-bottom: 16px;
+    line-height: 23px;
+}
+.footnote ol {
+	padding-left: 10px;
+	font-size: 15px;
+}
+.document {
+	margin-bottom: 60px;
+}
+.doc_list {
+	margin-bottom: 43px;
 }

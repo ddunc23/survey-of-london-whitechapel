@@ -90,7 +90,13 @@ def user_overview(request, user):
 	return render(request, 'map/user_overview.html', {'user': user, 'documents': documents, 'published_docs': published_docs, 'draft_docs': draft_docs, 'pending_docs': pending_docs})
 
 
-# Forms
+# User Generated Content
+
+@login_required
+def ugc_choice(request, feature):
+	"""A very simple view to allow users to choose between uploading text or media"""
+	feature = Feature.objects.get(id=feature)
+	return render(request, 'map/ugc_choice.html', {'feature': feature})
 
 @login_required
 def edit_document(request, feature, document=None):
@@ -136,7 +142,15 @@ def edit_document(request, feature, document=None):
 
 	return render(request, 'map/add_document.html', {'feature': feature, 'form': form, 'document': document })
 
+@login_required
+def edit_image(request, feature, image=None):
+	"""View to enable users to upload or edit images"""
+	pass
 
+@login_required
+def edit_media(request, feature, media=None):
+	"""View to enable users to upload or edit media (or rather, media embeds)"""
+	pass
 
 
 # API Views
@@ -186,6 +200,12 @@ def features_by_category(request, category):
 def features_by_tag(request, tag):
 	if request.method == 'GET':
 		features = Feature.objects.filter(tags__name__in=[tag])
+		serializer = FeatureSerializer(features, many=True)
+		return JSONResponse(serializer.data)
+
+def features_by_author(request, author):
+	if request.method == 'GET':
+		features = Feature.objects.filter(document__author=author)
 		serializer = FeatureSerializer(features, many=True)
 		return JSONResponse(serializer.data)
 
