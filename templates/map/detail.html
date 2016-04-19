@@ -11,7 +11,7 @@
 			<h1>{{ feature.b_name }} {% if user.is_authenticated %}<a href="{% url 'ugc_choice' feature.id %}" class="btn btn-default">Add Content</a>{% endif %}</h1>
 			<h2><small>{{ feature.address }} {% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a></small> <a href="{% url 'home' %}?highlight={{ feature.id }}" class="btn btn-default btn-sm">Show on Map</a> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
 			{% else %}
-			<h1>{{ feature.address }} {% if user.is_authenticated %}<a href="{% url 'add_document' feature.id %}" class="btn btn-default">Add a Story</a>{% endif %}</h1>
+			<h1>{{ feature.address }} {% if user.is_authenticated %}<a href="{% url 'ugc_choice' feature.id %}" class="btn btn-default">Add Content</a>{% endif %}</h1>
 			{% endif %}
 		</div>
 		<div class="col-xs-2">
@@ -22,13 +22,16 @@
 		<div class="col-xs-12 col-md-7">
 			<ul class="nav nav-tabs" role="tablist" id="docTabs">
 				{% if histories %}
-				<li role="presentation" {% if not stories or not descriptions %}class="active"{% endif %}><a href="#history" aria-controls="home" role="tab">History</a></li>
+				<li role="presentation" {% if not stories and not descriptions and not images %}{% else %}class="active"{% endif %}><a href="#history" aria-controls="history" role="tab" data-toggle="tab">History</a></li>
 				{% endif %}
 				{% if descriptions %}
-				<li role="presentation" {% if not histories %}class="active"{% endif %}><a href="#description" aria-controls="home" role="tab">Description</a></li>
+				<li role="presentation" {% if not histories %}class="active"{% endif %}><a href="#description" aria-controls="description" role="tab" data-toggle="tab">Description</a></li>
 				{% endif %}
 				{% if stories %}
-				<li role="presentation"{% if not histories and not descriptions %}class="active"{% endif %}><a href="#story" aria-controls="home" role="tab">Stories</a></li>
+				<li role="presentation"{% if not histories and not descriptions %}class="active"{% endif %}><a href="#story" aria-controls="stories" role="tab" data-toggle="tab">Stories</a></li>
+				{% endif %}
+				{% if images %}
+				<li role="presentation"{% if not histories and not descriptions and not stories %}class="active"{% endif %}><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images</a></li>
 				{% endif %}
 				
 			</ul>
@@ -38,7 +41,8 @@
 		<div class="col-md-3" id="fixed-nav">
 			<ul data-spy="affix" data-offset-top="300" data-offset-bottom="0" class="nav nav-stacked hidden-sm hidden-xs">
 			{% if histories %}
-				{% if not stories or not descriptions %}
+				{% if not stories and not descriptions and not images %}
+				{% else %}
 					{% for document in histories %}
 						{% if document.start_year %}
 							<li><a href="#{{ document.title|slugify }}">{{ document.title }}<br /><span class="small">{{ document.start_year }} - {{ document.end_year }}</span></a></li>
@@ -74,34 +78,52 @@
 		</div>
 		<div class="col-xs-12 col-md-7 feature-detail">
 			<div class="tab-content">
-				<div role="tabpanel" class="tab-pane {% if not stories or not descriptions %}active{% endif %}" id="history">
-				{% for document in histories %}
-					<div class="document">
-						<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-						<h2>{{ document.title }}<br /><span class="small">{{ document.author.userprofile.display_name }}</span></h2>
-						{{ document.body_processed|safe }}
-					</div>				
-				{% endfor %}
-				</div>
-				<div role="tabpanel" class="tab-pane {% if not histories  %}active{% endif %}" id="description">
-				{% for document in descriptions %}
-					<div class="document">
-						<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-						<h2>{{ document.title }}</h2>
-						{{ document.body_processed|safe }}
-					</div>	
-				{% endfor %}
-				</div>
-				<div role="tabpanel" class="tab-pane {% if not histories and not descriptions %}active{% endif %}" id="story">
-				{% for document in stories %}
-					<div class="document">
-						<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-						<h2>{{ document.title }}</h2>
-						<h2><span class="small">{% if document.author.first_name and document.author.last_name %}{{ document.author.first_name }} {{ document.author.last_name }}{% else %}{{ document.author }}{% endif %}</span></h2>
-						{{ document.body_processed|safe }}
-					</div>	
-				{% endfor %}
-				</div>
+				{% if histories %}
+					<div role="tabpanel" class="tab-pane{% if not stories and not descriptions and not images %}{% else %} active{% endif %}" id="history">
+					{% for document in histories %}
+						<div class="document">
+							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
+							<h2>{{ document.title }}<br /><span class="small">{{ document.author.userprofile.display_name }}</span></h2>
+							{{ document.body_processed|safe }}
+						</div>				
+					{% endfor %}
+					</div>
+				{% endif %}
+				{% if descriptions %}
+					<div role="tabpanel" class="tab-pane{% if not histories  %} active{% endif %}" id="description">
+					{% for document in descriptions %}
+						<div class="document">
+							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
+							<h2>{{ document.title }}<br /><span class="small">{{ document.author.userprofile.display_name }}</span></h2>
+							{{ document.body_processed|safe }}
+						</div>	
+					{% endfor %}
+					</div>
+				{% endif %}
+				{% if stories %}
+					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions %} active{% endif %}" id="story">
+					{% for document in stories %}
+						<div class="document">
+							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
+							<h2>{{ document.title }}<br /><span class="small">{{ document.author.userprofile.display_name }}</span></h2>
+							{{ document.body_processed|safe }}
+						</div>	
+					{% endfor %}
+					</div>
+				{% endif %}
+				{% if images %}
+					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories %} active{% endif %} row" id="images">
+					{% load thumbnail %}
+					{% for image in images %}
+						<div class="col-md-4">
+							<div class="item-card">
+								<img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}">
+								<caption>{{ image.caption }}</caption>
+							</div>
+						</div>	
+					{% endfor %}
+					</div>
+				{% endif %}
 			</div>
 		</div>
 		<div class="col-xs-12 col-md-2">
@@ -173,13 +195,15 @@
 
 	$('#docTabs a').click(function(e) {
 		e.preventDefault();
-		$(this).tab('show');
+		// $(this).tab('show');
 		if ($(this).html() == 'Description') {
 			$('#fixed-nav ul').html(descriptionNav);
 		} else if ($(this).html() == 'History') {
 			$('#fixed-nav ul').html(historyNav);
 		} else if ($(this).html() == 'Stories') {
 			$('#fixed-nav ul').html(storyNav);
+		} else {
+			$('#fixed-nav ul').html('');
 		}
 	})
 

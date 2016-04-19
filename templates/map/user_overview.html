@@ -7,7 +7,23 @@
 			{% if request.user = user %}
 				<h1>{{ user.userprofile.display_name }}</h1>
 				<hr />
-				<h2>Stories</h2>
+				<h2>Images</h2>
+				{% if images %}
+					<div class="row">
+					{% load thumbnail %}
+					{% for image in images %}
+						<div class="col-md-4">
+							<div class="item-card">
+								<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}">
+								<caption>{% if image.feature.b_name %}{{ image.feature.b_name }}{% else %}{{ image.feature.address }}{% endif %}</caption></a>
+							</div>
+						</div>	
+					{% endfor %}
+					</div>
+					<hr />
+				{% endif %}
+
+				<h2>Words</h2>
 				{% if documents %}
 						<h3>Drafts</h3>
 						{% if draft_docs %}

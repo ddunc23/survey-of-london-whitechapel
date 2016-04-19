@@ -24,6 +24,9 @@ urlpatterns = [
     url(r'^feature/(?P<feature>\d+)/content/add/$', views.ugc_choice, name='ugc_choice'),
     url(r'^feature/(?P<feature>\d+)/document/add/$', views.edit_document, name='add_document'),
     url(r'^feature/(?P<feature>\d+)/document/(?P<document>\d+)/edit/$', views.edit_document, name='edit_document'),
+    url(r'^feature/(?P<feature>\d+)/image/add/$', views.edit_image, name='add_image'),
+    url(r'^feature/(?P<feature>\d+)/image/(?P<image>\d+)/edit/$', views.edit_image, name='edit_image'),
+
     # User Profile Management
     url(r'^user/(?P<user>\w+)/$', views.user_overview, name='user_overview'),
 ]

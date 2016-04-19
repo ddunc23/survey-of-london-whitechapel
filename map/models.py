@@ -22,6 +22,7 @@ class UserProfile(models.Model):
 		return self.user.username
 
 class Category(models.Model):
+	"""Feature categories"""
 	name = models.CharField(max_length=128)
 	description = models.CharField(max_length=140, blank=True, null=True)
 	thumbnail = models.ImageField(null=True, blank=True)
@@ -33,7 +34,8 @@ class Category(models.Model):
 		return self.name
 
 
-class Feature(models.Model):	
+class Feature(models.Model):
+	"""A building footprint, open space, or other interactable vector object"""
 	id = models.PositiveSmallIntegerField(primary_key=True)
 	geom = models.MultiPolygonField(verbose_name='Footprint Geometry')
 	b_number = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Building Number')
@@ -94,6 +96,7 @@ feature_mapping = {
 
 
 class DocumentType(models.Model):
+	"""Document subcategories"""
 	name = models.CharField(max_length=64)
 
 	def __unicode__(self):
@@ -101,6 +104,7 @@ class DocumentType(models.Model):
 
 
 class Document(models.Model):
+	"""A user-generated or Survey of London text document attached to a feature."""
 	feature = models.ForeignKey(Feature)
 	author = models.ForeignKey(User)
 	title = models.CharField(max_length=128)
@@ -112,6 +116,7 @@ class Document(models.Model):
 	document_type = models.ForeignKey(DocumentType, blank=True, null=True)
 	published = models.BooleanField(default=False)
 	pending = models.BooleanField(default=False)
+	anonymise = models.BooleanField(default=False)
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
 
 	def __unicode__(self):
@@ -134,14 +139,20 @@ class Document(models.Model):
 		feature.save()
 
 
-class Story(models.Model):
-	feature = models.ForeignKey(Feature, null=True, blank=True)
+class Image(models.Model):
+	"""A user-generated image"""
+	feature = models.ForeignKey(Feature)
+	author = models.ForeignKey(User)
 	title = models.CharField(max_length=128)
-	body = RichTextUploadingField(blank=True)
-	author = models.CharField(max_length=128)
+	caption = models.CharField(max_length=255)
+	file = models.ImageField(upload_to=feature_directory_path, null=True, blank=True, verbose_name='Image')
+	published = models.BooleanField(default=False)
+	pending = models.BooleanField(default=False)
 
 	def __unicode__(self):
 		return self.title
 
-	class Meta:
-		verbose_name_plural = "Stories"
+
+#class Media(models.Model):
+#	"""A user-generated video or audio"""
+#	pass

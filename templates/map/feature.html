@@ -11,7 +11,7 @@
 		<p><span class="small">{% if documents %}<a href="{% url 'detail' feature.id %}">{{ feature.address }}{% else %}{{ feature.address }}{% endif %}</a></span><br />
 	{% endif %}
 	
-		{% if documents %}<span class="glyphicon glyphicon-file"></span> {% endif %}{% if feature.thumbnail %}<span class="glyphicon glyphicon-picture"></span> {% endif %}{% if stories %}<span class="glyphicon glyphicon-comment"></span> {% endif %}{% if user.is_authenticated %} <a href="{% url 'add_document' feature.id %}" class="btn btn-default btn-sm pull-right">Add Content</a>{% endif %}</p>
+		{% if documents %}<span class="glyphicon glyphicon-file"></span> {% endif %}{% if feature.thumbnail %}<span class="glyphicon glyphicon-picture"></span> {% endif %}{% if stories %}<span class="glyphicon glyphicon-comment"></span> {% endif %}{% if user.is_authenticated %} <a href="{% url 'ugc_choice' feature.id %}" class="btn btn-default btn-sm pull-right">Add Content</a>{% endif %}</p>
 	
 	<script>
 		$('.close-this').click(function() {

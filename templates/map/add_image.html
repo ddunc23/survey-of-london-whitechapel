@@ -7,14 +7,14 @@
 		<div class="col-md-2">
 		</div>
 		<div class="col-xs-12 col-md-7">
-			<h1>Add Content About {% if feature.b_name %}{{ feature.b_name }}{% else %}{{ feature.address }}{% endif %}</h1>
+			<h1>Add an Image of {% if feature.b_name %}{{ feature.b_name }}{% else %}{{ feature.address }}{% endif %}</h1>
 			<hr />
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-2">
 		</div>
-		<form id="document_form" method="post" {% if document.id %} action="{% url 'edit_document' feature.id document.id %}" {% else %}  action="{% url 'add_document' feature.id %}" {% endif %}>
+		<form id="image_form" method="post" {% if image.id %} action="{% url 'edit_document' feature.id image.id %}" {% else %}  action="{% url 'add_image' feature.id %}" {% endif %} enctype="multipart/form-data">
 			<div class="col-xs-12 col-md-7">
 				{% load crispy_forms_tags %}
 				{% csrf_token %}
@@ -37,10 +37,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-12 col-md-8 col-md-offset-2">
-				<h3 class="text-muted">Formatting Help</h3>
-				<p class="text-muted">Highlight text to show formatting toolbar.<br />
-				A footnote reference looks like this:[^1]<br />
-				[^1]: The footnote content looks like this.</p>
+				
 			</div>
 		</div>
 	</div>

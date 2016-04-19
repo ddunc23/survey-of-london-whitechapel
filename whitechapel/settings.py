@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'rest_framework_gis',
     'taggit',
     'crispy_forms',
+    'easy_thumbnails',
 )
 
 MIDDLEWARE_CLASSES = (

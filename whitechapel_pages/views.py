@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from map.models import Feature, Document, Story, Category
+from map.models import Feature, Document, Category
 from whitechapel_pages.models import Page
 
 

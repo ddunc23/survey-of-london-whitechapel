@@ -1,9 +1,9 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from map.models import Feature, Document, Story, Category
+from map.models import Feature, Document, Category, Image
 from map.serializers import FeatureSerializer
-from map.forms import DocumentForm
+from map.forms import DocumentForm, ImageForm
 from rest_framework.renderers import JSONRenderer
 from haystack.query import SearchQuerySet
 from django.contrib.auth.decorators import login_required
@@ -13,21 +13,21 @@ from django.contrib.auth.decorators import login_required
 def home(request):
 	"""Base map"""
 	features = Feature.objects.all()
+	subtitle = '| Map'
 
-	return render(request, 'map/index.html', {'title': 'Survey of London', 'features': features})
+	return render(request, 'map/index.html', {'title': 'Survey of London', 'features': features, 'subtitle': subtitle})
 
 def feature(request, feature):
 	"""Get info about a single feature"""
 	feature = Feature.objects.get(id=feature)
 	documents = Document.objects.filter(feature=feature)
 	histories = documents.filter(document_type__name='History').order_by('order')
-	stories = documents.filter(document_type__name='Story')
 	categories = Category.objects.filter(feature=feature)
 	lower = feature.original - 10
 	upper = feature.original + 10
 	build_range ={'upper': upper, 'lower': lower}
 
-	return render(request, 'map/feature.html', {'feature': feature, 'documents': documents, 'categories': categories, 'build_range': build_range, 'histories': histories, 'stories': stories })
+	return render(request, 'map/feature.html', {'feature': feature, 'documents': documents, 'categories': categories, 'build_range': build_range, 'histories': histories})
 
 def feature_legend(request, feature):
 	"""Update the legend control buttons for year, street"""
@@ -41,14 +41,16 @@ def feature_legend(request, feature):
 def detail(request, feature):
 	"""Detailed view of documents and media attached to a single feature"""
 	feature = Feature.objects.get(id=feature)
+	images = Image.objects.filter(feature=feature).filter(published=True)
 	documents = Document.objects.filter(feature=feature).filter(published=True).order_by('order')
 	histories = documents.filter(document_type__name='History')
 	descriptions = documents.filter(document_type__name='Description')
 	stories = documents.filter(document_type__name='Story')
 	categories = Category.objects.filter(feature=feature)
 	similar = feature.tags.similar_objects()
+	subtitle = '| ' + str(feature)
 
-	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar })
+	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar, 'subtitle': subtitle, 'images': images})
 
 def category(request, category):
 	"""Features by category"""
@@ -78,6 +80,9 @@ def search_map(request):
 
 	return render(request, 'map/search_map.html', {'query': query})
 
+
+# Users and User Generated Content
+
 @login_required
 def user_overview(request, user):
 	"""Show an overview of a user's details and documents"""
@@ -86,17 +91,19 @@ def user_overview(request, user):
 	published_docs = documents.filter(published=True)
 	pending_docs = documents.filter(pending=True)
 	draft_docs = documents.filter(published=False)
+	images = Image.objects.filter(author=user)
+	pending_images = images.filter(pending=True)
+	published_images = images.filter(published=True)
 
-	return render(request, 'map/user_overview.html', {'user': user, 'documents': documents, 'published_docs': published_docs, 'draft_docs': draft_docs, 'pending_docs': pending_docs})
+	return render(request, 'map/user_overview.html', {'user': user, 'documents': documents, 'published_docs': published_docs, 'draft_docs': draft_docs, 'pending_docs': pending_docs, 'images': images})
 
-
-# User Generated Content
 
 @login_required
 def ugc_choice(request, feature):
 	"""A very simple view to allow users to choose between uploading text or media"""
 	feature = Feature.objects.get(id=feature)
 	return render(request, 'map/ugc_choice.html', {'feature': feature})
+
 
 @login_required
 def edit_document(request, feature, document=None):
@@ -142,10 +149,53 @@ def edit_document(request, feature, document=None):
 
 	return render(request, 'map/add_document.html', {'feature': feature, 'form': form, 'document': document })
 
+
 @login_required
 def edit_image(request, feature, image=None):
 	"""View to enable users to upload or edit images"""
-	pass
+	if image:
+		document = Image.objects.get(id=document)
+	else:
+		image = None
+
+	if request.method == 'POST':
+		form = ImageForm(request.POST, request.FILES, instance=image)
+		if form.is_valid():
+			i = form.save(commit=False)
+			
+			try:
+				feature = Feature.objects.get(id=feature)
+				i.feature = feature
+			except Feature.DoesNotExist:
+				pass
+
+			i.author = request.user
+			if image != None:
+				i.id = i.id
+
+			published = request.POST.get('publish')
+
+			if published != None:
+				i.pending = True
+
+			i.file = request.FILES['file']
+
+			i.save()
+
+			return user_overview(request, request.user.username)
+
+		else:
+			print form.errors
+
+	else:
+		if image == None:
+			form = ImageForm(initial={'title': 'Title', 'caption': 'Caption'}, instance=image)
+		else:
+			form = ImageForm(instance=image)
+		feature = Feature.objects.get(id=feature)
+
+	return render(request, 'map/add_image.html', {'feature': feature, 'form': form, 'image': image })
+
 
 @login_required
 def edit_media(request, feature, media=None):

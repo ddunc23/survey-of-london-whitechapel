@@ -13,10 +13,11 @@ secret_settings.pyc
 ehthumbs.db
 Thumbs.db
 
-# Media and Databases #
-######################
+# Media, Databases and Compiled Python Files #
+##############################################
 *.sqlite3
 /media/
 /media/*
 /whoosh_index/
 /whoosh_index/*
+*.pyc
