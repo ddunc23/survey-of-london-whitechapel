@@ -1,0 +1,24 @@
+{% extends 'map/base.html' %}
+
+{% block content %}
+
+<div class="jumbotron ugc-jumbotron" style="background-image: url('/media/{{ feature.banner }}');">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1 class="text-center">Thank You.</h1>
+				<br />
+				<p class="text-center">Your content will be added to the website shortly.</p>
+				<p class="text-center">
+					<a href="{% url 'detail' feature.id %}" class="btn btn-default btn-lg">Return to {{ feature }}</a> 
+					<a href="#" class="btn btn-default btn-lg">Your Content</a>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
