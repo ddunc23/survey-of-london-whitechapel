@@ -1,5 +1,5 @@
 from django.contrib import admin
-from map.models import Feature, Document, Category, DocumentType, UserProfile, Image
+from map.models import Feature, Document, Category, DocumentType, UserProfile, Image, Media
 from djgeojson.fields import GeoJSONField
 from leaflet.admin import LeafletGeoAdmin
 from map.forms import FeatureForm
@@ -14,6 +14,10 @@ class DocumentInline(admin.StackedInline):
 
 class ImageInline(admin.StackedInline):
 	model = Image
+	extra = 0
+
+class MediaInline(admin.StackedInline):
+	model = Media
 	extra = 0
 
 class FeatureAdmin(LeafletGeoAdmin):
@@ -43,6 +47,7 @@ class FeatureAdmin(LeafletGeoAdmin):
 	inlines = [
 		DocumentInline,
 		ImageInline,
+		MediaInline,
 	]
 	search_fields = ['address','b_name']
 	settings_overrides = {

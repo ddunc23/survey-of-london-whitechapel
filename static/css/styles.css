@@ -266,7 +266,7 @@ footer.editor-help {
  	background-size: cover;
 }
 .ugc-jumbotron h1 {
-	margin-top: 20%;
+	margin-top: 10%;
 }
 .btn-file {
     position: relative;
@@ -297,4 +297,9 @@ footer.editor-help {
 }
 .tab-pane {
 	margin-bottom: 200px;
+}
+.item-card p {
+	font-size: 12px;
+	line-height: 18px;
+	padding: 0 3px 0 3px;
 }

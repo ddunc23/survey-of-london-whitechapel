@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^features/tagged/(?P<tag>.+)/$', views.tag, name='tag'),
     url(r'features/date/(?P<build_date>\d+)/$', views.date_range, name='date_range'),
     url(r'^features/search/$', views.search_map, name='search_map'),
+    url(r'^user/(?P<user>\w+)/content/$', views.all_content_by_author, name='all_content_by_author'),
     # API
     url(r'^api/features/$', views.features, name='features'),
     url(r'^api/features/date/(?P<build_date>\d+)/$', views.features_by_build_date, name='features_by_date'),
@@ -26,7 +27,9 @@ urlpatterns = [
     url(r'^feature/(?P<feature>\d+)/document/(?P<document>\d+)/edit/$', views.edit_document, name='edit_document'),
     url(r'^feature/(?P<feature>\d+)/image/add/$', views.edit_image, name='add_image'),
     url(r'^feature/(?P<feature>\d+)/image/(?P<image>\d+)/edit/$', views.edit_image, name='edit_image'),
-    url(r'^feature/(?P<feature>\d+)/content/add/thanks/$', views.ugc_choice, name='ugc_thanks'),
+    url(r'^feature/(?P<feature>\d+)/media/add/$', views.edit_media, name='add_media'),
+    url(r'^feature/(?P<feature>\d+)/media/(?P<media>\d+)/edit/$', views.edit_media, name='edit_media'),
+    url(r'^feature/(?P<feature>\d+)/content/add/thanks/$', views.ugc_thanks, name='ugc_thanks'),
     # User Profile Management
     url(r'^user/(?P<user>\w+)/$', views.user_overview, name='user_overview'),
 ]

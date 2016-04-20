@@ -144,7 +144,7 @@ class Image(models.Model):
 	feature = models.ForeignKey(Feature)
 	author = models.ForeignKey(User)
 	title = models.CharField(max_length=128)
-	caption = models.CharField(max_length=255)
+	description = models.TextField(null=True, blank=True)
 	file = models.ImageField(upload_to=feature_directory_path, null=True, blank=True, verbose_name='Image')
 	published = models.BooleanField(default=False)
 	pending = models.BooleanField(default=False)
@@ -152,7 +152,15 @@ class Image(models.Model):
 	def __unicode__(self):
 		return self.title
 
+class Media(models.Model):
+	"""A user-generated video or audio"""
+	feature = models.ForeignKey(Feature)
+	author = models.ForeignKey(User)
+	title = models.CharField(max_length=128)
+	description = models.TextField(null=True, blank=True)
+	url = models.URLField()
+	published = models.BooleanField(default=False)
+	pending = models.BooleanField(default=False)
 
-#class Media(models.Model):
-#	"""A user-generated video or audio"""
-#	pass
+	def __unicode__(self):
+		return self.title

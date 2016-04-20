@@ -1,5 +1,5 @@
 from django import forms
-from map.models import Feature, Document, Image
+from map.models import Feature, Document, Image, Media
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
@@ -25,12 +25,20 @@ class DocumentForm(forms.ModelForm):
 class ImageForm(forms.ModelForm):
 	class Meta:
 		model = Image
-		fields = ('title', 'caption', 'file')
+		fields = ('file', 'title', 'description')
 		labels = {
 			'title': '',
-			'caption': '',
-			'file': 'Image',
+			'file': 'Upload Image',
 		}
 		widgets = {
 			'file': forms.ClearableFileInput(attrs={'class':'img-upload'})
+		}
+
+class MediaForm(forms.ModelForm):
+	class Meta:
+		model = Media
+		fields = ('url', 'title', 'description')
+		labels = {
+			'title': 'Title',
+			'url': 'URL',
 		}

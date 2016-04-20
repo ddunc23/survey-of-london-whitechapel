@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     'taggit',
     'crispy_forms',
     'easy_thumbnails',
+    'embed_video',
 )
 
 MIDDLEWARE_CLASSES = (

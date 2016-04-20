@@ -1,12 +1,13 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from map.models import Feature, Document, Category, Image
+from map.models import Feature, Document, Category, Image, Media
 from map.serializers import FeatureSerializer
-from map.forms import DocumentForm, ImageForm
+from map.forms import DocumentForm, ImageForm, MediaForm
 from rest_framework.renderers import JSONRenderer
 from haystack.query import SearchQuerySet
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 # Map Views
 
@@ -43,6 +44,7 @@ def detail(request, feature):
 	feature = Feature.objects.get(id=feature)
 	images = Image.objects.filter(feature=feature).filter(published=True)
 	documents = Document.objects.filter(feature=feature).filter(published=True).order_by('order')
+	media = Media.objects.filter(feature=feature).filter(published=True)
 	histories = documents.filter(document_type__name='History')
 	descriptions = documents.filter(document_type__name='Description')
 	stories = documents.filter(document_type__name='Story')
@@ -50,7 +52,7 @@ def detail(request, feature):
 	similar = feature.tags.similar_objects()
 	subtitle = '| ' + str(feature)
 
-	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar, 'subtitle': subtitle, 'images': images})
+	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar, 'subtitle': subtitle, 'images': images, 'media': media})
 
 def category(request, category):
 	"""Features by category"""
@@ -80,6 +82,16 @@ def search_map(request):
 
 	return render(request, 'map/search_map.html', {'query': query})
 
+def all_content_by_author(request, user):
+	"""Show all documents, images, and media by a single author. I'll display this as a list for the moment, but should there be a map as well?"""
+	user = User.objects.get(id=user)
+	features = Feature.objects.filter(Q(document__author=user) | Q(image__author=user)).distinct('id')
+	documents = Document.objects.filter(author=user).filter(published=True)
+	images = Image.objects.filter(author=user).filter(published=True)
+
+	return render(request, 'map/content_by_author.html', {'user': user, 'documents': documents, 'images': images, 'features': features})
+
+
 
 # Users and User Generated Content
 
@@ -97,12 +109,16 @@ def user_overview(request, user):
 
 	return render(request, 'map/user_overview.html', {'user': user, 'documents': documents, 'published_docs': published_docs, 'draft_docs': draft_docs, 'pending_docs': pending_docs, 'images': images})
 
-
 @login_required
 def ugc_choice(request, feature):
 	"""A very simple view to allow users to choose between uploading text or media"""
 	feature = Feature.objects.get(id=feature)
 	return render(request, 'map/ugc_choice.html', {'feature': feature})
+
+@login_required
+def ugc_submit_confirmation(request, feature, document):
+	"""Check with the user that they really want to publish a document, because they won't be able to edit it after it's been submitted"""
+	pass
 
 @login_required
 def ugc_thanks(request, feature):
@@ -150,7 +166,7 @@ def edit_document(request, feature, document=None):
 
 	else:
 		if document == None:
-			form = DocumentForm(initial={'title': 'Title'}, instance=document)
+			form = DocumentForm(initial={'title': 'Add a title here (required)'}, instance=document)
 		else:
 			form = DocumentForm(instance=document)
 		feature = Feature.objects.get(id=feature)
@@ -190,14 +206,17 @@ def edit_image(request, feature, image=None):
 
 			i.save()
 
-			return user_overview(request, request.user.username)
+			if i.pending != True:
+				return user_overview(request, request.user.username)
+			else:
+				return ugc_thanks(request, feature.id)
 
 		else:
 			print form.errors
 
 	else:
 		if image == None:
-			form = ImageForm(initial={'title': 'Title', 'caption': 'Caption'}, instance=image)
+			form = ImageForm(initial={'title': 'Add a title (required)', 'caption': 'Add a caption (required)'}, instance=image)
 		else:
 			form = ImageForm(instance=image)
 		feature = Feature.objects.get(id=feature)
@@ -208,7 +227,49 @@ def edit_image(request, feature, image=None):
 @login_required
 def edit_media(request, feature, media=None):
 	"""View to enable users to upload or edit media (or rather, media embeds)"""
-	pass
+	if media:
+		media = Media.objects.get(id=media)
+	else:
+		media = None
+
+	if request.method == 'POST':
+		form = MediaForm(request.POST, instance=media)
+		if form.is_valid():
+			m = form.save(commit=False)
+			
+			try:
+				feature = Feature.objects.get(id=feature)
+				m.feature = feature
+			except Feature.DoesNotExist:
+				pass
+
+			m.author = request.user
+			if media != None:
+				m.id = media.id
+
+			published = request.POST.get('publish')
+
+			if published != None:
+				m.pending = True
+
+			m.save()
+
+			if m.pending != True:
+				return user_overview(request, request.user.username)
+			else:
+				return ugc_thanks(request, feature.id)
+
+		else:
+			print form.errors
+
+	else:
+		if media == None:
+			form = MediaForm()
+		else:
+			form = MediaForm(initial={'title': 'Add a title (required)', 'url': 'Add a link to a media file (required)'}, instance=document)
+		feature = Feature.objects.get(id=feature)
+
+	return render(request, 'map/add_media.html', {'feature': feature, 'form': form, 'media': media })
 
 
 # API Views
