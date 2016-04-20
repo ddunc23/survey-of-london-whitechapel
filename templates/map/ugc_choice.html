@@ -9,9 +9,9 @@
 				<h1 class="text-center">What would you like to add?</h1>
 				<br />
 				<p class="text-center">
-					<a href="{% url 'add_image' feature.id %}" class="btn btn-default btn-lg">Images</a> 
+					<a href="{% url 'add_image' feature.id %}" class="btn btn-default btn-lg">An Image</a> 
 					<a href="{% url 'add_document' feature.id %}" class="btn btn-default btn-lg">Words</a> 
-					<a href="" class="btn btn-default btn-lg">Audio or Video</a> 
+					<a href="{% url 'add_media' feature.id %}" class="btn btn-default btn-lg">Audio or Video</a> 
 				</p>
 			</div>
 		</div>

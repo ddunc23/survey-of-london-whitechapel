@@ -7,14 +7,14 @@
 		<div class="col-md-2">
 		</div>
 		<div class="col-xs-12 col-md-7">
-			<h1>Add an Image of {% if feature.b_name %}{{ feature.b_name }}{% else %}{{ feature.address }}{% endif %}</h1>
+			<h1>Add Media About {% if feature.b_name %}{{ feature.b_name }}{% else %}{{ feature.address }}{% endif %}</h1>
 			<hr />
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-2">
 		</div>
-		<form id="document_form" method="post" {% if image.id %} action="{% url 'edit_document' feature.id image.id %}" {% else %}  action="{% url 'add_image' feature.id %}" {% endif %} enctype="multipart/form-data">
+		<form id="document_form" method="post" {% if media.id %} action="{% url 'edit_media' feature.id media.id %}" {% else %}  action="{% url 'add_media' feature.id %}" {% endif %} enctype="multipart/form-data">
 			<div class="col-xs-12 col-md-7">
 				{% load crispy_forms_tags %}
 				{% csrf_token %}

@@ -33,7 +33,9 @@
 				{% if images %}
 				<li role="presentation"{% if not histories and not descriptions and not stories %}class="active"{% endif %}><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images</a></li>
 				{% endif %}
-				
+				{% if media %}
+				<li role="presentation"{% if not histories and not descriptions and not stories %}class="active"{% endif %}><a href="#media" aria-controls="images" role="tab" data-toggle="tab">Media</a></li>
+				{% endif %}
 			</ul>
 		</div>
 	</div>
@@ -83,7 +85,7 @@
 					{% for document in histories %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small">{{ document.author.userprofile.display_name }}</span></h2>
+							<h2>{{ document.title }}<br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{{ document.author.userprofile.display_name }}</a></span></h2>
 							{{ document.body_processed|safe }}
 						</div>				
 					{% endfor %}
@@ -94,7 +96,7 @@
 					{% for document in descriptions %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small">{{ document.author.userprofile.display_name }}</span></h2>
+							<h2>{{ document.title }}<br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{{ document.author.userprofile.display_name }}</a></span></h2>
 							{{ document.body_processed|safe }}
 						</div>	
 					{% endfor %}
@@ -105,7 +107,7 @@
 					{% for document in stories %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small">{{ document.author.userprofile.display_name }}</span></h2>
+							<h2>{{ document.title }}<br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{{ document.author.userprofile.display_name }}</a></span></h2>
 							{{ document.body_processed|safe }}
 						</div>	
 					{% endfor %}
@@ -113,17 +115,30 @@
 				{% endif %}
 				{% if images %}
 					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories %} active{% endif %} row" id="images">
-					{% load thumbnail %}
-					{% for image in images %}
+						{% load thumbnail %}
+						{% for image in images %}
 						<div class="col-md-4">
 							<div class="item-card">
 								<img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}">
-								<caption>{{ image.caption }}</caption>
+								<p>{{ image.title }}<br />Contributed by <a href="{% url 'all_content_by_author' image.author.id %}">{{ image.author.userprofile.display_name }}</a></p>
 							</div>
 						</div>	
-					{% endfor %}
+						{% endfor %}
 					</div>
 				{% endif %}
+				{% if media %}
+					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories %} active{% endif %} row" id="media">
+						{% load embed_video_tags %}
+						{% for embed in media %}
+						<h2>{{ embed.title }}</h2>
+						<div class="embed-responsive embed-responsive-4by3">
+							{% video embed.url 'large' %}
+						</div>
+						<hr />
+						{% endfor %}
+					</div>
+				{% endif %}
+
 			</div>
 		</div>
 		<div class="col-xs-12 col-md-2">
@@ -195,7 +210,7 @@
 
 	$('#docTabs a').click(function(e) {
 		e.preventDefault();
-		// $(this).tab('show');
+		$(this).tab('show');
 		if ($(this).html() == 'Description') {
 			$('#fixed-nav ul').html(descriptionNav);
 		} else if ($(this).html() == 'History') {
@@ -215,7 +230,13 @@
 	    $('#docTabs a[href="#'+url.split('#')[1]+'"]').tab('show');
 	    if (anchor == 'description') {
 	    	$('#fixed-nav ul').html(descriptionNav);
-	    }
+	    } else if ($(this).html() == 'History') {
+			$('#fixed-nav ul').html(historyNav);
+		} else if ($(this).html() == 'Stories') {
+			$('#fixed-nav ul').html(storyNav);
+		} else {
+			$('#fixed-nav ul').html('');
+		}
 	    $(document).ready(function() {
 			window.scroll(0,0);
 		})
