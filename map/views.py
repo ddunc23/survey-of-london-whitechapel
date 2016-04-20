@@ -104,6 +104,11 @@ def ugc_choice(request, feature):
 	feature = Feature.objects.get(id=feature)
 	return render(request, 'map/ugc_choice.html', {'feature': feature})
 
+@login_required
+def ugc_thanks(request, feature):
+	"""Another simple view to let users know that they've done something and we're grateful"""
+	feature = Feature.objects.get(id=feature)
+	return render(request, 'map/ugc_thanks.html', {'feature': feature})
 
 @login_required
 def edit_document(request, feature, document=None):
@@ -135,7 +140,10 @@ def edit_document(request, feature, document=None):
 
 			d.save()
 
-			return user_overview(request, request.user.username)
+			if d.pending != True:
+				return user_overview(request, request.user.username)
+			else:
+				return ugc_thanks(request, feature.id)
 
 		else:
 			print form.errors

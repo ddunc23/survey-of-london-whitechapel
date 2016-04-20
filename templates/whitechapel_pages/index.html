@@ -5,7 +5,7 @@
 <div class="jumbotron" style="background-image: url('/media/{{ page.banner_image }}');">
 	<div class="container">
 		<h1 class="text-center">{{ title }}</h1>
-		<h2 class="text-center">{{ subhead }}</h2>
+		<h2 class="text-center">{{ page.title }}</h2>
 		<br />
 		<div class="text-center">
 			<a href="{% url 'map.views.home' %}" class="btn btn-primary btn-lg">Explore the Map</a>
@@ -15,8 +15,8 @@
 
 <div class="container">
 	<div class="col-xs-12">
-		<h2 class="text-center">{{ page.title }}</h2>
-		{{ page.body|safe }}
+		<div class="lead">{{ page.body|safe }}
+		</div>
 	</div>
 </div>
 <div class="container">
@@ -39,37 +39,31 @@
 		{% endfor %}
 	</div>
 
-	<div class="row">
-		<div class="col-xs-12">
-			<h2 class="text-center">Themes</h2>
-			<br />
-		</div>
-	</div>
-	
-	<div class="row themed-content">
-		{% for category in categories %}
-		{% if category.thumbnail %}
-		<div class="col-xs-12 col-md-6">
-			<div>
-				<a href="{% url 'map.views.category' category.name %}"><img src="/media/{{ category.thumbnail }}"></a>
-				<p><a href="{% url 'map.views.category' category.name %}">{{ category.name }}</a></p>
+	{% if categories %}
+		<div class="row">
+			<div class="col-xs-12">
+				<h2 class="text-center">Themes</h2>
+				<br />
 			</div>
 		</div>
-		{% endif %}
-		{% endfor %}
-	</div>
-
+		
+		<div class="row themed-content">
+			{% for category in categories %}
+			{% if category.thumbnail %}
+			<div class="col-xs-12 col-md-6">
+				<div>
+					<a href="{% url 'map.views.category' category.name %}"><img src="/media/{{ category.thumbnail }}"></a>
+					<p><a href="{% url 'map.views.category' category.name %}">{{ category.name }}</a></p>
+				</div>
+			</div>
+			{% endif %}
+			{% endfor %}
+		</div>
+	{% endif %}
 </div>
 
 {% endblock %}
 
 {% block footer %}
-<footer>
-	<div class="row">
-		<div class="col-xs-1 col-sm-4"></div>
-		<div class="col-xs-4 col-sm-4"></div>
-		<div class="col-xs-4 col-sm-4"></div>
-	</div>
-</div>
 {% endblock %}
 
