@@ -69,5 +69,6 @@ admin.site.register(DocumentType)
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Image)
+admin.site.register(Media)
 
 

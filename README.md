@@ -2,7 +2,7 @@
 
 ## Dependencies
 
-### Content Management
+### Content Management - Django and many plugins
 
 * Memcached==1.4.14
 * Python==2.7

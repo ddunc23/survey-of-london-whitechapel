@@ -9,21 +9,94 @@
 		<br />
 		<div class="text-center">
 			<a href="{% url 'map.views.home' %}" class="btn btn-primary btn-lg">Explore the Map</a>
+			<a href="#" class="btn btn-primary btn-lg">Contribute</a>
 		</div>
 	</div>
 </div>
 
 <div class="container">
-	<div class="col-xs-12">
-		<div class="lead">{{ page.body|safe }}
-		</div>
-	</div>
-</div>
-<div class="container">
-
-	<div class="row">
+	<div class="row"><!-- Front Page Text -->
 		<div class="col-xs-12">
-			<h2 class="text-center">Places</h2>
+			<div class="front-page-about">
+				{{ page.body|safe }}
+			</div>
+		</div>
+	</div><!-- / Front Page Text -->
+
+	<div class="row"><!-- Featured Content and Latest Images -->
+		<div class="col-xs-12 col-md-8"><!-- Featured Contributions -->
+			<h2 class="front-page-heading">Featured Contributions</h2>
+			<div class="row">
+				{% for document in page.documents.all %}
+				{% if document.published == True %}
+				<div class="{% cycle 'col-xs-12' 'col-xs-12 col-md-6' 'col-xs-12 col-md-6' %}">
+					<h3><a href="{% url 'detail' document.feature.id %}#{{ document.document_type }}?{{ document.title|slugify }}">{{ document.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{{ document.author.userprofile.display_name }}</a> | {{ document.last_edited }}</span></h3>
+					{{ document.body|safe|truncatechars_html:140 }}
+				</div>
+				{% endif %}
+				{% endfor %}
+			</div>
+		</div><!-- / Featured Content -->
+		
+		<div class="col-xs-12 col-md-4"><!-- Latest Images -->
+			<h2 class="front-page-heading">Latest Images</h2>
+			{% load thumbnail %}
+			{% for image in images %}
+			<div class="media">
+				<div class="media-left">
+					<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded"></a>
+				</div>
+				<div class="media-body">
+					<h4 class="media-heading"><a href="{% url 'detail' image.feature.id %}#images">{{ image.feature }}</a><br /><span class="text-muted">{{ image.title }}</span></h4>
+					<span class="small"><a href="{% url 'all_content_by_author' image.author.id %}">{{ image.author.userprofile.display_name }}</a> | {{ image.last_edited }}</span>
+				</div>
+			</div>
+			{% endfor %}
+		</div><!-- / Latest Images -->
+	</div><!-- / Featured Content and Latest Images -->
+
+	{% comment 'Commented out until we've actually got some content %}
+	<div class="row"><!-- Featured Media -->
+		<div class="col-xs-12">
+			<h2 class="front-page-heading">Media and Interviews</h2>
+		</div>
+		<div class="col-xs-12 col-md-4">
+		{% load embed_video_tags %}
+			{% for embed in page.media.all %}
+			<h3>{{ embed.title }}</h3>
+			<div class="embed-responsive embed-responsive-4by3">
+				{% video embed.url 'large' %}
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+	{% endcomment %}
+
+	{% if categories %}
+	<div class="row"><!-- Themes / Routes / Tours -->
+		<div class="col-xs-12">
+			<h2 class="front-page-heading">Explore Whitechapel</h2>
+			<br />
+		</div>
+	</div>
+	
+	<div class="row themed-content">
+		{% for category in categories %}
+		{% if category.thumbnail and category.feature_set.all|length > 0 %}
+		<div class="col-xs-12 col-md-4">
+			<div>
+				<a href="{% url 'map.views.category' category.id %}"><img src="/media/{{ category.thumbnail }}"></a>
+				<p><a href="{% url 'map.views.category' category.id %}">{{ category.name }}</a></p>
+			</div>
+		</div>
+		{% endif %}
+		{% endfor %}
+	</div><!-- / Themed Content -->
+	{% endif %}
+
+	<div class="row"><!-- Places -->
+		<div class="col-xs-12">
+			<h2 class="front-page-heading">Places</h2>
 			<br />
 		</div>
 	</div>
@@ -37,33 +110,8 @@
 			</div>
 		</div>
 		{% endfor %}
-	</div>
-
-	{% if categories %}
-		<div class="row">
-			<div class="col-xs-12">
-				<h2 class="text-center">Themes</h2>
-				<br />
-			</div>
-		</div>
-		
-		<div class="row themed-content">
-			{% for category in categories %}
-			{% if category.thumbnail %}
-			<div class="col-xs-12 col-md-6">
-				<div>
-					<a href="{% url 'map.views.category' category.name %}"><img src="/media/{{ category.thumbnail }}"></a>
-					<p><a href="{% url 'map.views.category' category.name %}">{{ category.name }}</a></p>
-				</div>
-			</div>
-			{% endif %}
-			{% endfor %}
-		</div>
-	{% endif %}
+	</div><!-- Places -->
 </div>
 
-{% endblock %}
-
-{% block footer %}
 {% endblock %}
 

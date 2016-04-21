@@ -13,7 +13,7 @@
 					<ul class="list-unstyled doc_list">
 					{% for document in feature.document_set.all %}
 						{% if document.author == user %}
-							<li><a href="{% url 'detail' document.feature.id %}#{{ document.title|slugify }}">{{ document.title }}</a><br />
+							<li><a href="{% url 'detail' document.feature.id %}#{{ document.document_type }}">{{ document.title }}</a><br />
 								{{ document.body_processed|safe|truncatechars_html:140 }}
 							</li>
 						{% endif %}

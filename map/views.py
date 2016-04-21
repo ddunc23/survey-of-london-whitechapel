@@ -56,7 +56,7 @@ def detail(request, feature):
 
 def category(request, category):
 	"""Features by category"""
-	category = Category.objects.get(name__iexact=category)
+	category = Category.objects.get(id=category)
 
 	return render(request, 'map/category.html', {'title': 'Survey of London', 'category': category })
 

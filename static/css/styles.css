@@ -227,9 +227,8 @@ body {
 .footer {
   bottom: 0;
   width: 100%;
-  /* Set the fixed height of the footer here */
-  height: 60px;
   background-color: #f5f5f5;
+  padding-bottom: 50px;
 }
 /* Footnotes */
 .footnote-ref {
@@ -302,4 +301,10 @@ footer.editor-help {
 	font-size: 12px;
 	line-height: 18px;
 	padding: 0 3px 0 3px;
+}
+.front-page-heading {
+	border-bottom: 1px solid #f1f1f1;
+}
+.front-page-about p {
+	font-size: 170%;
 }

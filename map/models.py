@@ -148,6 +148,7 @@ class Image(models.Model):
 	file = models.ImageField(upload_to=feature_directory_path, null=True, blank=True, verbose_name='Image')
 	published = models.BooleanField(default=False)
 	pending = models.BooleanField(default=False)
+	last_edited = models.DateField(auto_now=True, null=True, blank=True)
 
 	def __unicode__(self):
 		return self.title
@@ -161,6 +162,7 @@ class Media(models.Model):
 	url = models.URLField()
 	published = models.BooleanField(default=False)
 	pending = models.BooleanField(default=False)
+	last_edited = models.DateField(auto_now=True, null=True, blank=True)
 
 	def __unicode__(self):
 		return self.title
