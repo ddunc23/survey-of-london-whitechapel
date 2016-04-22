@@ -25,7 +25,7 @@
 
 	<div class="row"><!-- Featured Content and Latest Images -->
 		<div class="col-xs-12 col-md-8"><!-- Featured Contributions -->
-			<h2 class="front-page-heading">Featured Contributions</h2>
+			<h1 class="front-page-heading">Featured Contributions</h1>
 			<div class="row">
 				{% for document in page.documents.all %}
 				{% if document.published == True %}
@@ -39,7 +39,7 @@
 		</div><!-- / Featured Content -->
 		
 		<div class="col-xs-12 col-md-4"><!-- Latest Images -->
-			<h2 class="front-page-heading">Latest Images</h2>
+			<h1 class="front-page-heading">Latest Images</h1>
 			{% load thumbnail %}
 			{% for image in images %}
 			<div class="media">
@@ -55,27 +55,32 @@
 		</div><!-- / Latest Images -->
 	</div><!-- / Featured Content and Latest Images -->
 
-	{% comment 'Commented out until we've actually got some content %}
-	<div class="row"><!-- Featured Media -->
+	<div class="row front-page-media"><!-- Featured Media -->
 		<div class="col-xs-12">
-			<h2 class="front-page-heading">Media and Interviews</h2>
+			<h1 class="front-page-heading">Interviews</h1>
 		</div>
-		<div class="col-xs-12 col-md-4">
+		<div class="col-xs-12 col-md-6">
 		{% load embed_video_tags %}
-			{% for embed in page.media.all %}
-			<h3>{{ embed.title }}</h3>
-			<div class="embed-responsive embed-responsive-4by3">
-				{% video embed.url 'large' %}
+			<div class="row">
+				{% for embed in page.media.all %}
+				<div class="col-xs-12 col-md-4">
+					<h3>{{ embed.title }}</h3>
+					<div>{{ embed.description|safe }}</div>
+				</div>
+				<div class="col-xs-12 col-md-8">
+					<div class="embed-responsive embed-responsive-4by3">
+						{% video embed.url 'large' %}
+					</div>
+				</div>
+				{% endfor %}
 			</div>
-			{% endfor %}
 		</div>
 	</div>
-	{% endcomment %}
 
 	{% if categories %}
 	<div class="row"><!-- Themes / Routes / Tours -->
 		<div class="col-xs-12">
-			<h2 class="front-page-heading">Explore Whitechapel</h2>
+			<h1 class="front-page-heading">Explore Whitechapel</h1>
 			<br />
 		</div>
 	</div>

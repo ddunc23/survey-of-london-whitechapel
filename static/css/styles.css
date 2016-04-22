@@ -308,3 +308,10 @@ footer.editor-help {
 .front-page-about p {
 	font-size: 170%;
 }
+.front-page-media p {
+	font-size: 100%;
+	line-height: 150%;
+}
+.front-page-media .embed-responsive {
+	margin-top: 20px;
+}

@@ -50,6 +50,8 @@ INSTALLED_APPS = (
     'crispy_forms',
     'easy_thumbnails',
     'embed_video',
+    'dbbackup',
+    # 'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -61,6 +63,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 ROOT_URLCONF = 'whitechapel.urls'
@@ -84,7 +88,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'whitechapel.wsgi.application'
 
 
-# Database
+# Database - moved to 'secret_settings.py'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 # Database connection settings are stored untracked in secret_settings.py
@@ -103,6 +107,7 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': '127.0.0.1:11211',
+        'TIMEOUT': 0,
     }
 }
 
@@ -144,6 +149,10 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
+
+
+### App-Specific Settings ###
+
 
 # Django-ckeditor Settings
 
@@ -187,3 +196,8 @@ GRAPPELLI_ADMIN_TITLE = 'Survey of London Whitechapel'
 # Crispy Forms
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+# django-dbbackup
+
+DBBACKUP_STORAGE = 'dbbackup.storage.filesystem_storage'
+DBBACKUP_STORAGE_OPTIONS = {'location': os.path.join(BASE_DIR, 'backups/')}
