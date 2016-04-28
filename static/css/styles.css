@@ -47,7 +47,7 @@ html, body, #map {
 	display: none;
 	background-image: url('../img/ajax-loader.gif');
 	background-repeat: no-repeat;
-	background-position: center;
+	background-position: top center;
 }
 
 .infobox-control p {
@@ -196,12 +196,12 @@ html, body, #map {
 .tag {
 	margin-bottom: 3px;
 }
-form#document_form .form-control {
+/*form#document_form .form-control {
 	border: 0;
 	border-radius: 0;
 	box-shadow: none;
 	font-size: 21px;
-}
+}*/
 
 form#document_form {
 	margin-bottom: 50px;
@@ -314,4 +314,11 @@ footer.editor-help {
 }
 .front-page-media .embed-responsive {
 	margin-top: 20px;
+	margin-bottom: 43px;
+}
+
+.controls > div > div, .controls > div > div:focus, .controls > div, .controls > div:focus {
+	border: 0;
+	box-shadow: none;
+	font-size: 21px;
 }

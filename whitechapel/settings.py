@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = (
     'grappelli',
+    'filebrowser',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +41,7 @@ INSTALLED_APPS = (
     'haystack',
     'map',
     'whitechapel_pages',
+    'whitechapel_users',
     'djgeojson',
     'leaflet',
     'ckeditor',
@@ -63,8 +65,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'django.middleware.cache.UpdateCacheMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
+    #'django.middleware.cache.UpdateCacheMiddleware',
+    #'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 ROOT_URLCONF = 'whitechapel.urls'
@@ -192,6 +194,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 GRAPPELLI_ADMIN_TITLE = 'Survey of London Whitechapel'
+
+# django-filebrowser
+
+FILEBROWSER_DIRECTORY = 'uploads/'
 
 # Crispy Forms
 

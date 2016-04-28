@@ -5,7 +5,7 @@
 	<div class="row">
 		<div class="col-xs-12 col-md-8 col-md-offset-2 content">
 			{% if request.user = user %}
-				<h1>{{ user.userprofile.display_name }}</h1>
+				<h1>{% if user.userprofile.display_name %}{{ user.userprofile.display_name }}{% else %}{{ user }}{% endif %}'s Content</h1>
 				<hr />
 				<h2>Images</h2>
 				{% if images %}

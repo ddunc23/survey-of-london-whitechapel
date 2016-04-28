@@ -11,7 +11,16 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
+        #migrations.AlterField(
+        #    model_name='feature',
+        #    name='basement',
+        #    field=models.PositiveSmallIntegerField(null=True, blank=True),
+        #),
+        migrations.RemoveField(
+            model_name='feature',
+            name='basement',
+        ),
+        migrations.AddField(
             model_name='feature',
             name='basement',
             field=models.PositiveSmallIntegerField(null=True, blank=True),

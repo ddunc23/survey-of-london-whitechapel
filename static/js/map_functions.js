@@ -183,7 +183,7 @@ function loadFeatures(jsonUrl) {
 
 			geojson = data;
 
-			sketchylayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/sketchymap_lidar_footprints/{z}/{x}/{y}.png', {maxZoom: 20});
+			sketchylayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/all_footprints_boring/{z}/{x}/{y}.png', {maxZoom: 20});
 
 			// oslayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop/{z}/{x}/{y}.png');
 

@@ -1,15 +1,15 @@
 {% extends 'map/base.html' %}
 
 {% block content %}
-<div id="small_map" {% if feature.thumbnail %} style="background: url('/media/{{ feature.banner }}'); background-size: cover; background-position: center;" {% endif %} class="hidden-sm hidden-xs"></div>
+<div id="small_map" {% if feature.thumbnail %} style="background: url('/media/{{ feature.thumbnail }}'); background-size: cover; background-position: center;" {% endif %} class="hidden-sm hidden-xs"></div>
 <div class="container">
 	<div class="row">
 		<div class="col-md-3">
 		</div>
 		<div class="col-xs-12 col-md-7">
 			{% if feature.b_name %}
-			<h1>{{ feature.b_name }} {% if user.is_authenticated %}{% if not histories and not descriptions and not stories and not images and not media %}{% else %}<a href="{% url 'ugc_choice' feature.id %}" class="btn btn-default">Add Content</a>{% endif %}{% endif %}</h1>
-			<h2><small>{{ feature.address }} {% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a></small> <a href="{% url 'home' %}?highlight={{ feature.id }}" class="btn btn-default btn-sm">Show on Map</a> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
+			<h1>{{ feature.b_name }} <div class="btn-group"><a href="{% url 'home' %}?highlight={{ feature.id }}" class="btn btn-default">Show on Map</a>{% if user.is_authenticated %}{% if not histories and not descriptions and not stories and not images and not media %}{% else %}<a href="{% url 'ugc_choice' feature.id %}" class="btn btn-primary">Add Content</a>{% endif %}{% endif %}</div></h1>
+			<h2><small>{{ feature.address }} {% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a></small> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
 			{% else %}
 			<h1>{{ feature.address }} {% if user.is_authenticated %}{% if not histories and not descriptions and not stories and not images and not media %}{% else %}<a href="{% url 'ugc_choice' feature.id %}" class="btn btn-default">Add Content</a>{% endif %}{% endif %}</h1>
 			{% endif %}
@@ -23,20 +23,20 @@
 		{% if not histories and not descriptions and not stories and not images and not media %}
 			<hr />
 			<h2>We Don't Have Any Information About This Place Yet</h2>
-			<p>Do you know about the history of this building or the people who have lived or worked here? <a href="{% url 'ugc_choice' feature.id %}">Contribute it here.</a></p>
+			<p>Do you know something about the history of this building or the people who have lived or worked here? {% if user.is_authenticated %}<a href="{% url 'ugc_choice' feature.id %}">Contribute it here.</a>{% else %}<a href="#">Contribute it here.</a>{% endif %}</p>
 
 		{% else %}
 
 
 			<ul class="nav nav-tabs" role="tablist" id="docTabs">
 				{% if histories %}
-				<li role="presentation" class="active"><a href="#history" aria-controls="history" role="tab" data-toggle="tab">History</a></li>
+				<li role="presentation" class="active"><a href="#history" aria-controls="history" role="tab" data-toggle="tab">Research</a></li>
 				{% endif %}
 				{% if descriptions %}
 				<li role="presentation" {% if not histories %}class="active"{% endif %}><a href="#description" aria-controls="description" role="tab" data-toggle="tab">Description</a></li>
 				{% endif %}
 				{% if stories %}
-				<li role="presentation"{% if not histories and not descriptions %}class="active"{% endif %}><a href="#story" aria-controls="stories" role="tab" data-toggle="tab">Stories</a></li>
+				<li role="presentation"{% if not histories and not descriptions %}class="active"{% endif %}><a href="#story" aria-controls="stories" role="tab" data-toggle="tab">Memories</a></li>
 				{% endif %}
 				{% if images %}
 				<li role="presentation"{% if not histories and not descriptions and not stories %}class="active"{% endif %}><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images</a></li>
@@ -125,7 +125,7 @@
 						<div class="col-md-4">
 							<div class="item-card">
 								<img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}">
-								<p>{{ image.title }}<br />Contributed by <a href="{% url 'all_content_by_author' image.author.id %}">{{ image.author.userprofile.display_name }}</a></p>
+								<p>{{ image.title }}<br />Contributed by <a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a></p>
 							</div>
 						</div>	
 						{% endfor %}
@@ -187,7 +187,7 @@
 		"fillOpacity": 0.8,
 	}
 
-	var oslayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop_New_Fonts/{z}/{x}/{y}.png').setOpacity(0.9);
+	var oslayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/all_footprints_boring/{z}/{x}/{y}.png').setOpacity(0.5);
 
 	var feature = L.geoJson(feature_geojson, {
 		style: myStyle
@@ -219,7 +219,7 @@
 		$(this).tab('show');
 		if ($(this).html() == 'Description') {
 			$('#fixed-nav ul').html(descriptionNav);
-		} else if ($(this).html() == 'History') {
+		} else if ($(this).html() == 'Research') {
 			$('#fixed-nav ul').html(historyNav);
 		} else if ($(this).html() == 'Stories') {
 			$('#fixed-nav ul').html(storyNav);
@@ -247,7 +247,9 @@
 	    $(document).ready(function() {
 	    	var activeTab = '#docTabs a[href="#' + tabAnchor +'"]';
 			$(activeTab).tab('show');
-			location.hash = '#' + docAnchor;
+			if (docAnchor != undefined) {
+				location.hash = '#' + docAnchor;
+			}
 		})
 	}
 

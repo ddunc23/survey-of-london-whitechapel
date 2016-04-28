@@ -23,12 +23,18 @@ def feature(request, feature):
 	feature = Feature.objects.get(id=feature)
 	documents = Document.objects.filter(feature=feature)
 	histories = documents.filter(document_type__name='History').order_by('order')
+	images = Image.objects.filter(feature=feature)
+	media = Media.objects.filter(feature=feature)
 	categories = Category.objects.filter(feature=feature)
-	lower = feature.original - 10
-	upper = feature.original + 10
+	if feature.original != None:
+		lower = feature.original - 10
+		upper = feature.original + 10
+	else:
+		lower = 0
+		upper = 0
 	build_range ={'upper': upper, 'lower': lower}
 
-	return render(request, 'map/feature.html', {'feature': feature, 'documents': documents, 'categories': categories, 'build_range': build_range, 'histories': histories})
+	return render(request, 'map/feature.html', {'feature': feature, 'documents': documents, 'categories': categories, 'build_range': build_range, 'histories': histories, 'images': images})
 
 def feature_legend(request, feature):
 	"""Update the legend control buttons for year, street"""
@@ -128,7 +134,7 @@ def ugc_thanks(request, feature):
 
 @login_required
 def edit_document(request, feature, document=None):
-	"""View to allow users to add new documents."""
+	"""View to allow users to add or edit documents."""
 	if document:
 		document = Document.objects.get(id=document)
 	else:
@@ -162,11 +168,11 @@ def edit_document(request, feature, document=None):
 				return ugc_thanks(request, feature.id)
 
 		else:
-			print form.errors
+			feature = Feature.objects.get(id=feature)
 
 	else:
 		if document == None:
-			form = DocumentForm(initial={'title': 'Add a title here (required)'}, instance=document)
+			form = DocumentForm(instance=document)
 		else:
 			form = DocumentForm(instance=document)
 		feature = Feature.objects.get(id=feature)
@@ -212,11 +218,11 @@ def edit_image(request, feature, image=None):
 				return ugc_thanks(request, feature.id)
 
 		else:
-			print form.errors
+			feature = Feature.objects.get(id=feature)
 
 	else:
 		if image == None:
-			form = ImageForm(initial={'title': 'Add a title (required)', 'caption': 'Add a caption (required)'}, instance=image)
+			form = ImageForm(instance=image)
 		else:
 			form = ImageForm(instance=image)
 		feature = Feature.objects.get(id=feature)
@@ -260,7 +266,7 @@ def edit_media(request, feature, media=None):
 				return ugc_thanks(request, feature.id)
 
 		else:
-			print form.errors
+			feature = Feature.objects.get(id=feature)
 
 	else:
 		if media == None:

@@ -1,5 +1,5 @@
 from haystack import indexes
-from map.models import Feature, Document, Story
+from map.models import Feature, Document
 
 class FeatureIndex(indexes.SearchIndex, indexes.Indexable):
 	text = indexes.CharField(document=True, use_template=True)

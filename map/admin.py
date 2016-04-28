@@ -1,5 +1,6 @@
 from django.contrib import admin
-from map.models import Feature, Document, Category, DocumentType, UserProfile, Image, Media
+from map.models import Feature, Document, Category, DocumentType, Image, Media
+from whitechapel_users.models import UserProfile
 from djgeojson.fields import GeoJSONField
 from leaflet.admin import LeafletGeoAdmin
 from map.forms import FeatureForm
@@ -39,7 +40,7 @@ class FeatureAdmin(LeafletGeoAdmin):
 			'classes': ('wide',),
 		}),
 		('Other Metadata', {
-			'fields': ('categories', 'thumbnail', 'tags', 'banner',),
+			'fields': ('categories', 'thumbnail', 'tags',),
 			'classes': ('wide',),
 		}),
 	)

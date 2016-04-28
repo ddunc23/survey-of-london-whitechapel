@@ -6,6 +6,7 @@ from map.models import Feature
 from rest_framework import routers, serializers, viewsets
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 from map.serializers import FeatureSerializer
+from filebrowser.sites import site
 
 # Django REST Framework Viewsets
 class FeatureViewSet(viewsets.ReadOnlyModelViewSet):
@@ -18,13 +19,12 @@ router.register(r'features', FeatureViewSet)
 
 
 urlpatterns = [
-    # Examples:
-    # url(r'^$', 'map_test.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
+    # django-filebrowser
+    url(r'^admin/filebrowser/', include(site.urls)),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^map/', include('map.urls')),
     url(r'^', include('whitechapel_pages.urls')),
+    url(r'^users/', include('whitechapel_users.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/', include(router.urls)),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),

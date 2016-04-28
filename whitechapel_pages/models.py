@@ -1,6 +1,7 @@
 from django.db import models
 # from map.models import Feature, Document
 from ckeditor_uploader.fields import RichTextUploadingField
+from filebrowser.fields import FileBrowseField
 
 
 # Create your models here.

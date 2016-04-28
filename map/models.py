@@ -13,13 +13,6 @@ def feature_directory_path(instance, filename):
 	"""Function to ensure image files will be uploaded to /uploads/features/<feature.id>/filename"""
 	return 'uploads/features/{0}/{1}'.format(instance.id, filename)
 
-class UserProfile(models.Model):
-	"""Additional Attributes for the User model"""
-	user = models.OneToOneField(User)
-	display_name = models.CharField(max_length=100, blank=True, null=True)
-
-	def __unicode__(self):
-		return self.user.username
 
 class Category(models.Model):
 	"""Feature categories"""
@@ -38,7 +31,7 @@ class Feature(models.Model):
 	"""A building footprint, open space, or other interactable vector object"""
 	id = models.PositiveSmallIntegerField(primary_key=True)
 	geom = models.MultiPolygonField(verbose_name='Footprint Geometry')
-	b_number = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Building Number')
+	b_number = models.CharField(max_length=16,null=True, blank=True, verbose_name='Building Number')
 	b_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='Building Name')
 	street = models.CharField(max_length=100, null=True, blank=True)
 	postcode = models.CharField(max_length=8)
@@ -60,7 +53,6 @@ class Feature(models.Model):
 	categories = models.ManyToManyField(Category, blank=True)
 	thumbnail = models.ImageField(upload_to=feature_directory_path, null=True, blank=True, verbose_name='Thumbnail Image')
 	tags = TaggableManager(blank=True)
-	banner = models.ImageField(upload_to=feature_directory_path, null=True, blank=True, verbose_name='Banner Image')
 
 	def __unicode__(self):
 		if self.b_name != None:

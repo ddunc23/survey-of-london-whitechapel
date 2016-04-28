@@ -6,7 +6,7 @@ from crispy_forms.layout import Submit
 class FeatureForm(forms.ModelForm):
 	class Meta:
 		model = Feature
-		fields = ('geom', 'b_number', 'b_name', 'street', 'postcode', 'address', 'b_type', 'original', 'rebuild_1', 'rebuild_2', 'f_date', 'storeys', 'basement', 'architect', 'builders', 'materials', 'type', 'c_area', 'listed', 'count', 'categories', 'thumbnail', 'tags', 'banner')
+		fields = ('geom', 'b_number', 'b_name', 'street', 'postcode', 'address', 'b_type', 'original', 'rebuild_1', 'rebuild_2', 'f_date', 'storeys', 'basement', 'architect', 'builders', 'materials', 'type', 'c_area', 'listed', 'count', 'categories', 'thumbnail', 'tags',)
 		widgets = {
 			'basement': forms.CheckboxInput(),
 			'c_area': forms.CheckboxInput(),
@@ -18,8 +18,8 @@ class DocumentForm(forms.ModelForm):
 		model = Document
 		fields = ('title', 'body',)
 		labels = {
-			'title': '',
-			'body': '',
+			'title': 'Title',
+			'body': 'Text',
 		}
 
 class ImageForm(forms.ModelForm):
@@ -27,7 +27,7 @@ class ImageForm(forms.ModelForm):
 		model = Image
 		fields = ('file', 'title', 'description')
 		labels = {
-			'title': '',
+			'title': 'Title',
 			'file': 'Upload Image',
 		}
 		widgets = {

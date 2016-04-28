@@ -2,7 +2,8 @@
 	<button type="button" class="btn btn-default btn-xs close-this"><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
 
 	{% if feature.thumbnail %}
-		<a href="{% if documents %}{% url 'detail' feature.id %}{% else %}#{% endif %}"><img src="/media/{{ feature.thumbnail }}"></a>
+		{% load thumbnail %}
+		<a href="{% url 'detail' feature.id %}"><img src="{% thumbnail feature.thumbnail 300x170 crop='0,0' %}"></a>
 	{% endif %}
 
 	{% if feature.b_name %}
@@ -11,7 +12,8 @@
 		<p><span class="small"><a href="{% url 'detail' feature.id %}">{{ feature.address }}</a></span><br />
 	{% endif %}
 	
-		{% if documents %}<span class="glyphicon glyphicon-file"></span> {% endif %}{% if feature.thumbnail %}<span class="glyphicon glyphicon-picture"></span> {% endif %}{% if stories %}<span class="glyphicon glyphicon-comment"></span> {% endif %}{% if user.is_authenticated %} <a href="{% url 'ugc_choice' feature.id %}" class="btn btn-default btn-sm pull-right">Add Content</a>{% endif %}</p>
+		{% if documents %}<a href="{% url 'detail' feature.id %}"><span class="glyphicon glyphicon-file"></span></a> {% endif %}{% if images %}<a href="{% url 'detail' feature.id %}#images"><span class="glyphicon glyphicon-picture"></span></a> {% endif %}{% if stories %}<span class="glyphicon glyphicon-comment"></span> {% endif %}{% if media %}<a href="{% url 'detail' feature.id %}#media"><span class="glyphicon glyphicon-play"></span> {% endif %}
+		<span class="pull-right">{% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a> {% endif %}{% if user.is_authenticated %}<a href="{% url 'ugc_choice' feature.id %}" class="btn btn-default btn-sm">Add Content</a>{% endif %} </span></p>
 	
 	<script>
 		$('.close-this').click(function() {
