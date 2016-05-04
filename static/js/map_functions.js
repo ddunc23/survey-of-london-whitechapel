@@ -132,10 +132,10 @@ info.update = function(properties) {
 function onEachFeature(feature, layer) {
 	if (feature.properties) {
 		if (feature.properties.b_name) {
-			layer.bindPopup(feature.properties.b_name);
+			layer.bindPopup('<a href="feature/' + feature.id + '/detail/">' + feature.properties.b_name + '</a>');
 		}
 		else if (feature.properties.address) {
-			layer.bindPopup(feature.properties.address);
+			layer.bindPopup('<a href="feature/' + feature.id + '/detail/">' + feature.properties.address + '</a>');
 		}
 		var hl = getUrlVars()['highlight'];
 		if (feature.id == hl) {
@@ -172,11 +172,8 @@ function getUrlVars() {
     return vars;
 }
 
-
 var map;
 var geojson;
-var oslayer;
-var neonlayer;
 var sketchylayer;
 var buildings;
 var highlight;
@@ -257,6 +254,7 @@ function loadFeatures(jsonUrl, mapType) {
 					$('.infobox-control').hide();
 					$('.titlebox-control').hide();
 				});
+				
 
 				$('.leaflet-control').mouseover(function() {
 					buildings.eachLayer(function(layer) {
@@ -299,8 +297,8 @@ function loadFeatures(jsonUrl, mapType) {
 		});
 	} else if (mapType == 'detail') {
 
-		function initMap(layers) {
-			var map = L.map('map', {
+		function initDetailMap(layers) {
+			map = L.map('map', {
 				zoom: 17,
 				zoomControl: false,
 				layers: layers,
@@ -326,7 +324,7 @@ function loadFeatures(jsonUrl, mapType) {
 				
 				layers = [sketchylayer, buildings];
 
-				initMap(layers);
+				initDetailMap(layers);
 			}
 		});
 

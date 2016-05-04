@@ -53,6 +53,16 @@ INSTALLED_APPS = (
     'easy_thumbnails',
     'embed_video',
     # 'debug_toolbar',
+    # django-allauth
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # django-allauth login providers
+    #'allauth.socialaccount.providers.facebook',
+    #'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.twitter',
+    'allauth.socialaccount.providers.google',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -201,3 +211,16 @@ FILEBROWSER_DIRECTORY = 'uploads/'
 # Crispy Forms
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+# django-allauth
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = '/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

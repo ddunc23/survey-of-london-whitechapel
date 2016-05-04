@@ -32,4 +32,6 @@ urlpatterns = [
     url(r'^search/', include('haystack.urls')),
     # Grappelli
     url(r'^grappelli/', include('grappelli.urls')),
+    # django-allauth
+    url(r'^accounts/', include('allauth.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
