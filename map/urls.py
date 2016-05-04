@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^user/(?P<user>\w+)/content/$', views.all_content_by_author, name='all_content_by_author'),
     # API
     url(r'^api/features/$', views.features, name='features'),
+    url(r'^api/features/(?P<feature>\d+)/$', views.single_feature, name='single_feature'),
     url(r'^api/features/date/(?P<build_date>\d+)/$', views.features_by_build_date, name='features_by_date'),
     url(r'^api/features/date/(?P<start_date>\d+)/(?P<end_date>\d+)/$', views.features_by_date_range, name='features_by_date_range'),
     url(r'^api/features/street/(?P<street>.+)/$', views.features_by_street_name, name='features_by_street_name'),

@@ -1,12 +1,12 @@
 {% extends 'map/base.html' %}
 {% block content %}
-		<div id="map"></div>
+		<div id="map" class="map-large"></div>
 		<script>
 
 			var title_box_title = 'All places tagged "{{ tag }}"';
 
 			var jsonUrl = '{% url "features_by_tag" tag %}';
-			loadFeatures(jsonUrl);
+			loadFeatures(jsonUrl, 'main');
 		</script>
 
 {% endblock %}

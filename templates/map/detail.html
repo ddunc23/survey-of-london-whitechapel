@@ -1,7 +1,7 @@
 {% extends 'map/base.html' %}
 
 {% block content %}
-<div id="small_map" {% if feature.thumbnail %} style="background: url('/media/{{ feature.thumbnail }}'); background-size: cover; background-position: center;" {% endif %} class="hidden-sm hidden-xs"></div>
+<div id="map" class="map-small" {% if feature.thumbnail %} style="background: url('/media/{{ feature.thumbnail }}'); background-size: cover; background-position: center;" {% endif %} class="hidden-sm hidden-xs"></div>
 <div class="container">
 	<div class="row">
 		<div class="col-md-3">
@@ -164,7 +164,7 @@
 				{% endfor %}
 				</ul>
 			{% endif %}
-			{% if feature.tags|length > 0 %}
+			{% if feature.tags.all|length > 0 %}
 				<h4>Tags</h4>
 				{% for tag in feature.tags.all %}
 					<a href="{% url 'tag' tag %}" class="btn btn-default btn-xs tag">{{ tag }}</a> 
@@ -177,36 +177,10 @@
 
 
 <script>
-	{% load geojson_tags %}
-	feature_geojson = {{ feature|geojsonfeature:"osm_id,count,address"|safe }}
 
-	var myStyle = {
-		"color": "#2262cc",
-		"weight": 1,
-		"opacity": 0.8,
-		"fillOpacity": 0.8,
-	}
-
-	var oslayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/all_footprints_boring/{z}/{x}/{y}.png').setOpacity(0.5);
-
-	var feature = L.geoJson(feature_geojson, {
-		style: myStyle
-	})
-
-	var centre = feature.getBounds().getCenter();
-
-	var map = L.map('small_map', {
-		center: centre,
-		zoom: 17,
-		zoomControl: false,
-		layers: [oslayer, feature],
-	})
-
-	map.dragging.disable();
-	map.touchZoom.disable();
-	map.doubleClickZoom.disable();
-	map.scrollWheelZoom.disable();
-	map.keyboard.disable();
+	var jsonUrl = '{% url "single_feature" feature.id %}';
+			
+	loadFeatures(jsonUrl, 'detail');
 
 	var historyNav = '{% for document in histories %}{% if document.start_year %}<li><a href="#{{ document.title|slugify }}">{{ document.start_year }} - {{ document.end_year }}<br /><span class="small">{{ document.title }}</span></a></li>{% else %}<li><a href="#{{ document.title|slugify }}">{{ document.title }}</span></a></li>{% endif %}{% endfor %}';
 

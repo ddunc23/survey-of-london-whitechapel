@@ -1,13 +1,13 @@
 {% extends 'map/base.html' %}
 {% block content %}
-		<div id="map"></div>
+		<div id="map" class="map-large"></div>
 		<script>
 			
 			var jsonUrl = '{% url "search_features" %}' + '?q=' + '{{ query }}';
 			
 			var title_box_title = 'Showing Results for &ldquo;{{ query }}&rdquo;';
 
-			loadFeatures(jsonUrl);
+			loadFeatures(jsonUrl, 'main');
 
 		</script>
 

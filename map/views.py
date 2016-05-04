@@ -8,6 +8,7 @@ from rest_framework.renderers import JSONRenderer
 from haystack.query import SearchQuerySet
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.views.decorators.cache import cache_page
 
 # Map Views
 
@@ -289,11 +290,19 @@ class JSONResponse(HttpResponse):
         kwargs['content_type'] = 'application/json'
         super(JSONResponse, self).__init__(content, **kwargs)
 
+@cache_page(60 * 15)
 def features(request):
 	"""All Features as geoJson"""
 	if request.method == 'GET':
 		features =  Feature.objects.all()
 		serializer = FeatureSerializer(features, many=True)
+		return JSONResponse(serializer.data)
+
+def single_feature(request, feature):
+	"""Get a single feature"""
+	if request.method== 'GET':
+		feature = Feature.objects.get(id=feature)
+		serializer = FeatureSerializer(feature, many=False)
 		return JSONResponse(serializer.data)
 
 def features_by_build_date(request, build_date):

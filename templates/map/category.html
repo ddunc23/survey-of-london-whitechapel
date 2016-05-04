@@ -1,6 +1,6 @@
 {% extends 'map/base.html' %}
 {% block content %}
-		<div id="map"></div>
+		<div id="map" class="map-large"></div>
 
 		{% load geojson_tags %}
 		{% load staticfiles %}
@@ -10,7 +10,7 @@
 			var title_box_title = 'Showing all places categorised by &ldquo;{{ category.name }}&rdquo;';
 
 			var jsonUrl = '{% url "features_by_category" category.id %}';
-			loadFeatures(jsonUrl);
+			loadFeatures(jsonUrl, 'main');
 		</script>
 
 {% endblock %}

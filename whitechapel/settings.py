@@ -52,7 +52,6 @@ INSTALLED_APPS = (
     'crispy_forms',
     'easy_thumbnails',
     'embed_video',
-    'dbbackup',
     # 'debug_toolbar',
 )
 
@@ -202,8 +201,3 @@ FILEBROWSER_DIRECTORY = 'uploads/'
 # Crispy Forms
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
-
-# django-dbbackup
-
-DBBACKUP_STORAGE = 'dbbackup.storage.filesystem_storage'
-DBBACKUP_STORAGE_OPTIONS = {'location': os.path.join(BASE_DIR, 'backups/')}

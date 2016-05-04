@@ -24,12 +24,17 @@ h1, h2, h3, h4 {
 	font-size: 15px;
 	line-height: 20px;
 }
-html, body, #map {
+html, body {
     height: 100%;
 }
-
-#map {
+.map-large {
 	padding-top: 4em;
+	height: 100%;
+}
+
+.map-small {
+	height: 300px;
+	border-bottom: 1px solid #e7e7e7;
 }
 
 #small_map {
@@ -67,6 +72,10 @@ html, body, #map {
 	padding-left: 38px;
 	bottom: 0;
 	width: 400px;
+}
+
+.info {
+	background-color: white;
 }
 
 .feature-legend .btn, .show-buildings .btn {

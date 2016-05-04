@@ -48,7 +48,7 @@ var titlebox = L.Control.extend({
 var myStyle = {
 	"color": "#F58D16",
 	"fillColor": "#F58D16",
-	"weight": 2,
+	"weight": 2.5,
 	"opacity": 0.4
 };
 
@@ -115,6 +115,20 @@ function setFootprintColour(layer, e) {
 	}
 }
 
+var info = L.control({'position': 'topleft'});
+
+info.onAdd = function(map) {
+    this._div = L.DomUtil.create('div', 'info');
+    this.update();
+    return this._div;
+};
+
+info.update = function(properties) {
+    this._div.innerHTML =  (properties ?
+        '<b>' + properties.address + '</b>' : 'Hover over a place');
+};
+
+
 function onEachFeature(feature, layer) {
 	if (feature.properties) {
 		if (feature.properties.b_name) {
@@ -134,9 +148,11 @@ function onEachFeature(feature, layer) {
 	}
 	layer.on("mouseover", function(e) {
 		setFootprintColour(layer, e);
+		info.update(layer.feature.properties);
 	})
 	layer.on("mouseout", function(e) {
 		setFootprintColour(layer, e);
+		info.update()
 	})
 	setDocNumberStyle(layer);
 	layer.on("click", function(e) {
@@ -165,123 +181,155 @@ var sketchylayer;
 var buildings;
 var highlight;
 
-function loadFeatures(jsonUrl) {
+function loadFeatures(jsonUrl, mapType) {
 
-	function initMap(layers) {
-		map = L.map('map', {
-			zoom: 17,
-			minZoom: 15,
-			maxZoom: 20,
-			zoomControl: false,
-			layers: layers
-		});
-	};
-
-	$.getJSON(jsonUrl).done(function(data) {
+	if (mapType == 'main') {
 		
-		if (map == null) {
-
-			geojson = data;
-
-			sketchylayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/all_footprints_boring/{z}/{x}/{y}.png', {maxZoom: 20});
-
-			// oslayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Crop/{z}/{x}/{y}.png');
-
-			// neonlayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/OS_OpenMap_Local_Whitechapel_Neon/{z}/{x}/{y}.png');
-
-			buildings = L.geoJson(geojson, {
-				onEachFeature: onEachFeature,
-				// style: myStyle
+		function initMap(layers) {
+			map = L.map('map', {
+				zoom: 17,
+				minZoom: 15,
+				maxZoom: 20,
+				zoomControl: false,
+				layers: layers
 			});
+		};
 
-			layers = [/*oslayer,*/ /*neonlayer,*/ sketchylayer, buildings];
-
-			initMap(layers);
-
-			map.fitBounds(buildings);
-
-			map.attributionControl.addAttribution("Contains OS data &copy; Crown copyright and OpenMap Local 2016 | Addresses &copy; OpenStreetMap Contributors");
-
-			var baseMaps = {
-				/*"Ordnance Survey OpenMap Local": oslayer,*/
-				// "Neon Layer": neonlayer,
-				"Sketchy Layer": sketchylayer,
-			};
+		$.getJSON(jsonUrl).done(function(data) {
 			
-			var overlayMaps = {
-				"Buildings": buildings
-			};
+			if (map == null) {
 
-			if (highlight != undefined) {
-				var bounds = highlight.getBounds();
-				map.fitBounds(bounds);
-				highlight.openPopup();
-			}
+				geojson = data;
 
-			L.control.zoom({
-				"position": "bottomleft",
-			}).addTo(map);
+				sketchylayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/all_footprints_boring/{z}/{x}/{y}.png', {maxZoom: 20});
 
-			L.control.layers(baseMaps, overlayMaps, {
-				"position": "bottomleft"
-			}).addTo(map);
-			
-			map.addControl(new infobox());
-			map.addControl(new feature_legend());
-			map.addControl(new show_all_buildings());
-			
-			title_box_title = '';
+				buildings = L.geoJson(geojson, {
+					onEachFeature: onEachFeature,
+				});
 
-			if (title_box_title != '') {
-				map.addControl(new titlebox());
-				$('.titlebox-control').show();
-			}
-		
+				layers = [sketchylayer, buildings];
 
-			$('.all_btn').click(function() {
-				var jsonUrl = "/map/api/features/";
-				loadFeatures(jsonUrl);
-				$('.infobox-control').hide();
-				$('.titlebox-control').hide();
-			});
+				initMap(layers);
 
-			$('.leaflet-control').mouseover(function() {
-				buildings.eachLayer(function(layer) {
-					if (layer._options['color'] != '#1AA9FF') {
-						layer.setStyle(myStyle);
-					}
-				layer.removeEventListener();
-				})
-			});
+				info.addTo(map);
 
-			$('.leaflet-control').mouseout(function() {
-				buildings.eachLayer(function(layer) {			
-					if (layer.feature.properties) {
-						if (layer.feature.properties.b_name) {
-							layer.bindPopup(layer.feature.properties.b_name);
-						}
-						else if (layer.feature.properties.address) {
-							layer.bindPopup(layer.feature.properties.address);
-						}
-					}
-					layer.on("mouseover", function(e) {
-						setFootprintColour(layer, e);
-					})
-					layer.on("mouseout", function(e) {
-						setFootprintColour(layer, e);
-					})
-					layer.on("click", function(e) {
-						layer.openPopup(e.latlng);
-						setFootprintColour(layer, e);
-					})
-				})
-			});
-		} else {
-			$.getJSON(jsonUrl).done(function(data) {
-				buildings.clearLayers();
-				buildings.addData(data);
 				map.fitBounds(buildings);
-			})
+
+				map.attributionControl.addAttribution("Contains OS data &copy; Crown copyright and OpenMap Local 2016 | Addresses &copy; OpenStreetMap Contributors");
+
+				var baseMaps = {
+					"Base Map": sketchylayer,
+				};
+				
+				var overlayMaps = {
+					"Places": buildings
+				};
+
+				if (highlight != undefined) {
+					var bounds = highlight.getBounds();
+					map.fitBounds(bounds);
+					highlight.openPopup();
+				}
+
+				L.control.zoom({
+					"position": "bottomleft",
+				}).addTo(map);
+
+				L.control.layers(baseMaps, overlayMaps, {
+					"position": "bottomleft"
+				}).addTo(map);
+				
+				map.addControl(new infobox());
+				map.addControl(new feature_legend());
+				map.addControl(new show_all_buildings());
+				
+				title_box_title = '';
+
+				if (title_box_title != '') {
+					map.addControl(new titlebox());
+					$('.titlebox-control').show();
+				}
+			
+
+				$('.all_btn').click(function() {
+					var jsonUrl = "/map/api/features/";
+					loadFeatures(jsonUrl, 'main');
+					$('.infobox-control').hide();
+					$('.titlebox-control').hide();
+				});
+
+				$('.leaflet-control').mouseover(function() {
+					buildings.eachLayer(function(layer) {
+						if (layer._options['color'] != '#1AA9FF') {
+							layer.setStyle(myStyle);
+						}
+					layer.removeEventListener();
+					})
+				});
+
+				$('.leaflet-control').mouseout(function() {
+					buildings.eachLayer(function(layer) {			
+						if (layer.feature.properties) {
+							if (layer.feature.properties.b_name) {
+								layer.bindPopup(layer.feature.properties.b_name);
+							}
+							else if (layer.feature.properties.address) {
+								layer.bindPopup(layer.feature.properties.address);
+							}
+						}
+						layer.on("mouseover", function(e) {
+							setFootprintColour(layer, e);
+						})
+						layer.on("mouseout", function(e) {
+							setFootprintColour(layer, e);
+						})
+						layer.on("click", function(e) {
+							layer.openPopup(e.latlng);
+							setFootprintColour(layer, e);
+						})
+					})
+				});
+			} else {
+				$.getJSON(jsonUrl).done(function(data) {
+					buildings.clearLayers();
+					buildings.addData(data);
+					map.fitBounds(buildings);
+				})
+			}
+		});
+	} else if (mapType == 'detail') {
+
+		function initMap(layers) {
+			var map = L.map('map', {
+				zoom: 17,
+				zoomControl: false,
+				layers: layers,
+			});
+			map.dragging.disable();
+			map.touchZoom.disable();
+			map.doubleClickZoom.disable();
+			map.scrollWheelZoom.disable();
+			map.keyboard.disable();
+			map.fitBounds(buildings);
+			map.attributionControl.addAttribution("Contains OS data &copy; Crown copyright and OpenMap Local 2016 | Addresses &copy; OpenStreetMap Contributors");
 		}
-	});
+
+		$.getJSON(jsonUrl).done(function(data) {
+			if (map == null) {
+				geojson = data;
+				
+				sketchylayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/all_footprints_boring/{z}/{x}/{y}.png', {maxZoom: 20, opacity: 0.5,});
+				
+				buildings = L.geoJson(geojson, {
+					style: highlightStyle,
+				});
+				
+				layers = [sketchylayer, buildings];
+
+				initMap(layers);
+			}
+		});
+
+
+	}
 }
