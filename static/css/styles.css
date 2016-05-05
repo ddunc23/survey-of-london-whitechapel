@@ -325,9 +325,30 @@ footer.editor-help {
 	margin-top: 20px;
 	margin-bottom: 43px;
 }
-
 .controls > div > div, .controls > div > div:focus, .controls > div, .controls > div:focus {
 	border: 0;
 	box-shadow: none;
 	font-size: 21px;
+}
+.login-dialogue {
+	margin-top: 40px;
+	padding-bottom: 20px;
+	background-color: white;
+	box-shadow: 0px 1px 5px black;
+}
+
+.login-dialogue p {
+	font-size: 16px;
+	margin-bottom: 10px;
+}
+
+.login-page-container {
+	background-image: url('../img/SoL_Whitechapel100219.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+	height: 100%;
+}
+
+.dropdown-menu li {
+	font-size: 14px;
 }

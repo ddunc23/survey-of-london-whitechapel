@@ -45,7 +45,18 @@
 	    				<li><a href="/">Home</a></li>
 	    				<li><a href="{% url 'map.views.home' %}">Map</a></li>
 	    				{% if user.is_authenticated %}
-	    				<li><a href="{% url 'user_overview' user.username %}"><span class="glyphicon glyphicon-user"></span></a></li>
+	    				<!--<li><a href="{% url 'user_overview' user.username %}"><span class="glyphicon glyphicon-user"></span></a></li>-->
+	    				<form class="navbar-form navbar-right">
+		    				<div class="btn-group">
+							  	<a href="{% url 'user_overview' user.username %}" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-user"></span></a>
+							  	<button type="button" class="btn btn-default dropdown-toggle navbar-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+								<ul class="dropdown-menu pull-right">
+								    <li><a href="#">Edit Profile</a></li>
+								    <li role="separator" class="divider"></li>
+									<li><a href="{% url 'account_logout' %}">Logout</a></li>
+								</ul>
+							</div>
+						</form>
 	    				{% else %}
 	    				<li><a href="/accounts/login/">Log In</a></li>
 	    				{% endif %}

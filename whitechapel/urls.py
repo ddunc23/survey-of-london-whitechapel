@@ -33,5 +33,7 @@ urlpatterns = [
     # Grappelli
     url(r'^grappelli/', include('grappelli.urls')),
     # django-allauth
+    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
+     {'next_page': '/'}),
     url(r'^accounts/', include('allauth.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

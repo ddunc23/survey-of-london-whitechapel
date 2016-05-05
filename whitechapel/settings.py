@@ -52,17 +52,18 @@ INSTALLED_APPS = (
     'crispy_forms',
     'easy_thumbnails',
     'embed_video',
-    # 'debug_toolbar',
-    # django-allauth
+    'debug_toolbar',
+    # django-allauth and login providers
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     # django-allauth login providers
     #'allauth.socialaccount.providers.facebook',
-    #'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.twitter',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.pinterest',
+    'allauth.socialaccount.providers.instagram',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -224,3 +225,11 @@ SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+ACCOUNT_EMAIL_REQUIRED = True
+
+#def show_toolbar(request):
+#    return True
+#DEBUG_TOOLBAR_CONFIG = {
+#    "SHOW_TOOLBAR_CALLBACK" : show_toolbar,
+#}
