@@ -5,5 +5,6 @@ from whitechapel_pages.models import Page
 
 class PageAdmin(admin.ModelAdmin):
 	filter_horizontal = ['features', 'documents']
+	prepopulated_fields = {"slug": ("title",)}
 
 admin.site.register(Page, PageAdmin)

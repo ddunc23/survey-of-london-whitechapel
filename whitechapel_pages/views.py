@@ -13,4 +13,10 @@ def home(request):
 	for feature in features:
 		feature.documents = Document.objects.filter(feature=feature)
 
-	return render(request, 'whitechapel_pages/index.html', { 'page': page, 'title': 'Survey of London', 'subhead': 'Whitechapel', 'features': features, 'categories': categories, 'images': images})
+	return render(request, 'whitechapel_pages/index.html', {'page': page, 'title': 'Survey of London', 'subhead': 'Whitechapel', 'features': features, 'categories': categories, 'images': images})
+
+def page(request, slug):
+	"""Any other page"""
+	page = Page.objects.get(slug=slug)
+
+	return render(request, 'whitechapel_pages/page.html', {'page': page})

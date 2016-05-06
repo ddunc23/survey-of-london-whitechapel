@@ -1,0 +1,18 @@
+{% extends 'map/base.html'%}
+
+{% block content %}
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-md-8 col-md-offset-2 content">
+			<h1>Profile Settings</h1>
+			<form id="profile_form" method="post" action="{% url 'user_profile' %}">
+				{% load crispy_forms_tags %}
+				{% csrf_token %}
+				{{ form|crispy }}
+				{{ profile_extra|crispy }}
+				<input type="submit" name="save" value="Save" class="btn btn-primary"/>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

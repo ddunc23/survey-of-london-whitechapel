@@ -8,6 +8,7 @@ from filebrowser.fields import FileBrowseField
 
 class Page(models.Model):
 	title = models.CharField(max_length=140)
+	slug = models.SlugField()
 	body = RichTextUploadingField(blank=True, null=True)
 	documents = models.ManyToManyField('map.Document', blank=True)
 	features = models.ManyToManyField('map.Feature', blank=True)

@@ -185,7 +185,7 @@ def edit_document(request, feature, document=None):
 def edit_image(request, feature, image=None):
 	"""View to enable users to upload or edit images"""
 	if image:
-		document = Image.objects.get(id=document)
+		image = Image.objects.get(id=image)
 	else:
 		image = None
 
