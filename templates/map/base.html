@@ -22,19 +22,38 @@
 		<script src="{% static 'js/medium-editor/medium-editor.js' %}"></script>
 		<link rel="stylesheet" href="{% static 'css/medium-editor/medium-editor.css' %}">
 		<link rel="stylesheet" href="{% static 'css/medium-editor/themes/default.css' %}">
-
-
-
-
-
 	</head>
 	<body data-spy="scroll" data-target="#fixed-nav">
 		<nav class="navbar navbar-default navbar-fixed-top">
 			<div class="container-fluid">
 			    <div class="navbar-header navbar-left">
       				<a class="navbar-brand" href="/">Survey of London</a>
+      				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+				        <span class="sr-only">Toggle navigation</span>
+				        <span class="icon-bar"></span>
+				        <span class="icon-bar"></span>
+				        <span class="icon-bar"></span>
+				    </button>
     			</div>
-    			<div class="collapse navbar-collapse">
+    			<div class="collapse navbar-collapse" id="navbar-collapse">
+	    			<ul class="nav navbar-nav navbar-right">
+	    			{% if user.is_authenticated %}
+	    				<li class="dropdown">
+	    					<a id="userLinksLabel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> <span class="visible-xs-inline">{% if user.userprofile.display_name %}{{ user.userprofile.display_name }}{% else %}{{ user }}{% endif %}</span> <span class="caret"></span></a>
+	    					<ul class="dropdown-menu" aria-labelledby="userLinksLabel">
+	    						<li><a href="{% url 'user_overview' user.username %}">Your Content</a></li>
+	    						<li><a href="{% url 'user_profile' %}">Edit Profile</a></li>
+							    {% if user.is_staff %}
+								<li><a href="/admin/">Go to Admin Site</a></li>
+								{% endif %}
+							    <li role="separator" class="divider"></li>
+								<li><a href="{% url 'account_logout' %}">Logout</a></li>
+							</ul>
+	    				</li>
+	    				{% else %}
+	    				<a href="{% url 'account_login' %}" class="btn btn-default navbar-btn btn-block">Sign In</a>
+	    				{% endif %}
+	    			</ul>
 	    			<form class="navbar-form navbar-right" role="search" action="{% url 'search_map' %}" type="get">
 				        <div class="form-group">
 				    	    <input type="text" class="form-control search-input" placeholder="Search Places" name="q">
@@ -42,26 +61,19 @@
 				        <button type="submit" class="btn btn-default search">Submit</button>
 			      	</form>
 			      	<ul class="nav navbar-nav navbar-right">
-	    				<li><a href="/">Home</a></li>
-	    				<li><a href="{% url 'map.views.home' %}">Map</a></li>
-						{% if user.is_authenticated %}
-	    				<li>
-		    				<div class="btn-group navbar-btn" role="group" aria-label="button group">
-							  	<a href="{% url 'user_overview' user.username %}" class="btn btn-default">{% if user.userprofile.display_name %}{{ user.userprofile.display_name }}{% else %}{{ user }}{% endif %} <span class="glyphicon glyphicon-user"></span></a>
-							  	<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
-								<ul class="dropdown-menu pull-right">
-								    <li><a href="{% url 'user_profile' %}">Edit Profile</a></li>
-								    {% if user.is_staff %}
-									<li><a href="/admin/">Go to Admin Site</a></li>
-									{% endif %}
-								    <li role="separator" class="divider"></li>
-									<li><a href="{% url 'account_logout' %}">Logout</a></li>
-								</ul>
-							</div>
-						</li>
-	    				{% else %}
-	    				<li><a href="{% url 'account_login' %}">Log In</a></li>
-	    				{% endif %}
+	    				<li><a href="{% url 'site_home' %}">Home</a></li>
+	    				<li><a href="{% url 'map_home' %}">Map</a></li>
+    					<li class="dropdown">
+    						<a id="pageLinksLabel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About <span class="caret"></span></a>
+    						<ul class="dropdown-menu" aria-labelledby="pageLinksLabel">
+			    				{% if not user.logged_in %}
+			    					<li><a href="{% url 'account_login' %}">Contribute</a>
+			    				{% endif %}
+			    				{% for link in menu_links %}
+			    				<li><a href="{% url 'page' link.slug %}">{{ link }}</a></li>
+			    				{% endfor %}
+			    			</ul>
+			    		</li>
 	    			</ul>
 	    		</div>
 			</div>

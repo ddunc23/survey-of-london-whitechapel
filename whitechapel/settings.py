@@ -92,6 +92,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'whitechapel_pages.context_processors.menu_links',
             ],
         },
     },
@@ -222,7 +223,7 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = 1
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/map/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

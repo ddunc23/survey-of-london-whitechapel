@@ -3,7 +3,7 @@ import views
 
 urlpatterns = [
     # Map
-    url(r'^$', views.home, name='home'),
+    url(r'^$', views.map_home, name='map_home'),
     url(r'feature/(?P<feature>\d+)/$', views.feature, name='feature'),
     url(r'feature/(?P<feature>\d+)/detail/$', views.detail, name='detail'),
     url(r'feature/(?P<feature>\d+)/legend/$', views.feature_legend, name='feature_legend'),

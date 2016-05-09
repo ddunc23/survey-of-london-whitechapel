@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^admin/filebrowser/', include(site.urls)),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^map/', include('map.urls')),
-    url(r'^', include('whitechapel_pages.urls')),
+    url(r'', include('whitechapel_pages.urls')),
     url(r'^users/', include('whitechapel_users.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/', include(router.urls)),

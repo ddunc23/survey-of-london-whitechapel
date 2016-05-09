@@ -12,7 +12,7 @@ from django.views.decorators.cache import cache_page
 
 # Map Views
 
-def home(request):
+def map_home(request):
 	"""Base map"""
 	features = Feature.objects.all()
 	subtitle = '| Map'
