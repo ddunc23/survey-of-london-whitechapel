@@ -4,6 +4,7 @@ from djgeojson.fields import PolygonField
 from django.contrib.gis.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 from taggit.managers import TaggableManager
+from embed_video.fields import EmbedVideoField
 import bleach
 import markdown
 import html2text
@@ -46,7 +47,7 @@ class Feature(models.Model):
 	architect = models.CharField(max_length=100, null=True, blank=True)
 	builders = models.CharField(max_length=100, null=True, blank=True)
 	materials = models.CharField(max_length=100, null=True, blank=True)
-	type = models.CharField(max_length=100, null=True, blank=True)
+	short_description = models.CharField(max_length=140, null=True, blank=True, verbose_name='Short Description')
 	c_area = models.CharField(max_length=8,null=True, blank=True, verbose_name='Conservation Area')
 	listed = models.CharField(max_length=8,null=True, blank=True, verbose_name='Listed')
 	count = models.PositiveSmallIntegerField(default=0)
@@ -87,12 +88,13 @@ feature_mapping = {
 }
 
 
-class DocumentType(models.Model):
-	"""Document subcategories"""
-	name = models.CharField(max_length=64)
-
-	def __unicode__(self):
-		return self.name
+def update_feature_count(ugc_item):
+	"""Update feature.count whenever a new document, image, or media item is added"""
+	documents = len(Document.objects.filter(feature=ugc_item.feature).filter(published=True))
+	images = len(Image.objects.filter(feature=ugc_item.feature).filter(published=True))
+	media = len(Media.objects.filter(feature=ugc_item.feature).filter(published=True))
+	ugc_item.feature.count = documents + images + media
+	ugc_item.feature.save()
 
 
 class Document(models.Model):
@@ -105,7 +107,12 @@ class Document(models.Model):
 	start_year = models.PositiveSmallIntegerField(null=True, blank=True)
 	end_year = models.PositiveSmallIntegerField(null=True, blank=True)
 	order = models.PositiveSmallIntegerField(default=0)
-	document_type = models.ForeignKey(DocumentType, blank=True, null=True)
+	DOCUMENT_TYPE_CHOICES = (
+		('HISTORY', 'Research'),
+		('DESCRIPTION', 'Description'),
+		('STORY', 'Memory'),
+	)
+	document_type = models.CharField(max_length=16, choices=DOCUMENT_TYPE_CHOICES, default='HISTORY')
 	published = models.BooleanField(default=False)
 	pending = models.BooleanField(default=False)
 	anonymise = models.BooleanField(default=False)
@@ -118,17 +125,14 @@ class Document(models.Model):
 			return self.feature.address + ' | ' + self.title
 
 	def save(self, *args, **kwargs):
-		"""Sanitize html input from users, add footnotes and calculate the number of documents attached to a feature."""
+		"""Sanitize html input from users, add footnotes and update the 'count' attribute of the feature"""
 		# Clean the html
 		self.body = self.body = bleach.clean(self.body, tags=['p', 'b', 'strong', 'em', 'img', 'a', 'blockquote', 'i', 'li', 'ul', 'ol', 'h2', 'h3', 'br'])
 		# Convert HTML to Markdown so you can run the footnote filter on it, then save as self.body_processed, which is what gets displayed on the site
 		body_markdown = html2text.html2text(self.body)
 		self.body_processed = markdown.markdown(body_markdown, extensions=['markdown.extensions.footnotes'])
 		super(Document, self).save(*args, **kwargs)
-		documents = Document.objects.filter(feature=self.feature)
-		feature = Feature.objects.get(id=self.feature.id)
-		feature.count = len(documents)
-		feature.save()
+		update_feature_count(self)
 
 
 class Image(models.Model):
@@ -145,13 +149,19 @@ class Image(models.Model):
 	def __unicode__(self):
 		return self.title
 
+	def save(self, *args, **kwargs):
+		"""Update the 'count' attribute of the feature"""
+		super(Image, self).save(*args, **kwargs)
+		update_feature_count(self)
+
+
 class Media(models.Model):
 	"""A user-generated video or audio"""
 	feature = models.ForeignKey(Feature)
 	author = models.ForeignKey(User)
 	title = models.CharField(max_length=128)
 	description = models.TextField(null=True, blank=True)
-	url = models.URLField()
+	url = EmbedVideoField()
 	published = models.BooleanField(default=False)
 	pending = models.BooleanField(default=False)
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
@@ -161,3 +171,8 @@ class Media(models.Model):
 
 	class Meta:
 		verbose_name_plural = 'Media'
+
+	def save(self, *args, **kwargs):
+		"""Update the 'count' attribute of the feature"""
+		super(Media, self).save(*args, **kwargs)
+		update_feature_count(self)

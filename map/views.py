@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from map.models import Feature, Document, Category, Image, Media
 from map.serializers import FeatureSerializer
@@ -21,9 +21,10 @@ def map_home(request):
 
 def feature(request, feature):
 	"""Get info about a single feature"""
-	feature = Feature.objects.get(id=feature)
+	# feature = Feature.objects.get(id=feature)
+	feature = get_object_or_404(Feature, id=feature)
 	documents = Document.objects.filter(feature=feature)
-	histories = documents.filter(document_type__name='History').order_by('order')
+	histories = documents.filter(document_type='HISTORY').order_by('order')
 	images = Image.objects.filter(feature=feature)
 	media = Media.objects.filter(feature=feature)
 	categories = Category.objects.filter(feature=feature)
@@ -40,21 +41,25 @@ def feature(request, feature):
 def feature_legend(request, feature):
 	"""Update the legend control buttons for year, street"""
 	feature = Feature.objects.get(id=feature)
-	lower = feature.original - 20
-	upper = feature.original + 20
+	if feature.original != None:
+		lower = feature.original - 10
+		upper = feature.original + 10
+	else:
+		lower = 0
+		upper = 0
 	build_range ={'upper': upper, 'lower': lower}
 
 	return render(request, 'map/legendcontrol.html', {'feature': feature, 'build_range': build_range })
 
 def detail(request, feature):
 	"""Detailed view of documents and media attached to a single feature"""
-	feature = Feature.objects.get(id=feature)
+	feature = get_object_or_404(Feature, id=feature)
 	images = Image.objects.filter(feature=feature).filter(published=True)
 	documents = Document.objects.filter(feature=feature).filter(published=True).order_by('order')
 	media = Media.objects.filter(feature=feature).filter(published=True)
-	histories = documents.filter(document_type__name='History')
-	descriptions = documents.filter(document_type__name='Description')
-	stories = documents.filter(document_type__name='Story')
+	histories = documents.filter(document_type='HISTORY')
+	descriptions = documents.filter(document_type='DESCRIPTION')
+	stories = documents.filter(document_type='STORY')
 	categories = Category.objects.filter(feature=feature)
 	similar = feature.tags.similar_objects()
 	subtitle = '| ' + str(feature)
@@ -103,13 +108,13 @@ def all_content_by_author(request, user):
 # Users and User Generated Content
 
 @login_required
-def user_overview(request, user):
+def user_overview(request):
 	"""Show an overview of a user's details and documents"""
-	user = User.objects.get(username=user)
+	user = request.user
 	documents = Document.objects.filter(author=user)
 	published_docs = documents.filter(published=True)
 	pending_docs = documents.filter(pending=True)
-	draft_docs = documents.filter(published=False)
+	draft_docs = documents.filter(published=False).filter(pending=False)
 	images = Image.objects.filter(author=user)
 	pending_images = images.filter(pending=True)
 	published_images = images.filter(published=True)
@@ -164,7 +169,7 @@ def edit_document(request, feature, document=None):
 			d.save()
 
 			if d.pending != True:
-				return user_overview(request, request.user.username)
+				return user_overview(request)
 			else:
 				return ugc_thanks(request, feature.id)
 

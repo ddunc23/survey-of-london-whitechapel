@@ -17,7 +17,6 @@ class FeatureViewSet(viewsets.ReadOnlyModelViewSet):
 router = routers.DefaultRouter()
 router.register(r'features', FeatureViewSet)
 
-
 urlpatterns = [
     # django-filebrowser
     url(r'^admin/filebrowser/', include(site.urls)),
@@ -36,5 +35,5 @@ urlpatterns = [
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
      {'next_page': '/'}),
     url(r'^accounts/', include('allauth.urls')),
-    url(r'^accounts/profile/$', 'whitechapel_users.views.user_profile', name='user_profile')
+    url(r'^accounts/profile/$', 'whitechapel_users.views.user_profile', name='user_profile'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

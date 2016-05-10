@@ -31,6 +31,6 @@ urlpatterns = [
     url(r'^feature/(?P<feature>\d+)/media/add/$', views.edit_media, name='add_media'),
     url(r'^feature/(?P<feature>\d+)/media/(?P<media>\d+)/edit/$', views.edit_media, name='edit_media'),
     url(r'^feature/(?P<feature>\d+)/content/add/thanks/$', views.ugc_thanks, name='ugc_thanks'),
-    # User Profile Management
-    url(r'^user/(?P<user>\w+)/$', views.user_overview, name='user_overview'),
+    # User Content Management
+    url(r'^user/overview/$', views.user_overview, name='user_overview'),
 ]

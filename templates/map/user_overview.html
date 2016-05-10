@@ -5,25 +5,73 @@
 	<div class="row">
 		<div class="col-xs-12 col-md-8 col-md-offset-2 content">
 			{% if request.user = user %}
-				<h1>{% if user.userprofile.display_name %}{{ user.userprofile.display_name }}{% else %}{{ user }}{% endif %}'s Content</h1>
-				<hr />
-				<h2>Images</h2>
-				{% if images %}
-					<div class="row">
-					{% load thumbnail %}
-					{% for image in images %}
-						<div class="col-md-4">
-							<div class="item-card">
-								<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}">
-								<caption>{% if image.feature.b_name %}{{ image.feature.b_name }}{% else %}{{ image.feature.address }}{% endif %}</caption></a>
-							</div>
-						</div>	
-					{% endfor %}
+				<h1>Your Submissions</h1>
+				<ul class="nav nav-tabs" role="tablist" id="contentTabs">
+					<li role="presentation" class="active"><a href="#drafts" aria-controls="drafts" role="tab" data-toggle="tab">Drafts</a></li>
+					<li role="presentation"><a href="#pending" aria-controls="pending" role="tab" data-toggle="tab">Pending</a></li>
+					<li role="presentation"><a href="#published" aria-controls="published" role="tab" data-toggle="tab">Published</a></li>
+					<li role="presentation"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images</a></li>
+					<li role="presentation"><a href="#media" aria-controls="media" role="tab" data-toggle="tab">Media</a></li>
+				</ul>
+				<div class="tab-content">
+					<div role="tabpanel" class="tab-pane active" id="drafts">
+						<h2>Drafts</h2>
+						{% if not draft_docs %}
+							<p>You don't have any drafts.</p>
+						{% else %}
+							{% for doc in draft_docs %}
+								<h3><a href="{% url 'edit_document' doc.feature.id doc.id %}">{{ doc.title }}</a><br /><span class="small">{{ doc.feature }} | {{ doc.last_edited }}</span></h3>
+								{{ doc.body|safe|truncatewords_html:40 }}
+							{% endfor %}
+						{% endif %}
 					</div>
-					<hr />
-				{% endif %}
+					<div role="tabpanel" class="tab-pane" id="pending">
+						<h2>Pending</h2>
+						{% if not pending_docs %}
+							<p>You don't have any pending documents.</p>
+						{% else %}
+							{% for doc in pending_docs %}
+								<h3>{{ doc.title }}<br /><span class="small">{{ doc.feature }} | {{ doc.last_edited }}</span></h3>
+								{{ doc.body|safe|truncatewords_html:40 }}
+							{% endfor %}
+						{% endif %}
+					</div>
+					<div role="tabpanel" class="tab-pane" id="published">
+						<h2>Published</h2>
+						{% if not published_docs %}
+							<p>You don't have any published documents yet.</p>
+						{% else %}
+							{% for doc in published_docs %}
+								<h3><a href="{% url 'detail' doc.feature.id %}#{{ doc.title|slugify }}">{{ doc.title }}</a><br /><span class="small">{{ doc.feature }} | {{ doc.last_edited }}</span></h3>
+								{{ doc.body|safe|truncatewords_html:40 }}
+							{% endfor %}
+						{% endif %}
+					</div>
+					<div role="tabpanel" class="tab-pane" id="images">
+						<h2>Images</h2>
+						{% if not images %}
+							<p>You haven't uploaded any images yet</p>
+						{% else %}
+							<div class="row">
+							{% load thumbnail %}
+							{% for image in images %}
+								<div class="col-md-4">
+									<div class="item-card">
+										<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}">
+										<caption>{% if image.feature.b_name %}{{ image.feature.b_name }}{% else %}{{ image.feature.address }}{% endif %}</caption></a>
+									</div>
+								</div>	
+							{% endfor %}
+							</div>
+						{% endif %}
+					</div>
+					<div role="tabpanel" class="tab-pane" id="media">
+						<h2>Media</h2>
+					</div>
+				</div>
+				
 
-				<h2>Words</h2>
+				<!--<h2>Words</h2>
 				{% if documents %}
 						<h3>Drafts</h3>
 						{% if draft_docs %}
@@ -57,7 +105,7 @@
 				{% else %}
 					<p>You haven't written any stories yet.</p>
 				{% endif %}
-			{% endif %}
+			{% endif %}-->
 		</div>
 	</div>
 </div>

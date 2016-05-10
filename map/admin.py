@@ -1,5 +1,5 @@
 from django.contrib import admin
-from map.models import Feature, Document, Category, DocumentType, Image, Media
+from map.models import Feature, Document, Category, Image, Media
 from whitechapel_users.models import UserProfile
 from djgeojson.fields import GeoJSONField
 from leaflet.admin import LeafletGeoAdmin
@@ -31,12 +31,16 @@ class FeatureAdmin(LeafletGeoAdmin):
 			'fields': ('b_number', 'b_name', 'street', 'postcode', 'address'),
 			'classes': ('wide',),
 		}),
+		('Short Description', {
+			'fields': ('short_description',),
+			'classes': ('wide',),
+		}),
 		('Dates', {
 			'fields': ('original', 'rebuild_1', 'rebuild_2', 'f_date'),
 			'classes': ('wide',),
 		}),
 		('Building Information', {
-			'fields': ('storeys', 'basement', 'architect', 'builders', 'materials', 'type', 'c_area', 'listed',),
+			'fields': ('storeys', 'basement', 'architect', 'builders', 'materials', 'c_area', 'listed',),
 			'classes': ('wide',),
 		}),
 		('Other Metadata', {
@@ -66,7 +70,6 @@ class UserAdmin(BaseUserAdmin):
 admin.site.register(Category)
 admin.site.register(Feature, FeatureAdmin)
 admin.site.register(Document)
-admin.site.register(DocumentType)
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Image)
