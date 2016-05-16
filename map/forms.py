@@ -18,7 +18,7 @@ class DocumentForm(forms.ModelForm):
 		model = Document
 		fields = ('title', 'body',)
 		labels = {
-			'title': 'Title',
+			'title': 'Give your contribution a title',
 			'body': 'Text',
 		}
 
@@ -27,7 +27,7 @@ class ImageForm(forms.ModelForm):
 		model = Image
 		fields = ('file', 'title', 'description')
 		labels = {
-			'title': 'Title',
+			'title': 'Give Your Contribution a Title',
 			'file': 'Upload Image',
 		}
 		widgets = {

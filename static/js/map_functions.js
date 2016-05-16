@@ -28,7 +28,7 @@ var show_all_buildings = L.Control.extend({
 	},
 	onAdd: function(map) {
 		var container = L.DomUtil.create('div', 'show-buildings');
-		container.innerHTML += '<a href="#" class="all_btn btn btn-default btn-sm">Show All Buildings</a>';
+		container.innerHTML += '<a href="/map/" class="all_btn btn btn-default btn-sm">Show All Buildings</a>';
 		return container;
 	}
 })
@@ -178,7 +178,7 @@ var sketchylayer;
 var buildings;
 var highlight;
 
-function loadFeatures(jsonUrl, mapType) {
+function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 	if (mapType == 'main') {
 		
@@ -238,7 +238,9 @@ function loadFeatures(jsonUrl, mapType) {
 				
 				map.addControl(new infobox());
 				map.addControl(new feature_legend());
-				map.addControl(new show_all_buildings());
+				if (allFeatures == false) {
+					map.addControl(new show_all_buildings());
+				}
 				
 				title_box_title = '';
 
@@ -248,12 +250,12 @@ function loadFeatures(jsonUrl, mapType) {
 				}
 			
 
-				$('.all_btn').click(function() {
+				/*$('.all_btn').click(function() {
 					var jsonUrl = "/map/api/features/";
 					loadFeatures(jsonUrl, 'main');
 					$('.infobox-control').hide();
 					$('.titlebox-control').hide();
-				});
+				});*/
 				
 
 				$('.leaflet-control').mouseover(function() {

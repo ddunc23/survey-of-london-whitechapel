@@ -156,7 +156,7 @@
 				{% endfor %}
 				</ul>
 			{% endif %}
-			{% if feature.categories.all.0 %}
+			{% if feature.categories.all %}
 				<h4>Categories</h4>
 				<ul class="list-unstyled">
 				{% for category in feature.categories.all %}
@@ -178,9 +178,9 @@
 
 <script>
 
-	var jsonUrl = '{% url "single_feature" feature.id %}';
+	// var jsonUrl = '{% url "single_feature" feature.id %}';
 			
-	loadFeatures(jsonUrl, 'detail');
+	// loadFeatures(jsonUrl, 'detail');
 
 	var historyNav = '{% for document in histories %}{% if document.start_year %}<li><a href="#{{ document.title|slugify }}">{{ document.start_year }} - {{ document.end_year }}<br /><span class="small">{{ document.title }}</span></a></li>{% else %}<li><a href="#{{ document.title|slugify }}">{{ document.title }}</span></a></li>{% endif %}{% endfor %}';
 
@@ -195,7 +195,7 @@
 			$('#fixed-nav ul').html(descriptionNav);
 		} else if ($(this).html() == 'Research') {
 			$('#fixed-nav ul').html(historyNav);
-		} else if ($(this).html() == 'Stories') {
+		} else if ($(this).html() == 'Memories') {
 			$('#fixed-nav ul').html(storyNav);
 		} else {
 			$('#fixed-nav ul').html('');

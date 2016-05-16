@@ -20,7 +20,7 @@
 							<p>You don't have any drafts.</p>
 						{% else %}
 							{% for doc in draft_docs %}
-								<h3><a href="{% url 'edit_document' doc.feature.id doc.id %}">{{ doc.title }}</a><br /><span class="small">{{ doc.feature }} | {{ doc.last_edited }}</span></h3>
+								<h3><a href="{% url 'edit_document' doc.feature.id doc.id %}">{{ doc.title }}</a><br /><span class="small">{{ doc.feature }} | Last edited {{ doc.last_edited }}</span></h3>
 								{{ doc.body|safe|truncatewords_html:40 }}
 							{% endfor %}
 						{% endif %}
@@ -31,7 +31,7 @@
 							<p>You don't have any pending documents.</p>
 						{% else %}
 							{% for doc in pending_docs %}
-								<h3>{{ doc.title }}<br /><span class="small">{{ doc.feature }} | {{ doc.last_edited }}</span></h3>
+								<h3>{{ doc.title }}<br /><span class="small">{{ doc.feature }} | Submitted {{ doc.last_edited }}</span></h3>
 								{{ doc.body|safe|truncatewords_html:40 }}
 							{% endfor %}
 						{% endif %}
@@ -42,7 +42,7 @@
 							<p>You don't have any published documents yet.</p>
 						{% else %}
 							{% for doc in published_docs %}
-								<h3><a href="{% url 'detail' doc.feature.id %}#{{ doc.title|slugify }}">{{ doc.title }}</a><br /><span class="small">{{ doc.feature }} | {{ doc.last_edited }}</span></h3>
+								<h3><a href="{% url 'detail' doc.feature.id %}#{{ doc.title|slugify }}">{{ doc.title }}</a><br /><span class="small">{{ doc.feature }} | Published {{ doc.last_edited }}</span></h3>
 								{{ doc.body|safe|truncatewords_html:40 }}
 							{% endfor %}
 						{% endif %}

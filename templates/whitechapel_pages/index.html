@@ -30,7 +30,7 @@
 				{% if document.published == True %}
 				<div class="{% cycle 'col-xs-12' 'col-xs-12 col-md-6' 'col-xs-12 col-md-6' %}">
 					<h3><a href="{% url 'detail' document.feature.id %}#{{ document.document_type }}?{{ document.title|slugify }}">{{ document.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{{ document.author.userprofile.display_name }}</a> | {{ document.last_edited }}</span></h3>
-					{{ document.body|safe|truncatewords_html:40 }} <a href="{% url 'detail' document.feature.id %}#{{ document.document_type }}?{{ document.title|slugify }}">Read More...</a>
+					{{ document.body|safe|truncatewords_html:40 }}
 				</div>
 				{% endif %}
 				{% endfor %}

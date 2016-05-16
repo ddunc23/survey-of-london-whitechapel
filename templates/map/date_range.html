@@ -1,13 +1,13 @@
 {% extends 'map/base.html' %}
 {% block content %}
-		<div id="map"></div>
+		<div id="map" class="map-large"></div>
 
 		<script>
 
 			var title_box_title = 'Showing all places built between {{ build_range.lower }} and {{ build_range.upper }}';
 
 			var jsonUrl = '{% url "features_by_date_range" build_range.lower build_range.upper %}';
-			loadFeatures(jsonUrl);
+			loadFeatures(jsonUrl, 'main', false);
 		</script>
 
 {% endblock %}

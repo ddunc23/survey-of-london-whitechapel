@@ -66,9 +66,6 @@
     					<li class="dropdown">
     						<a id="pageLinksLabel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About <span class="caret"></span></a>
     						<ul class="dropdown-menu" aria-labelledby="pageLinksLabel">
-			    				{% if not user.logged_in %}
-			    					<li><a href="{% url 'account_login' %}">Contribute</a>
-			    				{% endif %}
 			    				{% for link in menu_links %}
 			    				<li><a href="{% url 'page' link.slug %}">{{ link }}</a></li>
 			    				{% endfor %}

@@ -21,12 +21,11 @@ def map_home(request):
 
 def feature(request, feature):
 	"""Get info about a single feature"""
-	# feature = Feature.objects.get(id=feature)
 	feature = get_object_or_404(Feature, id=feature)
-	documents = Document.objects.filter(feature=feature)
+	documents = Document.objects.filter(feature=feature).filter(published=True)
 	histories = documents.filter(document_type='HISTORY').order_by('order')
-	images = Image.objects.filter(feature=feature)
-	media = Media.objects.filter(feature=feature)
+	images = Image.objects.filter(feature=feature).filter(published=True)
+	media = Media.objects.filter(feature=feature).filter(published=True)
 	categories = Category.objects.filter(feature=feature)
 	if feature.original != None:
 		lower = feature.original - 10
@@ -295,7 +294,7 @@ class JSONResponse(HttpResponse):
         kwargs['content_type'] = 'application/json'
         super(JSONResponse, self).__init__(content, **kwargs)
 
-@cache_page(60 * 15)
+@cache_page(60 * 30)
 def features(request):
 	"""All Features as geoJson"""
 	if request.method == 'GET':

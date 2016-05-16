@@ -41,7 +41,7 @@ class Feature(models.Model):
 	original = models.PositiveSmallIntegerField(null=True, blank=True)
 	rebuild_1 = models.PositiveSmallIntegerField(null=True, blank=True)
 	rebuild_2 = models.PositiveSmallIntegerField(null=True, blank=True)
-	f_date = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Facade Data')
+	f_date = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Facade Date')
 	storeys = models.PositiveSmallIntegerField(null=True, blank=True)
 	basement = models.CharField(max_length=8,null=True, blank=True)
 	architect = models.CharField(max_length=100, null=True, blank=True)
@@ -119,17 +119,23 @@ class Document(models.Model):
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
 
 	def __unicode__(self):
+		try:
+			author_name = self.author.userprofile.display_name
+		except:
+			author_name = self.author.username
 		if self.feature.b_name:
-			return self.author.userprofile.display_name + ' | ' + self.feature.b_name + ' | ' + self.title
+			return author_name + ' | ' + self.feature.b_name + ' | ' + self.title
 		else:
-			return self.feature.address + ' | ' + self.title
+			return author_name + ' | ' + self.feature.address + ' | ' + self.title
 
 	def save(self, *args, **kwargs):
 		"""Sanitize html input from users, add footnotes and update the 'count' attribute of the feature"""
 		# Clean the html
-		self.body = self.body = bleach.clean(self.body, tags=['p', 'b', 'strong', 'em', 'img', 'a', 'blockquote', 'i', 'li', 'ul', 'ol', 'h2', 'h3', 'br'])
+		# self.body = bleach.clean(self.body, tags=['p', 'b', 'strong', 'em', 'img', 'a', 'blockquote', 'i', 'li', 'ul', 'ol', 'h2', 'h3', 'br'], attributes={'img': ['alt'], 'a': ['href'],})
 		# Convert HTML to Markdown so you can run the footnote filter on it, then save as self.body_processed, which is what gets displayed on the site
-		body_markdown = html2text.html2text(self.body)
+		h = html2text.HTML2Text()
+		h.ignore_images = False
+		body_markdown = h.handle(self.body)
 		self.body_processed = markdown.markdown(body_markdown, extensions=['markdown.extensions.footnotes'])
 		super(Document, self).save(*args, **kwargs)
 		update_feature_count(self)

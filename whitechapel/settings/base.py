@@ -13,18 +13,11 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 from secret_settings import *
+from unipath import Path
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['dev.local', 'dev.example.com']
-
+BASE_DIR = Path(__file__).ancestor(3)
 
 # Application definition
 
@@ -52,7 +45,6 @@ INSTALLED_APPS = (
     'crispy_forms',
     'easy_thumbnails',
     'embed_video',
-    'debug_toolbar',
     # django-allauth and login providers
     'django.contrib.sites',
     'allauth',
@@ -84,7 +76,8 @@ ROOT_URLCONF = 'whitechapel.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates/')],
+        # 'DIRS': [os.path.join(BASE_DIR, 'templates/')],
+        'DIRS': (BASE_DIR.child('templates'),),
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -105,14 +98,6 @@ WSGI_APPLICATION = 'whitechapel.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 # Database connection settings are stored untracked in secret_settings.py
-
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#    }
-#}
-
 
 # Caching
 
@@ -154,18 +139,17 @@ STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    BASE_DIR.child('static'),
     'static/',
 ]
 
 # Media Settings
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT = BASE_DIR.child('media')
 MEDIA_URL = '/media/'
 
 
 ### App-Specific Settings ###
-
 
 # Django-ckeditor Settings
 
@@ -174,7 +158,7 @@ CKEDITOR_UPLOAD_PATH = 'uploads/'
 # Django-leaflet Settings
 
 LEAFLET_CONFIG = {
-    'TILES': 'http://dev.local/tileserver-php/tileserver.php?/index.json?/all_footprints_boring/{z}/{x}/{y}.png',
+    'TILES': 'http://dev.local/tileserver.php?/index.json?/all_footprints_boring/{z}/{x}/{y}.png',
     'DEFAULT_CENTER': (51.5161, -0.067),
     'DEFAULT_ZOOM': 16,
 }
@@ -228,9 +212,3 @@ LOGIN_REDIRECT_URL = '/map/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ACCOUNT_EMAIL_REQUIRED = True
-
-#def show_toolbar(request):
-#    return True
-#DEBUG_TOOLBAR_CONFIG = {
-#    "SHOW_TOOLBAR_CALLBACK" : show_toolbar,
-#}
