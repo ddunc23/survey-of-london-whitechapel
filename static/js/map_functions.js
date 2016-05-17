@@ -185,7 +185,7 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 		function initMap(layers) {
 			map = L.map('map', {
 				zoom: 17,
-				minZoom: 15,
+				minZoom: 17,
 				maxZoom: 20,
 				zoomControl: false,
 				layers: layers
@@ -198,7 +198,7 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				geojson = data;
 
-				sketchylayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/all_footprints_boring/{z}/{x}/{y}.png', {maxZoom: 20});
+				sketchylayer = L.tileLayer('http://dev.local/tileserver.php?/index.json?/whitechapel_building_footprints_may_2016/{z}/{x}/{y}.png', {maxZoom: 20});
 
 				buildings = L.geoJson(geojson, {
 					onEachFeature: onEachFeature,
