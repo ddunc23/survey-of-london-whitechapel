@@ -1,0 +1,8 @@
+sudo apt-get install postgresql-contrib && sudo apt-get install postgis postgresql-9.3-postgis-2.1 && sudo apt-get install postgresql-server-dev-9.3 && sudo apt-get install python-dev && sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk && sudo apt-get install python-pip && sudo apt-get install memcached && sudo apt-get install python-virtualenv && sudo apt-get install git && sudo apt-get install php5-sqlite
+
+sudo -u postgres createuser -P whitechapel
+sudo -u postgres createdb -O whitechapel whitechapel_map
+sudo -u postgres psql -c "CREATE EXTENSION postgis;" whitechapel_map
+
+
+sudo -u postgres psql --username=whitechapel whitechapel_map_staging < 20160617_dump.sql
