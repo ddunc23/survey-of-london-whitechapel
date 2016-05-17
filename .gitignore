@@ -13,7 +13,7 @@ secret_settings.pyc
 ehthumbs.db
 Thumbs.db
 
-# Media, Databases and Compiled Python Files #
+# Media, Databases, Logs, and Compiled Python Files #
 ##############################################
 *.sqlite3
 /media/
@@ -23,3 +23,4 @@ Thumbs.db
 *.pyc
 *.sql
 *.pgsql
+*.log

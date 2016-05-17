@@ -1,3 +1,4 @@
+from .secret_settings import *
 from .base import *
 # from whitechapel.urls import urlpatterns
 

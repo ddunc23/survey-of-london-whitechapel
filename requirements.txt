@@ -26,6 +26,7 @@ html2text==2016.4.2
 html5lib==0.9999999
 jsonfield==1.0.3
 mbutil==0.2.0
+mod-wsgi==4.5.2
 oauthlib==1.1.1
 psycopg2==2.6.1
 python-dateutil==2.5.0
