@@ -279,9 +279,11 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 						}
 						layer.on("mouseover", function(e) {
 							setFootprintColour(layer, e);
+							info.update(layer.feature.properties);
 						})
 						layer.on("mouseout", function(e) {
 							setFootprintColour(layer, e);
+							info.update()
 						})
 						layer.on("click", function(e) {
 							layer.openPopup(e.latlng);
