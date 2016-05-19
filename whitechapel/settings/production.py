@@ -3,11 +3,11 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['staging.local', 'dev.example.com']
+ALLOWED_HOSTS = ['staging.local', 'dev.example.com', 'surveyoflondon.org']
 
 # STATIC_ROOT = '/home/duncan/code/staging/survey-of-london-whitechapel/static/'
 
-INSTALLED_APPS += ('mod_wsgi.server',)
+SECURE_SSL_HOST = True
 
 LOGGING = {
     'version': 1,
@@ -16,7 +16,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/home/duncan/code/staging/survey-of-london-whitechapel/debug.log',
+            'filename': '/home/duncan/logs/debug.log',
         },
     },
     'loggers': {
