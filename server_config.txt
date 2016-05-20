@@ -2,7 +2,7 @@
 
 sudo apt-get update
 
-sudo apt-get install postgresql-contrib && sudo apt-get install postgis postgresql-9.3-postgis-2.1 && sudo apt-get install postgresql-server-dev-9.3 && sudo apt-get install python-dev && sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk && sudo apt-get install python-pip && sudo apt-get install memcached && sudo apt-get install python-virtualenv && sudo apt-get install git && sudo apt-get install php5-sqlite && sudo apt-get install apache2-dev
+sudo apt-get install postgresql-contrib && sudo apt-get install postgis postgresql-9.3-postgis-2.1 && sudo apt-get install postgresql-server-dev-9.3 && sudo apt-get install python-dev && sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk && sudo apt-get install python-pip && sudo apt-get install memcached && sudo apt-get install python-virtualenv && sudo apt-get install git && sudo apt-get install php5-sqlite && sudo apt-get install apache2-dev && apt-get install libapache2-mod-wsgi
 
 
 ## Setup database
@@ -19,3 +19,11 @@ git clone https://github.com/ddunc23/survey-of-london-whitechapel.git
 ## Command to import the database from a backup
 
 sudo -u postgres psql --username=whitechapel whitechapel_map_staging < 20160617_dump.sql
+
+
+## Apache Config
+
+Disable the 000-default and default-ssl sites, then make two virtualhost config files in /etc/apache2/sites-available/, one for the django app and one for the tileserver. Both virtualhosts need to be configured for ssl, because otherwise it's going to be really insecure and bad. Also, if the map isn't configured to serve securely, people will get a warning about insecure content when accessing the map pages.
+It might be worth considering configuring an additional domain name for media files to stop malicious code execution from uploaded content.
+
+As another defence, you need to stop .php files from being executed from the media directory. Add php_flag engine off to .htaccess in the root media directory.

@@ -9,6 +9,10 @@ ALLOWED_HOSTS = ['staging.local', 'dev.example.com', 'surveyoflondon.org']
 
 SECURE_SSL_HOST = True
 
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SECURE = True
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

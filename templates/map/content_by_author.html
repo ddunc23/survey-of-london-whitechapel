@@ -1,45 +1,54 @@
 {% extends 'map/base.html' %}
 
 {% block content %}
-<div class="container">
-	<div class="row">
-		<div class="col-xs-12 col-md-8 col-md-offset-2 content">
-			<h1>All Contributions by {{ user.userprofile.display_name}}</h1>
-			<hr />
-			{% for feature in features %}
-				<h2><a href="{% url 'detail' feature.id %}">{{ feature }}</a></h2>
-				{% if feature.document_set.all|length > 0 %}
-					<h3>Documents</h3>
+
+	<div class="row results_pane">		
+		<div class="col-xs-12 col-md-4"><!-- Results Side Bar-->
+			<div class="col-xs-12">
+				<h2>All Contributions from {% if user.userprofile.display_name %}{{ user.userprofile.display_name }}{% else %}{{ user }}{% endif %}</h2>
+				<hr />
+				{% regroup documents by feature as document_list %}
+				<h3>Documents</h3>
+				{% for document in document_list %}
+				<h4>{{ document.grouper }}</h4>
 					<ul class="list-unstyled doc_list">
-					{% for document in feature.document_set.all %}
-						{% if document.author == user %}
-							<li><a href="{% url 'detail' document.feature.id %}#{{ document.document_type }}">{{ document.title }}</a><br />
-								{{ document.body_processed|safe|truncatechars_html:140 }}
-							</li>
-						{% endif %}
+					{% for item in document.list %}
+						<li><a href="{% url 'detail' item.feature.id %}#{{ item.document_type }}">{{ item.title }}</a></li>
 					{% endfor %}
 					</ul>
-				{% endif %}
-				{% if feature.image_set.all|length > 0 %}
-					<h3>Images</h3>
-					{% load thumbnail %}
-					<div class="row">
-					{% for image in feature.image_set.all %}
-						{% if image.author == user %}
-							<div class="col-md-4">
-								<div class="item-card">
-									<img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}">
-									<p>{{ image.caption }}</p>
-								</div>
-							</div>	
-						{% endif %}
+				{% endfor %}
+				<hr />
+
+				{% regroup images by feature as image_list %}
+				<h3>Images</h3>
+				{% load thumbnail %}
+				{% for image in image_list %}
+					<h4>{{ image.grouper }}</h4>
+					{% for item in image.list %}
+						<div class="media">
+							<div class="media-left">
+								<a href="{% url 'detail' item.feature.id %}#images"><img src="{% thumbnail item.file 64x64 crop='0,0' %}" class="img-rounded"></a>
+							</div>
+							<div class="media-body">
+								<h4 class="media-heading"><a href="{% url 'detail' item.feature.id %}#images">{{ item.title }}</a></h4>
+								<span class="small">{{ item.last_edited }}</span>
+							</div>
+						</div>
 					{% endfor %}
-					</div>
-				{% endif %}
-			<hr />
-			{% endfor %}
+				<br />
+				{% endfor %}
+				<hr />
+			</div>
+		</div><!-- / Results side bar -->
+		<div class="col-xs-12 col-md-8 map-results" id="map">
 		</div>
+		<script>
+			var jsonUrl = '{% url "features_by_author" user.id %}';
+			loadFeatures(jsonUrl, 'main', false);
+		</script>
 	</div>
-</div>
+
 
 {% endblock %}
+{% block footer %}
+{% endblock %} 

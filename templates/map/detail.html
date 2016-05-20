@@ -124,7 +124,7 @@
 						{% for image in images %}
 						<div class="col-xs-12 col-sm-4 col-md-4">
 							<div class="item-card">
-								<img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}">
+								<a href="#" class="gallery_item" data-image="/media/{{ image.file }}" data-caption="{{ image.title }}" data-author="{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}"><img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}"></a>
 								<p>{{ image.title }}<br />Contributed by <a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a></p>
 							</div>
 						</div>	
@@ -133,14 +133,16 @@
 				{% endif %}
 				{% if media %}
 					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories %} active{% endif %} row" id="media">
-						{% load embed_video_tags %}
-						{% for embed in media %}
-						<h2>{{ embed.title }}</h2>
-						<div class="embed-responsive embed-responsive-4by3">
-							{% video embed.url 'large' %}
+						<div class="col-xs-12">
+							{% load embed_video_tags %}
+							{% for embed in media %}
+							<h2>{{ embed.title }}</h2>
+							<div class="embed-responsive embed-responsive-4by3">
+								{% video embed.url 'large' %}
+							</div>
+							<hr />
+							{% endfor %}
 						</div>
-						<hr />
-						{% endfor %}
 					</div>
 				{% endif %}
 
@@ -175,12 +177,94 @@
 </div>
 
 
+<div class="modal fade" id="lightbox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<!--<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    		</div>-->
+			<div class="modal-body">
+        		<img src="" id="lightbox_image" alt="">
+        		<div class="btn-group pull-right" role="group" aria-label="gallery navigation">
+	        		<button type="button" class="btn btn-default lightbox_prev">Previous</button>
+	        		<button type="button" class="btn btn-default lightbox_next">Next</button>
+      			</div>
+        		<p id="lightbox_caption"></p>
+        		<p id="lightbox_image_author" class="small"></p>
+      		</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    		</div>
+    	</div>
+	</div>
+</div>
+
 
 <script>
 
-	// var jsonUrl = '{% url "single_feature" feature.id %}';
-			
-	// loadFeatures(jsonUrl, 'detail');
+	function update_img(images, index) {
+		// Update the lightbox image on clicking the buttons or pressing the left or right arrow keys
+		function next_img() {
+			if (index +1 >= images.length) {
+				index = 0;
+			} else {
+				index = index +1;
+			}
+			$('#lightbox_image').attr('src', $(images[index]).data('image'));
+			$('#lightbox_image').attr('alt', $(images[index]).data('caption'));
+			$('#lightbox_caption').html($(images[index]).data('caption'));
+			$('#lightbox_image_author').html('Submitted by ' + $(images[index]).data('author'));
+		}
+
+		function prev_img() {
+			if (index <= 0) {
+				index = images.length -1;
+			} else {
+				index = index -1;
+			}
+				$('#lightbox_image').attr('src', $(images[index]).data('image'));
+				$('#lightbox_image').attr('alt', $(images[index]).data('caption'));
+				$('#lightbox_caption').html($(images[index]).data('caption'));
+				$('#lightbox_image_author').html('Submitted by ' + $(images[index]).data('author'));
+		}
+
+		$(window).keydown(function(e) {
+			if (e.key == 'ArrowRight') {
+				e.preventDefault();
+				next_img();
+			} else if (e.key == 'ArrowLeft') {
+				e.preventDefault();
+				prev_img();
+			}
+		});
+
+		$('.lightbox_next').click(function(e) {
+			next_img();
+		});
+		$('.lightbox_prev').click(function(e) {
+			prev_img();
+		});
+
+
+	}
+
+	// Image Gallery
+	$('.gallery_item').click(function() {
+		// Populate lightbox content from image data attributes
+		var image = $(this).data('image');
+		var caption = $(this).data('caption');
+		var author = $(this).data('author');
+		$('#lightbox_image').attr('src', image);
+		$('#lightbox_image').attr('alt', caption);
+		$('#lightbox_caption').html(caption);
+		$('#lightbox_image_author').html('Submitted by ' + author);
+		// Create an array of all the images in teh gallery, get the index of the current image
+		var images = $('.gallery_item');
+		var index = $(this).parent().parent().prevAll('.col-xs-12').length;
+		update_img(images, index);
+		$('#lightbox').modal('show');
+	});
+
 
 	var historyNav = '{% for document in histories %}{% if document.start_year %}<li><a href="#{{ document.title|slugify }}">{{ document.start_year }} - {{ document.end_year }}<br /><span class="small">{{ document.title }}</span></a></li>{% else %}<li><a href="#{{ document.title|slugify }}">{{ document.title }}</span></a></li>{% endif %}{% endfor %}';
 

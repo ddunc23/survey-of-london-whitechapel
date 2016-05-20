@@ -9,6 +9,10 @@ from haystack.query import SearchQuerySet
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.views.decorators.cache import cache_page
+from itertools import chain
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Map Views
 
@@ -286,9 +290,7 @@ def edit_media(request, feature, media=None):
 # API Views
 
 class JSONResponse(HttpResponse):
-    """
-    An HttpResponse that renders its content into JSON.
-    """
+    """An HttpResponse that its content into JSON."""
     def __init__(self, data, **kwargs):
         content = JSONRenderer().render(data)
         kwargs['content_type'] = 'application/json'
@@ -343,7 +345,10 @@ def features_by_tag(request, tag):
 
 def features_by_author(request, author):
 	if request.method == 'GET':
-		features = Feature.objects.filter(document__author=author)
+		documents = Feature.objects.filter(document__author=author)
+		images = Feature.objects.filter(image__author=author)
+		media = Feature.objects.filter(media__author=author)
+		features = list(chain(documents, images, media))
 		serializer = FeatureSerializer(features, many=True)
 		return JSONResponse(serializer.data)
 

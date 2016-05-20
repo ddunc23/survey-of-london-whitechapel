@@ -12,7 +12,10 @@ import re
 
 def feature_directory_path(instance, filename):
 	"""Function to ensure image files will be uploaded to /uploads/features/<feature.id>/filename"""
-	return 'uploads/features/{0}/{1}'.format(instance.id, filename)
+	if instance.feature:
+		return 'uploads/features/{0}/{1}'.format(instance.feature.id, filename)
+	else:
+		return 'uploads/features/{0}/{1}'.format(instance.id, filename)
 
 
 class Category(models.Model):
@@ -147,7 +150,7 @@ class Image(models.Model):
 	author = models.ForeignKey(User)
 	title = models.CharField(max_length=128)
 	description = models.TextField(null=True, blank=True)
-	file = models.ImageField(upload_to=feature_directory_path, null=True, blank=True, verbose_name='Image')
+	file = models.ImageField(upload_to=feature_directory_path, null=True, blank=False, verbose_name='Image')
 	published = models.BooleanField(default=False)
 	pending = models.BooleanField(default=False)
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)

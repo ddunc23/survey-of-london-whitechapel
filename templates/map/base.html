@@ -44,7 +44,7 @@
 	    						<li><a href="{% url 'user_overview' %}">Your Submissions</a></li>
 	    						<li><a href="{% url 'user_profile' %}">Edit Profile</a></li>
 							    {% if user.is_staff %}
-								<li><a href="/admin/">Go to Admin Site</a></li>
+								<li><a href="{% url 'admin:index' %}">Go to Admin Site</a></li>
 								{% endif %}
 							    <li role="separator" class="divider"></li>
 								<li><a href="{% url 'account_logout' %}">Logout</a></li>

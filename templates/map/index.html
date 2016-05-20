@@ -1,10 +1,6 @@
 {% extends 'map/base.html' %}
 {% block content %}
 		<div id="map" class="map-large"></div>
-
-		{% load geojson_tags %}
-		{% load staticfiles %}
-
 		<script>
 			var jsonUrl = '{% url "features" %}';
 			loadFeatures(jsonUrl, 'main', 'index', true);

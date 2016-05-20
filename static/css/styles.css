@@ -36,7 +36,10 @@ html, body {
 	height: 300px;
 	border-bottom: 1px solid #e7e7e7;
 }
-
+.map-results {
+	padding-top: 4em;
+	height: 100%;
+}
 #small_map {
 	height: 300px;
 	border-bottom: 1px solid #e7e7e7;
@@ -229,10 +232,6 @@ html {
   position: relative;
   min-height: 100%;
 }
-body {
-  /* Margin bottom by footer height */
-  /* margin-bottom: 60px; */
-}
 .footer {
   bottom: 0;
   width: 100%;
@@ -356,4 +355,18 @@ p.login-dialogue-text {
 }
 .login-dialogue .lead {
 	font-size: 170%;
+}
+#lightbox_image {
+	width: 100%;
+	margin-bottom: 5px;
+}
+p#lightbox_caption, p#lightbox_image_author {
+	margin-bottom: 0px;
+}
+.results_pane {
+	height: 100%;
+}
+.results_pane .col-xs-12 {
+	height: 100%;
+	overflow: scroll;
 }

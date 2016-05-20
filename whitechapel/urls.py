@@ -18,7 +18,7 @@ router = routers.DefaultRouter()
 router.register(r'features', FeatureViewSet)
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^survey-of-london-whitechapel-admin-site/', include(admin.site.urls)),
     url(r'^map/', include('map.urls')),
     url(r'', include('whitechapel_pages.urls')),
     url(r'^users/', include('whitechapel_users.urls')),
