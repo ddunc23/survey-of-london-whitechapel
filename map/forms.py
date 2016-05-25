@@ -25,9 +25,9 @@ class DocumentForm(forms.ModelForm):
 class ImageForm(forms.ModelForm):
 	class Meta:
 		model = Image
-		fields = ('file', 'title', 'description')
+		fields = ('title', 'file',)
 		labels = {
-			'title': 'Give Your Contribution a Title',
+			'title': 'Give your contribution a title',
 			'file': 'Upload Image',
 		}
 		widgets = {
@@ -37,8 +37,8 @@ class ImageForm(forms.ModelForm):
 class MediaForm(forms.ModelForm):
 	class Meta:
 		model = Media
-		fields = ('url', 'title', 'description')
+		fields = ('title', 'url')
 		labels = {
-			'title': 'Title',
-			'url': 'URL',
+			'title': 'Give your contribution a title',
+			'url': 'Paste a link to YouTube, Vimeo or SoundCloud media here',
 		}

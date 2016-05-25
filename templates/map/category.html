@@ -7,10 +7,10 @@
 
 		<script>
 
-			var title_box_title = 'Showing all places categorised by &ldquo;{{ category.name }}&rdquo;';
+			var title_box_title = 'Showing all places in {{ category.name }}';
 
 			var jsonUrl = '{% url "features_by_category" category.id %}';
-			loadFeatures(jsonUrl, 'main');
+			loadFeatures(jsonUrl, 'main', false);
 		</script>
 
 {% endblock %}

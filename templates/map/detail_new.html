@@ -8,10 +8,10 @@
 		</div>
 		<div class="col-xs-12 col-md-7">
 			{% if feature.b_name %}
-			<h1>{{ feature.b_name }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Show on Map</a>{% if user.is_authenticated %}{% if not histories and not descriptions and not stories and not images and not media %}{% else %}<a href="{% url 'ugc_choice' feature.id %}" class="btn btn-primary">Add Content</a>{% endif %}{% endif %}</div></h1>
+			<h1>{{ feature.b_name }} <a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Show on Map</a></h1>
 			<h2><small>{{ feature.address }} {% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a></small> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
 			{% else %}
-			<h1>{{ feature.address }} {% if user.is_authenticated %}{% if not histories and not descriptions and not stories and not images and not media %}{% else %}<a href="{% url 'ugc_choice' feature.id %}" class="btn btn-default">Add Content</a>{% endif %}{% endif %}</h1>
+			<h1>{{ feature.address }}</h1>
 			{% endif %}
 		</div>
 		<div class="col-xs-2">
@@ -26,24 +26,12 @@
 			<p>Do you know something about the history of this building or the people who have lived or worked here? {% if user.is_authenticated %}<a href="{% url 'ugc_choice' feature.id %}">Contribute it here.</a>{% else %}<a href="{% url 'account_login' %}">Contribute it here.</a>{% endif %}</p>
 
 		{% else %}
-
-
 			<ul class="nav nav-tabs" role="tablist" id="docTabs">
-				{% if histories %}
-				<li role="presentation" class="active"><a href="#history" aria-controls="history" role="tab" data-toggle="tab">Research</a></li>
-				{% endif %}
-				{% if descriptions %}
-				<li role="presentation" {% if not histories %}class="active"{% endif %}><a href="#description" aria-controls="description" role="tab" data-toggle="tab">Description</a></li>
-				{% endif %}
-				{% if stories %}
-				<li role="presentation"{% if not histories and not descriptions %}class="active"{% endif %}><a href="#story" aria-controls="stories" role="tab" data-toggle="tab">Memories</a></li>
-				{% endif %}
-				{% if images %}
-				<li role="presentation"{% if not histories and not descriptions and not stories %}class="active"{% endif %}><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images</a></li>
-				{% endif %}
-				{% if media %}
-				<li role="presentation"{% if not histories and not descriptions and not stories %}class="active"{% endif %}><a href="#media" aria-controls="images" role="tab" data-toggle="tab">Media</a></li>
-				{% endif %}
+				<li role="presentation" {% if histories %}class="active"{% endif %}><a href="#history" aria-controls="history" role="tab" data-toggle="tab">Research</a></li>
+				<li role="presentation" {% if not histories and descriptions and not stories and not images and not media %}class="active"{% endif %}><a href="#description" aria-controls="description" role="tab" data-toggle="tab">Description</a></li>
+				<li role="presentation"{% if not histories and not descriptions and stories and not images and not media %}class="active"{% endif %}><a href="#story" aria-controls="stories" role="tab" data-toggle="tab">Memories</a></li>
+				<li role="presentation"{% if not histories and not descriptions and not stories and images and not media%}class="active"{% endif %}><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images</a></li>
+				<li role="presentation"{% if not histories and not descriptions and not stories and not images and media %}class="active"{% endif %}><a href="#media" aria-controls="images" role="tab" data-toggle="tab">Media</a></li>
 			</ul>
 		</div>
 	</div>
@@ -85,19 +73,22 @@
 		</div>
 		<div class="col-xs-12 col-md-7 feature-detail">
 			<div class="tab-content">
-				{% if histories %}
-					<div role="tabpanel" class="tab-pane active" id="history">
-					{% for document in histories %}
-						<div class="document">
-							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{{ document.author.userprofile.display_name }}</a></span></h2>
-							{{ document.body_processed|safe }}
-						</div>				
-					{% endfor %}
+					<div role="tabpanel" class="tab-pane {% if histories %}active{% endif %}" id="history">
+					{% if histories %}
+						{% for document in histories %}
+							<div class="document">
+								<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
+								<h2>{{ document.title }}<br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{{ document.author.userprofile.display_name }}</a></span></h2>
+								{{ document.body_processed|safe }}
+							</div>				
+						{% endfor %}
+					{% else %}
+						<h3>No one's contributed any research about {% if feature.b_name %}{{ feature.b_name }}{% else %}PP feature.address }}{% endif %} yet.</h3>
+						<p><a href="{% url 'add_document' feature.id %}" class="btn btn-default btn-lg">Add Research</a></p>
+					{% endif %}
 					</div>
-				{% endif %}
-				{% if descriptions %}
-					<div role="tabpanel" class="tab-pane{% if not histories  %} active{% endif %}" id="description">
+					<div role="tabpanel" class="tab-pane{% if not histories and descriptions and not stories and not images and not media %} active{% endif %}" id="description">
+					{% if descriptions %}
 					{% for document in descriptions %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
@@ -105,21 +96,27 @@
 							{{ document.body_processed|safe }}
 						</div>	
 					{% endfor %}
+					{% else %}
+						<h3>No one's contributed a description of {% if feature.b_name %}{{ feature.b_name }}{% else %}{{ feature.address }}{% endif %} yet.</h3>
+						<p><a href="{% url 'add_document' feature.id %}" class="btn btn-default btn-lg">Add a Description</a></p>
+					{% endif %}
 					</div>
-				{% endif %}
-				{% if stories %}
-					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions %} active{% endif %}" id="story">
-					{% for document in stories %}
-						<div class="document">
-							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{{ document.author.userprofile.display_name }}</a></span></h2>
-							{{ document.body_processed|safe }}
-						</div>	
-					{% endfor %}
+					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and stories and not images and not media %} active{% endif %}" id="story">
+					{% if stories %}
+						{% for document in stories %}
+							<div class="document">
+								<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
+								<h2>{{ document.title }}<br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{{ document.author.userprofile.display_name }}</a></span></h2>
+								{{ document.body_processed|safe }}
+							</div>	
+						{% endfor %}
+					{% else %}
+						<h3>No one's contributed any memories of {% if feature.b_name %}{{ feature.b_name }}{% else %}PP feature.address }}{% endif %} yet.</h3>
+						<p><a href="{% url 'add_document' feature.id %}" class="btn btn-default btn-lg">Add a Memory</a></p>
+					{% endif %}
 					</div>
-				{% endif %}
-				{% if images %}
-					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories %} active{% endif %} row" id="images">
+					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories and images and not media %} active{% endif %} row" id="images">
+					{% if images %}
 						{% load thumbnail %}
 						{% for image in images %}
 						<div class="col-xs-12 col-sm-4 col-md-4">
@@ -129,10 +126,15 @@
 							</div>
 						</div>	
 						{% endfor %}
+					{% else %}
+						<div class="col-xs-12">
+							<h3>No one's contributed any images of {% if feature.b_name %}{{ feature.b_name }}{% else %}PP feature.address }}{% endif %} yet.</h3>
+							<p><a href="{% url 'add_image' feature.id %}" class="btn btn-default btn-lg">Add an Image</a></p>
+						</div>
+					{% endif %}
 					</div>
-				{% endif %}
-				{% if media %}
-					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories %} active{% endif %} row" id="media">
+					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories and not images and media %} active{% endif %} row" id="media">
+					{% if media %}	
 						<div class="col-xs-12">
 							{% load embed_video_tags %}
 							{% for embed in media %}
@@ -143,9 +145,13 @@
 							<hr />
 							{% endfor %}
 						</div>
+					{% else %}
+						<div class="col-xs-12">
+							<h3>No one's contributed any audio or video of {% if feature.b_name %}{{ feature.b_name }}{% else %}{{ feature.address }}{% endif %} yet.</h3>
+							<p><a href="{% url 'add_media' feature.id %}" class="btn btn-default btn-lg">Add Media</a></p>
+						</div>
+					{% endif %}	
 					</div>
-				{% endif %}
-
 			</div>
 		{% endif %} 
 		</div>

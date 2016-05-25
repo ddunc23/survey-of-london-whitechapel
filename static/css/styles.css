@@ -8,7 +8,7 @@ p, .infobox-control p {
 	font-family: Georgia;
 	font-size: 21px;
 	line-height: 33px;
-	margin-bottom: 43px;
+	margin-bottom: 33px;
 }
 .content li {
 	font-size: 21px;
@@ -97,7 +97,6 @@ html, body {
 	border: 1px solid #999;
 	vertical-align: middle;
 	padding: 5px 10px 5px 10px;
-	display: none;
 }
 
 .leaflet-control-attribution {
@@ -196,10 +195,10 @@ html, body {
 	border-bottom: 1px solid #e7e7e7;
 }
 .jumbotron h1, .jumbotron h2 {
-	text-shadow: 0px 1px 5px #404040;
+	text-shadow: 0px 1px 5px #000000;
 }
 .jumbotron .btn {
-	box-shadow:  0px 1px 5px #404040;
+	box-shadow:  0px 1px 5px #000000;
 }
 /*footer {
 	background-color: #f8f8f8;
@@ -219,7 +218,7 @@ form#document_form {
 	margin-bottom: 50px;
 }
 
-form#document_form #id_title {
+form#document_form #id_title, #id_url {
 	font-size: 30px;
 	height: 45px;
 }
@@ -233,7 +232,6 @@ html {
   min-height: 100%;
 }
 .footer {
-  bottom: 0;
   width: 100%;
   background-color: #f5f5f5;
   padding-bottom: 50px;
@@ -369,4 +367,10 @@ p#lightbox_caption, p#lightbox_image_author {
 .results_pane .col-xs-12 {
 	height: 100%;
 	overflow: scroll;
+}
+.footer p {
+	font-size: 1px;
+}
+.feature-overview-footer .btn-group {
+	margin: 0 5px 0 5px;
 }

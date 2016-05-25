@@ -12,9 +12,10 @@ import re
 
 def feature_directory_path(instance, filename):
 	"""Function to ensure image files will be uploaded to /uploads/features/<feature.id>/filename"""
-	if instance.feature:
-		return 'uploads/features/{0}/{1}'.format(instance.feature.id, filename)
-	else:
+	try:
+		feature = instance.feature
+		return 'uploads/features/{0}/{1}'.format(feature.id, filename)
+	except:
 		return 'uploads/features/{0}/{1}'.format(instance.id, filename)
 
 
@@ -101,7 +102,7 @@ def update_feature_count(ugc_item):
 
 
 class Document(models.Model):
-	"""A user-generated or Survey of London text document attached to a feature."""
+	"""A user-submitted or Survey of London text document attached to a feature."""
 	feature = models.ForeignKey(Feature)
 	author = models.ForeignKey(User)
 	title = models.CharField(max_length=128)
@@ -143,9 +144,14 @@ class Document(models.Model):
 		super(Document, self).save(*args, **kwargs)
 		update_feature_count(self)
 
+	def delete(self, *args, **kwargs):
+		"""If a document is deleted, update the feature count to reflect this"""
+		super(Document, self).delete(*args, **kwargs)
+		update_feature_count(self)
+
 
 class Image(models.Model):
-	"""A user-generated image"""
+	"""A user-submitted image"""
 	feature = models.ForeignKey(Feature)
 	author = models.ForeignKey(User)
 	title = models.CharField(max_length=128)
@@ -163,9 +169,14 @@ class Image(models.Model):
 		super(Image, self).save(*args, **kwargs)
 		update_feature_count(self)
 
+	def delete(self, *args, **kwargs):
+		"""If an image is deleted, update the feature count to reflect this"""
+		super(Image, self).delete(*args, **kwargs)
+		update_feature_count(self)
+
 
 class Media(models.Model):
-	"""A user-generated video or audio"""
+	"""A user-submitted video or audio"""
 	feature = models.ForeignKey(Feature)
 	author = models.ForeignKey(User)
 	title = models.CharField(max_length=128)
@@ -184,4 +195,9 @@ class Media(models.Model):
 	def save(self, *args, **kwargs):
 		"""Update the 'count' attribute of the feature"""
 		super(Media, self).save(*args, **kwargs)
+		update_feature_count(self)
+
+	def delete(self, *args, **kwargs):
+		"""If an image is deleted, update the feature count to reflect this"""
+		super(Media, self).delete(*args, **kwargs)
 		update_feature_count(self)

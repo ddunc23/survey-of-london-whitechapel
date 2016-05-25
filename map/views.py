@@ -20,8 +20,14 @@ def map_home(request):
 	"""Base map"""
 	features = Feature.objects.all()
 	subtitle = '| Map'
+	first_visit = None
+	try:
+		request.session['has_visited']
+	except KeyError:
+		first_visit = True
+		request.session['has_visited'] = True
 
-	return render(request, 'map/index.html', {'title': 'Survey of London', 'features': features, 'subtitle': subtitle})
+	return render(request, 'map/index.html', {'title': 'Survey of London', 'features': features, 'subtitle': subtitle, 'first_visit': first_visit })
 
 def feature(request, feature):
 	"""Get info about a single feature"""
@@ -67,7 +73,7 @@ def detail(request, feature):
 	similar = feature.tags.similar_objects()
 	subtitle = '| ' + str(feature)
 
-	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar, 'subtitle': subtitle, 'images': images, 'media': media})
+	return render(request, 'map/detail_new.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar, 'subtitle': subtitle, 'images': images, 'media': media})
 
 def category(request, category):
 	"""Features by category"""
@@ -122,7 +128,7 @@ def user_overview(request):
 	pending_images = images.filter(pending=True)
 	published_images = images.filter(published=True)
 
-	return render(request, 'map/user_overview.html', {'user': user, 'documents': documents, 'published_docs': published_docs, 'draft_docs': draft_docs, 'pending_docs': pending_docs, 'images': images})
+	return render(request, 'map/user_overview.html', {'user': user, 'documents': documents, 'published_docs': published_docs, 'draft_docs': draft_docs, 'pending_docs': pending_docs, 'images': images, 'pending_images': pending_images})
 
 @login_required
 def ugc_choice(request, feature):

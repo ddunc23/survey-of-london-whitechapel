@@ -1,9 +1,11 @@
 {% extends 'map/base.html' %}
 {% block content %}
+<div id="" class="map-small" style="background: url('/media/{{ page.banner_image }}'); background-size: cover; background-position: center;" class="hidden-sm hidden-xs">
+</div>
 <div class="container">
 	<div class="row">
 		<div class="col-xs-12 col-md-8 col-md-offset-2 content">
-			<h1>{{ page.title }}</h1>
+			<h1>{{ page.title }} {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:whitechapel_pages_page_change' page.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %}</h1>
 			{{ page.body|safe }}
 		</div>
 	</div>

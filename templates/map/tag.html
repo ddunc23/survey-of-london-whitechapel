@@ -3,7 +3,7 @@
 		<div id="map" class="map-large"></div>
 		<script>
 
-			var title_box_title = 'All places tagged "{{ tag }}"';
+			var title_box_title = 'Showing all places tagged "{{ tag }}"';
 
 			var jsonUrl = '{% url "features_by_tag" tag %}';
 			loadFeatures(jsonUrl, 'main', false);

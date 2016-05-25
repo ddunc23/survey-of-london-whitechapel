@@ -13,7 +13,7 @@
 				<h4>{{ document.grouper }}</h4>
 					<ul class="list-unstyled doc_list">
 					{% for item in document.list %}
-						<li><a href="{% url 'detail' item.feature.id %}#{{ item.document_type }}">{{ item.title }}</a></li>
+						<li><a href="{% url 'detail' item.feature.id %}#{{ item.document_type }}">{{ item.title }}</a><br /></li>
 					{% endfor %}
 					</ul>
 				{% endfor %}
@@ -44,6 +44,7 @@
 		</div>
 		<script>
 			var jsonUrl = '{% url "features_by_author" user.id %}';
+			var title_box_title = 'Showing places with contributions from {% if user.userprofile.display_name %}{{ user.userprofile.display_name }}{% else %}{{ user }}{% endif %}';
 			loadFeatures(jsonUrl, 'main', false);
 		</script>
 	</div>

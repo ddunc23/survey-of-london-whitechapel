@@ -28,14 +28,14 @@ var show_all_buildings = L.Control.extend({
 	},
 	onAdd: function(map) {
 		var container = L.DomUtil.create('div', 'show-buildings');
-		container.innerHTML += '<a href="/map/" class="all_btn btn btn-default btn-sm">Show All Buildings</a>';
+		container.innerHTML += '<a href="/map/" class="all_btn btn btn-default btn-sm">Show All Places</a>';
 		return container;
 	}
 })
 
 var titlebox = L.Control.extend({
 	options: {
-		position: 'bottomright',
+		position: 'topleft',
 	},
 	onAdd: function(map) {
 		var container = L.DomUtil.create('div', 'titlebox-control row');
@@ -125,7 +125,7 @@ info.onAdd = function(map) {
 
 info.update = function(properties) {
     this._div.innerHTML =  (properties ?
-        '<b>' + properties.address + '</b>' : 'Hover over a place');
+        '<b>' + properties.address + '</b>' : '');
 };
 
 
@@ -184,8 +184,8 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 		
 		function initMap(layers) {
 			map = L.map('map', {
-				zoom: 17,
-				minZoom: 17,
+				zoom: 16,
+				minZoom: 16,
 				maxZoom: 20,
 				zoomControl: false,
 				layers: layers
@@ -207,8 +207,6 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 				layers = [sketchylayer, buildings];
 
 				initMap(layers);
-
-				info.addTo(map);
 
 				map.fitBounds(buildings);
 
@@ -242,12 +240,14 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 					map.addControl(new show_all_buildings());
 				}
 				
-				title_box_title = '';
+				// title_box_title = '';
 
 				if (title_box_title != '') {
 					map.addControl(new titlebox());
 					$('.titlebox-control').show();
 				}
+
+				info.addTo(map);
 			
 
 				/*$('.all_btn').click(function() {
@@ -271,10 +271,10 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 					buildings.eachLayer(function(layer) {			
 						if (layer.feature.properties) {
 							if (layer.feature.properties.b_name) {
-								layer.bindPopup(layer.feature.properties.b_name);
+								layer.bindPopup('<a href="feature/' + layer.feature.id + '/detail/">' + layer.feature.properties.b_name + '</a>');
 							}
 							else if (layer.feature.properties.address) {
-								layer.bindPopup(layer.feature.properties.address);
+								layer.bindPopup('<a href="feature/' + layer.feature.id + '/detail/">' + layer.feature.properties.address + '</a>');
 							}
 						}
 						layer.on("mouseover", function(e) {

@@ -155,7 +155,7 @@ CKEDITOR_UPLOAD_PATH = 'uploads/'
 # Django-leaflet Settings
 
 LEAFLET_CONFIG = {
-    'TILES': 'http://dev.local/tileserver.php?/index.json?/all_footprints_boring/{z}/{x}/{y}.png',
+    'TILES': 'https://surveyoflondonmaps.org/tileserver.php?/index.json?/whitechapel_building_footprints_with_open_spaces/{z}/{x}/{y}.png',
     'DEFAULT_CENTER': (51.5161, -0.067),
     'DEFAULT_ZOOM': 16,
 }
@@ -205,7 +205,5 @@ AUTHENTICATION_BACKENDS = (
 SITE_ID = 1
 
 LOGIN_REDIRECT_URL = '/map/'
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ACCOUNT_EMAIL_REQUIRED = True
