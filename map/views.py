@@ -73,7 +73,7 @@ def detail(request, feature):
 	similar = feature.tags.similar_objects()
 	subtitle = '| ' + str(feature)
 
-	return render(request, 'map/detail_new.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar, 'subtitle': subtitle, 'images': images, 'media': media})
+	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar, 'subtitle': subtitle, 'images': images, 'media': media})
 
 def category(request, category):
 	"""Features by category"""
