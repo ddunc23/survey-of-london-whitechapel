@@ -146,6 +146,11 @@ MEDIA_ROOT = BASE_DIR.child('media')
 MEDIA_URL = '/media/'
 
 
+# Logging
+
+LOG_DIR = BASE_DIR.child('logs')
+
+
 ### App-Specific Settings ###
 
 # Django-ckeditor Settings
