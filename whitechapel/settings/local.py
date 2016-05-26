@@ -23,7 +23,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': LOG_DIR + 'debug.log',
+            'filename': LOG_DIR + '/debug.log',
         },
     },
     'loggers': {

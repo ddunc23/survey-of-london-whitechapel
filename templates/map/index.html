@@ -24,7 +24,7 @@
 			var title_box_title = 'Showing all places'
 			var jsonUrl = '{% url "features" %}';
 			loadFeatures(jsonUrl, 'main', 'index', true);
-			{% if first_visit == False %}
+			{% if first_visit == True %}
 				$('#helpbox').modal('show');
 			{% endif %}
 		</script>

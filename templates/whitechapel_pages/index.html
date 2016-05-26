@@ -86,12 +86,14 @@
 	
 	<div class="row themed-content">
 		{% for category in categories %}
+		{% if category.feature_set.all %}
 		<div class="col-xs-12 col-md-4">
 			<div>
 				<a href="{% url 'map.views.category' category.id %}"><img src="{% thumbnail category.thumbnail 360x204 %}"></a>
 				<p><a href="{% url 'map.views.category' category.id %}">{{ category.name }}</a></p>
 			</div>
 		</div>
+		{% endif %}
 		{% endfor %}
 	</div><!-- / Themed Content -->
 	{% endif %}

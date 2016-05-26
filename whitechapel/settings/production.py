@@ -3,7 +3,7 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['staging.local', 'dev.example.com', 'surveyoflondon.org']
+ALLOWED_HOSTS = ['surveyoflondon.org']
 
 # STATIC_ROOT = '/home/duncan/code/staging/survey-of-london-whitechapel/static/'
 
@@ -13,7 +13,11 @@ SESSION_COOKIE_SECURE = True
 
 CSRF_COOKIE_SECURE = True
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+MANAGERS = (
+        ('Duncan Hay', 'd.hay@ucl.ac.uk'),
+    )
 
 LOGGING = {
     'version': 1,
@@ -22,7 +26,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': LOG_DIR + 'debug.log',
+            'filename': LOG_DIR + '/debug.log',
         },
     },
     'loggers': {

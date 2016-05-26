@@ -224,8 +224,9 @@ form#document_form #id_title, #id_url {
 }
 
 form#document_form label {
-	font-size: 30px;
-	font-weight: normal;
+	font-size: 25px;
+	font-weight: lighter;
+	font-style: italic;
 }
 html {
   position: relative;
@@ -369,8 +370,19 @@ p#lightbox_caption, p#lightbox_image_author {
 	overflow: scroll;
 }
 .footer p {
-	font-size: 1px;
+	font-size: 14px;
+	line-height: 22px;
 }
 .feature-overview-footer .btn-group {
 	margin: 0 5px 0 5px;
+}
+
+/* jQuery UI Autocomplete */
+
+.ui-autocomplete .ui-menu {
+	background-color: white;
+}
+
+.ui-menu-item {
+	background-color: white;
 }

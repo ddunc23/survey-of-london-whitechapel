@@ -30,6 +30,19 @@
 </div>
 {% load staticfiles %}
 <script src="{% static 'js/ugc_functions.js' %}"></script>
+
+<script>
+
+var data = [{% for tag in tags %}'{{ tag }}',{% endfor %}]
+
+$('#id_tags').select2({
+	tags: true,
+	data: data,
+});
+
+</script>
+
+
 {% endblock %}
 
 {% block footer %}

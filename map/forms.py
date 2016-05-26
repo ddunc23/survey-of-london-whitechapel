@@ -16,19 +16,24 @@ class FeatureForm(forms.ModelForm):
 class DocumentForm(forms.ModelForm):
 	class Meta:
 		model = Document
-		fields = ('title', 'body',)
+		fields = ('title', 'tags', 'body',)
 		labels = {
 			'title': 'Give your contribution a title',
+			'tags': 'Add one or two tags so people can find your contribution more easily',
 			'body': 'Text',
+		}
+		widgets = {
+			'tags': forms.SelectMultiple()
 		}
 
 class ImageForm(forms.ModelForm):
 	class Meta:
 		model = Image
-		fields = ('title', 'file',)
+		fields = ('title', 'file', 'tags')
 		labels = {
 			'title': 'Give your contribution a title',
 			'file': 'Upload Image',
+			'tags': 'Add one or two tags so people can find your image more easily'
 		}
 		widgets = {
 			'file': forms.ClearableFileInput(attrs={'class':'img-upload'})
@@ -37,8 +42,9 @@ class ImageForm(forms.ModelForm):
 class MediaForm(forms.ModelForm):
 	class Meta:
 		model = Media
-		fields = ('title', 'url')
+		fields = ('title', 'url', 'tags')
 		labels = {
 			'title': 'Give your contribution a title',
 			'url': 'Paste a link to YouTube, Vimeo or SoundCloud media here',
+			'tags': 'Add one or two tags so people can find your contribution more easily'
 		}

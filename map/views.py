@@ -11,6 +11,8 @@ from django.db.models import Q
 from django.views.decorators.cache import cache_page
 from itertools import chain
 import logging
+from taggit.models import Tag
+from django.core.mail import mail_managers
 
 logger = logging.getLogger(__name__)
 
@@ -176,10 +178,14 @@ def edit_document(request, feature, document=None):
 				d.pending = True
 
 			d.save()
+			form.save_m2m()
 
 			if d.pending != True:
 				return user_overview(request)
 			else:
+				# Tell the SoL admins that a new document has been submitted.
+				message = 'A new document has been submitted from ' + request.user.get_username() + '.'
+				mail_managers('New Document Submitted', message)
 				return ugc_thanks(request, feature.id)
 
 		else:
@@ -192,7 +198,9 @@ def edit_document(request, feature, document=None):
 			form = DocumentForm(instance=document)
 		feature = Feature.objects.get(id=feature)
 
-	return render(request, 'map/add_document.html', {'feature': feature, 'form': form, 'document': document })
+	tags = Tag.objects.all()
+
+	return render(request, 'map/add_document.html', {'feature': feature, 'form': form, 'document': document, 'tags': tags, })
 
 
 @login_required
@@ -226,10 +234,12 @@ def edit_image(request, feature, image=None):
 			i.file = request.FILES['file']
 
 			i.save()
+			form.save_m2m()
 
 			if i.pending != True:
 				return user_overview(request, request.user.username)
 			else:
+				# Add email handler here to alert SoL admins that new content has been submitted
 				return ugc_thanks(request, feature.id)
 
 		else:
@@ -274,10 +284,12 @@ def edit_media(request, feature, media=None):
 				m.pending = True
 
 			m.save()
+			form.save_m2m()
 
 			if m.pending != True:
 				return user_overview(request, request.user.username)
 			else:
+				# Add email handler here to alert SoL admins that new content has been submitted
 				return ugc_thanks(request, feature.id)
 
 		else:
@@ -345,7 +357,7 @@ def features_by_category(request, category):
 
 def features_by_tag(request, tag):
 	if request.method == 'GET':
-		features = Feature.objects.filter(tags__name__in=[tag])
+		features = Feature.objects.filter(Q(tags__name__in=[tag]) | Q(document__tags__name__in=[tag]) | Q(image__tags__name__in=[tag]) | Q(media__tags__name__in=[tag]))
 		serializer = FeatureSerializer(features, many=True)
 		return JSONResponse(serializer.data)
 
