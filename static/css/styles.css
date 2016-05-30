@@ -194,7 +194,7 @@ html, body {
 	padding-top: 150px;
 	border-bottom: 1px solid #e7e7e7;
 }
-.jumbotron h1, .jumbotron h2 {
+.jumbotron h1, .jumbotron h2, .jumbotron p {
 	text-shadow: 0px 1px 5px #000000;
 }
 .jumbotron .btn {
@@ -224,7 +224,7 @@ form#document_form #id_title, #id_url {
 }
 
 form#document_form label {
-	font-size: 25px;
+	font-size: 18px;
 	font-weight: lighter;
 	font-style: italic;
 }
@@ -259,7 +259,7 @@ html {
 	margin-bottom: 43px;
 }
 div#div_id_body {
-	margin-bottom: 200px;
+	margin-bottom: 10px;
 }
 footer.editor-help {
 	height: 200px;
@@ -377,12 +377,39 @@ p#lightbox_caption, p#lightbox_image_author {
 	margin: 0 5px 0 5px;
 }
 
-/* jQuery UI Autocomplete */
-
-.ui-autocomplete .ui-menu {
-	background-color: white;
+.editor-help {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	background-color: rgba(245, 245, 245, 0.8);
+	height: 220px;
+	border-top: 1px solid #e7e7e7;
 }
 
-.ui-menu-item {
-	background-color: white;
+.editor-help button {
+	margin-top: 15px;
+	margin-right: 10px;
+}
+
+.editor-help p {
+	font-size: 16px;
+	line-height: 24px;
+}
+
+.ugc-content-form-container {
+	margin-bottom: 300px;
+}
+
+/* Medium Editor */
+
+#div_id_body .controls {
+	background-image: none;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+	-webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+	-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	min-height: 200px;
 }

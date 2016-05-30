@@ -23,7 +23,10 @@ class DocumentForm(forms.ModelForm):
 			'body': 'Text',
 		}
 		widgets = {
-			'tags': forms.SelectMultiple()
+			# 'body': forms.TextInput(attrs={'class': 'medium-editor-input'})
+		}
+		help_texts = {
+			'tags': '',
 		}
 
 class ImageForm(forms.ModelForm):
@@ -36,7 +39,11 @@ class ImageForm(forms.ModelForm):
 			'tags': 'Add one or two tags so people can find your image more easily'
 		}
 		widgets = {
-			'file': forms.ClearableFileInput(attrs={'class':'img-upload'})
+			'file': forms.ClearableFileInput(attrs={'class':'img-upload'}),
+			#'tags': forms.SelectMultiple(),
+		}
+		help_texts = {
+			'tags': '',
 		}
 
 class MediaForm(forms.ModelForm):
@@ -47,4 +54,10 @@ class MediaForm(forms.ModelForm):
 			'title': 'Give your contribution a title',
 			'url': 'Paste a link to YouTube, Vimeo or SoundCloud media here',
 			'tags': 'Add one or two tags so people can find your contribution more easily'
+		}
+		widgets = {
+			#'tags': forms.SelectMultiple()
+		}
+		help_texts = {
+			'tags': '',
 		}

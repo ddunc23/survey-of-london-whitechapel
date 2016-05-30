@@ -11,12 +11,6 @@ from allauth.account.views import login
 def home(request, user):
 	pass
 
-def whitechapel_login(request):
-	response = login
-	print 'working'
-
-	return response
-
 @login_required
 def user_profile(request):
 	"""View to allow users to edit their profile"""
@@ -39,25 +33,3 @@ def user_profile(request):
 		profile_extra = WhitechapelUserProfileFormExtra(instance=user)
 
 	return render(request, 'whitechapel_users/profile.html', {'form': form, 'profile_extra': profile_extra})
-
-
-
-"""
-def user_login(request, user):
-	if request.method == 'POST':
-		username = request.POST['username']
-		password = request.POST['password']
-		user = authenticate(username=username, password=password)
-		if user is not None:
-			if user.is_active:
-				login(request, user)
-				# Redirect to a success page.
-			else:
-				pass
-		else:
-			pass
-	else:
-		pass
-
-	return render(request, 'whitechapel_users/login.html', {})
-"""

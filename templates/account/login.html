@@ -15,7 +15,7 @@
           <h3>Contribute to Survey of London Whitechapel</h3>
           <hr>
           <p>This website is a collaboration between the Survey of London and you, the reading public.</p>
-          <p>To start contributing your memories, research, images or media about Whitechapel's buildings and history, sign, or if you don't have an account yet, <a href="{{ signup_url }}">sign up here</a>.</p>
+          <p>To start contributing your memories, research, images or media about Whitechapel's buildings and history, sign in, or, if you don't have an account yet, <a href="{{ signup_url }}">sign up here</a>.</p>
           </div>
         <div class="col-xs-12 col-md-5">
         <h3>Sign In</h3>
@@ -31,8 +31,6 @@
         {% include "socialaccount/snippets/login_extra.html" %}
 
         {% else %}
-        <p>{% blocktrans %}If you have not created an account yet, then please
-        <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
         {% endif %}
 
         <form class="login" method="POST" action="{% url 'account_login' %}">
@@ -42,6 +40,7 @@
           {% if redirect_field_value %}
           <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
           {% endif %}
+          <input type="hidden" name="next" value="/map/?last_feature={{ last_feature }}" />
           <a class="btn btn-default" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
           <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
         </form>

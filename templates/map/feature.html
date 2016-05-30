@@ -5,15 +5,13 @@
 		{% load thumbnail %}
 		<a href="{% url 'detail' feature.id %}"><img src="{% thumbnail feature.thumbnail 300x170 crop='0,0' %}"></a>
 	{% endif %}
-
 	<div class="feature-overview-footer">
 		{% if feature.b_name %}
 			<p><span class="small"><a href="{% url 'detail' feature.id %}">{{ feature.b_name }}</a></span><br /></p>
 			{% else %}
 			<p><span class="small"><a href="{% url 'detail' feature.id %}">{{ feature.address }}</a></span><br /></p>
 		{% endif %}
-
-			<div class="btn-group">{% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a> {% endif %}<a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?feature={{ feature.id }}{% endif %}" class="btn btn-default btn-sm">Add Content</a> <a href="{% url 'detail' feature.id %}" class="btn btn-default btn-sm">Read More</a> </div>
+			<div class="btn-group">{% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a> {% endif %}<a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-default btn-sm">Add Content</a> <a href="{% url 'detail' feature.id %}" class="btn btn-default btn-sm">Read More</a> </div>
 	</div>
 		<script>
 			$('.close-this').click(function() {

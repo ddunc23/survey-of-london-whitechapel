@@ -4,23 +4,19 @@
 
 <div class="container">
 	<div class="row">
-		<div class="col-md-2">
-		</div>
-		<div class="col-xs-12 col-md-7">
-			<h1>Add an Image of {% if feature.b_name %}{{ feature.b_name }}{% else %}{{ feature.address }}{% endif %}</h1>
+		<div class="col-xs-12 col-md-8 col-md-offset-2">
+			<h2>Add an Image of {% if feature.b_name %}{{ feature.b_name }}{% else %}{{ feature.address }}{% endif %}</h2>
 			<hr />
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-md-2">
-		</div>
+	<div class="row ugc-content-form-container">
 		<form id="document_form" method="post" {% if image.id %} action="{% url 'edit_document' feature.id image.id %}" {% else %}  action="{% url 'add_image' feature.id %}" {% endif %} enctype="multipart/form-data">
-			<div class="col-xs-12 col-md-7">
+			<div class="col-xs-12 col-md-8 col-md-offset-2">
 				{% load crispy_forms_tags %}
 				{% csrf_token %}
 				{{ form|crispy }}
 			</div>
-			<div class="col-md-3">
+			<div class="col-xs-12 col-md-8 col-md-offset-2">
 				<input type="submit" name="submit" value="Save" class="btn btn-default"/>
 				<input type="submit" name="publish" value="Submit" class="btn btn-primary"/>
 				
@@ -28,18 +24,36 @@
 		</form>
 	</div>
 </div>
+
+<div class="editor-help">
+	<div class="row">
+		<div class="col-xs-12">
+			<button class="btn btn-default btn-sm toggle-help pull-right">Hide Help</button>
+			<h3 class="text-center">Help</h3>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-md-4">
+				<h4>What We're Looking For</h4>
+				<p>If you've got a photo, drawing, or painting of this building, either from now or as it was in the past, you can contribute it using this page.</p>
+			</div>
+			<div class="col-xs-12 col-md-4">
+				<h4>How to Add an Image</h4>
+				<p>Click the 'Browse' button above to select a file from your computer. Your image should be in .jpg, .png, or .gif format, and should be no larger than 1 megabyte in size.</p>
+			</div>
+			<div class="col-xs-12 col-md-4">
+				<h4>Help People Find Your Image</h4>
+				<p>Give your text a title and add one or two tags. For example, if your image is from a particular time, you could tag it '1960s'.</p>
+			</div>
+		</div>
+	</div>
+</div>
+
 {% load staticfiles %}
 <script src="{% static 'js/ugc_functions.js' %}"></script>
 {% endblock %}
 
+
 {% block footer %}
-<!--<footer class="footer navbar-fixed-bottom editor-help">
-	<div class="container">
-		<div class="row">
-			<div class="col-xs-12 col-md-8 col-md-offset-2">
-				
-			</div>
-		</div>
-	</div>
-</footer>-->
 {% endblock %}

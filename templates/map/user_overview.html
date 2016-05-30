@@ -31,17 +31,8 @@
 							<p>You don't have any pending submissions.</p>
 						{% else %}
 							{% for doc in pending_docs %}
-								<h3>{{ doc.title }}<br /><span class="small">{{ doc.feature }} | Submitted {{ doc.last_edited }}</span></h3>
+								<h3>{{ doc.title }}<br /><span class="small"><a href="{% url 'detail' doc.feature.id %}">{{ doc.feature }}</a> | Submitted {{ doc.last_edited }}</span></h3>
 								{{ doc.body|safe|truncatewords_html:40 }}
-							{% endfor %}
-							{% load thumbnail %}
-							{% for image in pending_images %}
-								<div class="col-md-4">
-									<div class="item-card">
-										<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}">
-										<caption>{% if image.feature.b_name %}{{ image.feature.b_name }}{% else %}{{ image.feature.address }}{% endif %}</caption></a>
-									</div>
-								</div>
 							{% endfor %}
 						{% endif %}
 					</div>

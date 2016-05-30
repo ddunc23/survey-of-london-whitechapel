@@ -1,6 +1,7 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from map.models import Feature, Document, Category, Image, Media
 from map.serializers import FeatureSerializer
 from map.forms import DocumentForm, ImageForm, MediaForm
@@ -13,6 +14,8 @@ from itertools import chain
 import logging
 from taggit.models import Tag
 from django.core.mail import mail_managers
+import re
+from django.template import Context
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +31,14 @@ def map_home(request):
 	except KeyError:
 		first_visit = True
 		request.session['has_visited'] = True
+
+	
+	last_feature = request.GET.get('last_feature')
+	if last_feature is not None and last_feature !='':
+		last_feature = int(last_feature)
+		return HttpResponseRedirect(reverse('ugc_choice', args=(last_feature,)))
+	else:
+		pass
 
 	return render(request, 'map/index.html', {'title': 'Survey of London', 'features': features, 'subtitle': subtitle, 'first_visit': first_visit })
 
@@ -47,7 +58,7 @@ def feature(request, feature):
 		upper = 0
 	build_range ={'upper': upper, 'lower': lower}
 
-	return render(request, 'map/feature.html', {'feature': feature, 'documents': documents, 'categories': categories, 'build_range': build_range, 'histories': histories, 'images': images})
+	return render(request, 'map/feature.html', {'feature': feature, 'documents': documents, 'categories': categories, 'build_range': build_range, 'histories': histories, 'images': images, })
 
 def feature_legend(request, feature):
 	"""Update the legend control buttons for year, street"""
@@ -149,6 +160,13 @@ def ugc_thanks(request, feature):
 	feature = Feature.objects.get(id=feature)
 	return render(request, 'map/ugc_thanks.html', {'feature': feature})
 
+
+def inform_managers_of_content_submission(request):
+	# Tell the SoL admins that a new document has been submitted.
+	message = 'Hello Survey of London Admins!\n New content has been submitted by ' + request.user.get_username() + ' and is awaiting moderation. To review, edit, and approve it, click <a href="#">here</a>.\n Thank you.'
+	mail_managers('New Content Submitted', message)
+
+
 @login_required
 def edit_document(request, feature, document=None):
 	"""View to allow users to add or edit documents."""
@@ -177,15 +195,21 @@ def edit_document(request, feature, document=None):
 			if published != None:
 				d.pending = True
 
+			### Regex to get select2 tags working - fix fix fix!
+
+			#data = form.cleaned_data['tags']
+			#string = ', '.join(data)
+			#uni = re.sub(r'u"|u\'|[\[\]"\']', '', string)
+			#form.cleaned_data['tags'] = repr(uni)
+			# form.cleaned_data['tags'] = data
+
 			d.save()
 			form.save_m2m()
 
 			if d.pending != True:
 				return user_overview(request)
 			else:
-				# Tell the SoL admins that a new document has been submitted.
-				message = 'A new document has been submitted from ' + request.user.get_username() + '.'
-				mail_managers('New Document Submitted', message)
+				inform_managers_of_content_submission(request)
 				return ugc_thanks(request, feature.id)
 
 		else:
@@ -237,9 +261,9 @@ def edit_image(request, feature, image=None):
 			form.save_m2m()
 
 			if i.pending != True:
-				return user_overview(request, request.user.username)
+				return user_overview(request)
 			else:
-				# Add email handler here to alert SoL admins that new content has been submitted
+				inform_managers_of_content_submission(request)
 				return ugc_thanks(request, feature.id)
 
 		else:
@@ -252,7 +276,9 @@ def edit_image(request, feature, image=None):
 			form = ImageForm(instance=image)
 		feature = Feature.objects.get(id=feature)
 
-	return render(request, 'map/add_image.html', {'feature': feature, 'form': form, 'image': image })
+	tags = Tag.objects.all()
+
+	return render(request, 'map/add_image.html', {'feature': feature, 'form': form, 'image': image, 'tags': tags })
 
 
 @login_required
@@ -289,7 +315,7 @@ def edit_media(request, feature, media=None):
 			if m.pending != True:
 				return user_overview(request, request.user.username)
 			else:
-				# Add email handler here to alert SoL admins that new content has been submitted
+				inform_managers_of_content_submission(request)
 				return ugc_thanks(request, feature.id)
 
 		else:
@@ -302,7 +328,9 @@ def edit_media(request, feature, media=None):
 			form = MediaForm(initial={'title': 'Add a title (required)', 'url': 'Add a link to a media file (required)'}, instance=document)
 		feature = Feature.objects.get(id=feature)
 
-	return render(request, 'map/add_media.html', {'feature': feature, 'form': form, 'media': media })
+	tags = Tag.objects.all()
+
+	return render(request, 'map/add_media.html', {'feature': feature, 'form': form, 'media': media, 'tags': tags })
 
 
 # API Views

@@ -83,6 +83,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'whitechapel_pages.context_processors.menu_links',
+                'map.context_processors.last_feature',
             ],
         },
     },
@@ -150,6 +151,10 @@ MEDIA_URL = '/media/'
 
 LOG_DIR = BASE_DIR.child('logs')
 
+# Emails 
+
+EMAIL_SUBJECT_PREFIX = 'Survey of London Whitechapel | '
+
 
 ### App-Specific Settings ###
 
@@ -212,3 +217,4 @@ SITE_ID = 1
 LOGIN_REDIRECT_URL = '/map/'
 
 ACCOUNT_EMAIL_REQUIRED = True
+
