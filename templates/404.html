@@ -5,10 +5,13 @@
 <div class="container">
 	<div class="row">
 		<div class="col-xs-12 col-md-8 col-md-offset-2 content">
-			<h1>Oh Noes - Error 404!</h1>
-			<p>It borked.</p>
+			<h1>Error 404</h1>
+			<p>The page you requested can't be found.</p>
+			<p><a href="{% url 'map_home' %}">Take me back to the map.</a></p>
 		</div>
 	</div>
 </div>
 
+{% endblock %}
+{% block footer %}
 {% endblock %}

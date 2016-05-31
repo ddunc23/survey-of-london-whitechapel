@@ -11,8 +11,12 @@
 				{{ form|crispy }}
 				{{ profile_extra|crispy }}
 				<input type="submit" name="save" value="Save" class="btn btn-primary"/>
+				<a class="btn btn-default" href="{% url 'account_reset_password' %}">Reset Password</a>
 			</form>
 		</div>
 	</div>
 </div>
+{% endblock %}
+
+{% block footer %}
 {% endblock %}
