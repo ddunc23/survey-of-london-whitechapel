@@ -172,6 +172,10 @@
 				{% endfor %}
 				</ul>
 			{% endif %}
+			<h4>Tags</h4>
+				{% for tag in tags %}
+					<a href="{% url 'tag' tag %}" class="btn btn-default btn-xs tag">{{ tag }}</a> 
+				{% endfor %}
 			{% if feature.tags.all|length > 0 %}
 				<h4>Tags</h4>
 				{% for tag in feature.tags.all %}

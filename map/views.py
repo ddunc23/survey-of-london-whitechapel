@@ -85,8 +85,16 @@ def detail(request, feature):
 	categories = Category.objects.filter(feature=feature)
 	similar = feature.tags.similar_objects()
 	subtitle = '| ' + str(feature)
+	tags = []
+	for document in documents:
+		tags.append(document.tags.all())
+	for image in images:
+		tags.append(image.tags.all())
+	for item in media:
+		tags.append(item.tags.all())
+	tags.append(feature.tags.all())
 
-	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar, 'subtitle': subtitle, 'images': images, 'media': media})
+	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar, 'subtitle': subtitle, 'images': images, 'media': media, 'tags': tags, })
 
 def category(request, category):
 	"""Features by category"""
@@ -385,6 +393,7 @@ def features_by_category(request, category):
 
 def features_by_tag(request, tag):
 	if request.method == 'GET':
+		"""Gather all features by a particular tag, ensuring that you include tags attached to media, images, and documents"""
 		features = Feature.objects.filter(Q(tags__name__in=[tag]) | Q(document__tags__name__in=[tag]) | Q(image__tags__name__in=[tag]) | Q(media__tags__name__in=[tag]))
 		serializer = FeatureSerializer(features, many=True)
 		return JSONResponse(serializer.data)
