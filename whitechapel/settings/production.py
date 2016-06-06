@@ -3,9 +3,7 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['surveyoflondon.org']
-
-# STATIC_ROOT = '/home/duncan/code/staging/survey-of-london-whitechapel/static/'
+ALLOWED_HOSTS = ['surveyoflondon.org', 'staging.surveyoflondon.org']
 
 SECURE_SSL_HOST = True
 

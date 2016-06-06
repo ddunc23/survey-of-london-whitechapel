@@ -165,7 +165,7 @@ CKEDITOR_UPLOAD_PATH = 'uploads/'
 # Django-leaflet Settings
 
 LEAFLET_CONFIG = {
-    'TILES': 'https://surveyoflondonmaps.org/tileserver.php?/index.json?/whitechapel_building_footprints_with_open_spaces/{z}/{x}/{y}.png',
+    'TILES': 'https://{s}.surveyoflondon.org/tileserver.php?/index.json?/whitechapel_building_footprints_with_open_spaces/{z}/{x}/{y}.png',
     'DEFAULT_CENTER': (51.5161, -0.067),
     'DEFAULT_ZOOM': 16,
 }

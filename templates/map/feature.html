@@ -11,6 +11,9 @@
 			{% else %}
 			<p><span class="small"><a href="{% url 'detail' feature.id %}">{{ feature.address }}</a></span><br /></p>
 		{% endif %}
+			<p class="feature-icons">
+				{% if documents %}<span class="glyphicon glyphicon-file"></span> {% endif %}{% if images %}<span class="glyphicon glyphicon-picture"></span> {% endif %}{% if media %}<span class="glyphicon glyphicon-play"></span> {% endif %}
+			</p>
 			<div class="btn-group">{% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a> {% endif %}<a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-default btn-sm">Add Content</a> <a href="{% url 'detail' feature.id %}" class="btn btn-default btn-sm">Read More</a> </div>
 	</div>
 		<script>
