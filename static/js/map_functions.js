@@ -28,7 +28,7 @@ var show_all_buildings = L.Control.extend({
 	},
 	onAdd: function(map) {
 		var container = L.DomUtil.create('div', 'show-buildings');
-		container.innerHTML += '<a href="/map/" class="all_btn btn btn-default btn-sm">Show All Places</a>';
+		container.innerHTML += '<a href="/map/" class="all_btn btn btn-primary btn-sm">Show All Places</a>';
 		return container;
 	}
 })
@@ -204,11 +204,17 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 					onEachFeature: onEachFeature,
 				});
 
-				layers = [sketchylayer, buildings];
-
-				initMap(layers);
-
-				map.fitBounds(buildings);
+				if (geojson.features.length > 0) {
+					layers = [sketchylayer, buildings];
+					initMap(layers);
+					map.fitBounds(buildings);
+				} else {
+					layers = [sketchylayer,]
+					initMap(layers);
+					map.setView([51.5161, -0.067], 16);
+					var q = getUrlVars()['q'];
+					title_box_title = 'No results for "' + q + '"';
+				}
 
 				map.attributionControl.addAttribution("Contains OS data &copy; Crown copyright and OpenMap Local 2016 | Addresses &copy; OpenStreetMap Contributors");
 
@@ -235,12 +241,10 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 				}).addTo(map);
 				
 				map.addControl(new infobox());
-				map.addControl(new feature_legend());
+				// map.addControl(new feature_legend());
 				if (allFeatures == false) {
 					map.addControl(new show_all_buildings());
 				}
-				
-				// title_box_title = '';
 
 				if (title_box_title != '') {
 					map.addControl(new titlebox());
@@ -248,14 +252,6 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 				}
 
 				info.addTo(map);
-			
-
-				/*$('.all_btn').click(function() {
-					var jsonUrl = "/map/api/features/";
-					loadFeatures(jsonUrl, 'main');
-					$('.infobox-control').hide();
-					$('.titlebox-control').hide();
-				});*/
 				
 
 				$('.leaflet-control').mouseover(function() {

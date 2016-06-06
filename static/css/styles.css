@@ -84,6 +84,11 @@ html, body {
 .feature-legend .btn, .show-buildings .btn {
 	border: 1px solid #999;
 	line-height: 1.3;
+	color: white;
+}
+
+.show-buildings .btn:hover {
+	color: white;
 }
 
 .infobox-control img {
@@ -92,11 +97,11 @@ html, body {
 
 .titlebox-control {
 	background-color: white;
-	border-radius: 3px;
 	color: rgba(0,0,0,.75);
 	border: 1px solid #999;
 	vertical-align: middle;
 	padding: 5px 10px 5px 10px;
+	box-shadow: 0px 1px 5px #909090;
 }
 
 .leaflet-control-attribution {
@@ -157,7 +162,6 @@ html, body {
 }
 .feature-overview {
 	background-color: white;
-	/* min-height: 300px; */
 	display: block;
 }
 .feature-detail img {

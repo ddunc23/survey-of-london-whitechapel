@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
@@ -171,8 +171,9 @@ def ugc_thanks(request, feature):
 
 def inform_managers_of_content_submission(request):
 	# Tell the SoL admins that a new document has been submitted.
-	message = 'Hello Survey of London Admins!\n New content has been submitted by ' + request.user.get_username() + ' and is awaiting moderation. To review, edit, and approve it, click <a href="#">here</a>.\n Thank you.'
-	mail_managers('New Content Submitted', message)
+	message = 'Hello Survey of London Editors.\nNew content has been submitted by ' + request.user.get_username() + ' and is awaiting moderation.\nThank you.'
+	html_message = '<p>Hello Survey of London Editors.</p><p>New content has been submitted by ' + request.user.get_username() + ' and is awaiting moderation. To review, edit, and approve it, click <a href="#">here</a>.</p><p>Thank you.</p>'
+	mail_managers('New Content Submitted', message=message, html_message=html_message)
 
 
 @login_required
@@ -180,6 +181,8 @@ def edit_document(request, feature, document=None):
 	"""View to allow users to add or edit documents."""
 	if document:
 		document = Document.objects.get(id=document)
+		if request.user != document.author:
+			raise Http404("Document does not exist")
 	else:
 		document = None
 
@@ -240,6 +243,8 @@ def edit_image(request, feature, image=None):
 	"""View to enable users to upload or edit images"""
 	if image:
 		image = Image.objects.get(id=image)
+		if request.user != image.author:
+			raise Http404("Image does not exist")
 	else:
 		image = None
 
@@ -294,6 +299,8 @@ def edit_media(request, feature, media=None):
 	"""View to enable users to upload or edit media (or rather, media embeds)"""
 	if media:
 		media = Media.objects.get(id=media)
+		if request.user != media.author:
+			raise Http404("Media does not exist")
 	else:
 		media = None
 
