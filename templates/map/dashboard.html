@@ -1,0 +1,46 @@
+{% extends 'map/base.html' %}
+
+{% block content %}
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12">
+		<h1>Dashboard</h1>
+		<hr />
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-md-4">
+			<h2>New Documents</h2>
+			{% for document in documents %}
+				<h3><a href="{% url 'edit_document' document.feature.id document.id %}">{{ document.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{{ document.author.userprofile.display_name }}</a> | {{ document.feature }}<br />Submitted {{ document.last_edited }}</span></h3>
+			{% endfor %}
+		</div>
+		<div class="col-xs-12 col-md-4">
+			<h2>New Images</h2>
+			{% load thumbnail %}
+			{% for image in images %}
+			<div class="media">
+				<div class="media-left">
+					<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded"></a>
+				</div>
+				<div class="media-body">
+					<h4 class="media-heading"><a href="{% url 'detail' image.feature.id %}#images">{{ image.feature }}</a><br /><span class="text-muted">{{ image.title }}</span></h4>
+					<span class="small"><a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a> | {{ image.last_edited }}</span>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+		<div class="col-xs-12 col-md-4">
+		<h2>Most Prolific Contributors</h2>
+		<ol>
+		{% for user in users|dictsortreversed:'contributions' %}
+			<li>{{ user }} {{ user.contributions }}</li>
+		{% endfor %}
+		</ol>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

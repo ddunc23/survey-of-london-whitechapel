@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from map.models import Feature, Document, Category, Image, Media
 from map.serializers import FeatureSerializer
-from map.forms import DocumentForm, ImageForm, MediaForm
+from map.forms import DocumentForm, ImageForm, MediaForm, AdminDocumentForm
 from rest_framework.renderers import JSONRenderer
 from haystack.query import SearchQuerySet
 from django.contrib.auth.decorators import login_required
@@ -16,6 +16,7 @@ from taggit.models import Tag
 from django.core.mail import mail_managers
 import re
 from django.template import Context
+from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
 
@@ -169,25 +170,67 @@ def ugc_thanks(request, feature):
 	return render(request, 'map/ugc_thanks.html', {'feature': feature})
 
 
+@login_required
+def dashboard(request):
+	"""An overview of new submissions, users, and useful statistics"""
+	if request.user.is_staff == False:
+		raise Http404("Staff Only!")
+	
+	documents = Document.objects.filter(pending=True).order_by('-last_edited')
+	images = Image.objects.filter(pending=True).order_by('last_edited')
+	media = Media.objects.filter(pending=True).order_by('last_edited')
+	new_users = User.objects.filter(date_joined__gte=datetime.now()-timedelta(days=7))
+	users = User.objects.all()
+	for user in users:
+		user.contributions = len(Document.objects.filter(author=user)) + len(Image.objects.filter(author=user)) + len(Media.objects.filter(author=user))
+
+	return render(request, 'map/dashboard.html', {'documents': documents, 'images': images, 'media': media, 'new_users': new_users, 'users': users})
+
+@login_required
+def approve_document(request):
+	pass
+
+
 def inform_managers_of_content_submission(request):
-	# Tell the SoL admins that a new document has been submitted.
+	"""Tell the SoL admins that a new document has been submitted."""
 	message = 'Hello Survey of London Editors.\nNew content has been submitted by ' + request.user.get_username() + ' and is awaiting moderation.\nThank you.'
-	html_message = '<p>Hello Survey of London Editors.</p><p>New content has been submitted by ' + request.user.get_username() + ' and is awaiting moderation. To review, edit, and approve it, click <a href="#">here</a>.</p><p>Thank you.</p>'
+	html_message = '<p>Hello Survey of London Editors.</p><p>New content has been submitted by ' + request.user.get_username() + ' and is awaiting moderation. To review, edit, and approve it, click <a href="https://surveyoflondon.org/">here</a>.</p><p>Thank you.</p>'
 	mail_managers('New Content Submitted', message=message, html_message=html_message)
+
+
+def inform_user_of_content_publication(author, title, editor, message):
+	"""Tell a contributor that their content has been published and copy in the editor who approved it"""
+	if message != '':
+		message = 'Hello ' + author + '.\nYour recent submission titled "' + title + '" has just been published on the Survey of London Whitechapel Website.\n' + message + 'Thanks for your contribution.'
+	else:
+		message = 'Hello ' + author + '.\nYour recent submission titled "' + title + '" has just been published on the Survey of London Whitechapel Website.\nThanks for your contribution.'
+
+	recipient_list = [author.email, editor.email]
+
+	send_mail(subject='Your Content has been Approved', message=message, from_email='admin@surveyoflondon.org', recipient_list=recipient_list)
 
 
 @login_required
 def edit_document(request, feature, document=None):
 	"""View to allow users to add or edit documents."""
 	if document:
+		"""If the document exits, edit that document, otherwise present the user with a blank form"""
 		document = Document.objects.get(id=document)
-		if request.user != document.author:
-			raise Http404("Document does not exist")
+		if request.user.is_staff == False:
+			"""Stop people who aren't the author from editing the post unless they're a SoL admin"""
+			if request.user != document.author:
+				raise Http404("Document does not exist")
 	else:
 		document = None
 
 	if request.method == 'POST':
-		form = DocumentForm(request.POST, instance=document)
+		"""If request type is a 'POST', save the form"""
+		if request.user.is_staff == True:
+			"""If the user is an SoL administrator, process the admin version of the document form which includes a field to add extra text to the thankyou email; otherwise, process a standard DocumentForm"""
+			form = AdminDocumentForm(request.POST, instance=document)
+		else:
+			form = DocumentForm(request.POST, instance=document)
+		
 		if form.is_valid():
 			d = form.save(commit=False)
 			
@@ -197,14 +240,20 @@ def edit_document(request, feature, document=None):
 			except Feature.DoesNotExist:
 				pass
 
-			d.author = request.user
+			if d.author == None:
+				d.author = request.user
+			
 			if document != None:
 				d.id = document.id
 
 			published = request.POST.get('publish')
 
 			if published != None:
-				d.pending = True
+				if published == False:
+					"""If the published checkbox isn't ticked (which it won't be an unless an editor's seen and checked it, put the document in pending."""
+					d.pending = True
+				else:
+					d.pending = False
 
 			### Regex to get select2 tags working - fix fix fix!
 
@@ -217,6 +266,15 @@ def edit_document(request, feature, document=None):
 			d.save()
 			form.save_m2m()
 
+			if published == True and request.user.is_staff == True:
+				editor = request.user
+				message = d.email_thanks
+				inform_managers_of_content_submission(d.author, d.title, editor, message)
+				return dashboard(request)
+
+			if request.user.is_staff == True:
+				return dashboard(request)
+
 			if d.pending != True:
 				return user_overview(request)
 			else:
@@ -228,9 +286,16 @@ def edit_document(request, feature, document=None):
 
 	else:
 		if document == None:
-			form = DocumentForm(instance=document)
+			if request.user.is_staff == True:
+				form = AdminDocumentForm(instance=document)
+			else:
+				form = DocumentForm(instance=document)
 		else:
-			form = DocumentForm(instance=document)
+			if request.user.is_staff == True:
+				form = AdminDocumentForm(instance=document)
+			else:
+				form = DocumentForm(instance=document)
+	
 		feature = Feature.objects.get(id=feature)
 
 	tags = Tag.objects.all()

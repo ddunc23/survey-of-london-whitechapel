@@ -29,6 +29,19 @@ class DocumentForm(forms.ModelForm):
 			'tags': '',
 		}
 
+
+class AdminDocumentForm(DocumentForm):
+	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here.', required=False)
+	class Meta(DocumentForm.Meta):
+		fields = ('title', 'tags', 'body', 'email_thanks', 'published')
+		labels = {
+			'title': 'Edit the title',
+			'tags': 'Add more tags as necessary',
+			'body': 'Text',
+			'published': 'Tick this box to approve this submission and publish it on the map.',
+		}
+
+
 class ImageForm(forms.ModelForm):
 	class Meta:
 		model = Image

@@ -33,4 +33,5 @@ urlpatterns = [
     url(r'^feature/(?P<feature>\d+)/content/add/thanks/$', views.ugc_thanks, name='ugc_thanks'),
     # User Content Management
     url(r'^user/overview/$', views.user_overview, name='user_overview'),
+    url(r'^dashboard/$', views.dashboard, name='dashboard'),
 ]
