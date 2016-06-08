@@ -34,4 +34,5 @@ urlpatterns = [
     # User Content Management
     url(r'^user/overview/$', views.user_overview, name='user_overview'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
+    url(r'^document/(?P<document>\d+)/moderate/$', views.moderate_document, name='moderate_document'),
 ]

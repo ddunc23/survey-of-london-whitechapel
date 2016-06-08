@@ -9,14 +9,19 @@
 		</div>
 	</div>
 	<div class="row">
+		<div class="col-xs-12">
+			<h2>New Content</h2>
+		</div>
+	</div>
+	<div class="row">
 		<div class="col-xs-12 col-md-4">
-			<h2>New Documents</h2>
+			<h3>Documents</h3>
 			{% for document in documents %}
 				<h3><a href="{% url 'edit_document' document.feature.id document.id %}">{{ document.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{{ document.author.userprofile.display_name }}</a> | {{ document.feature }}<br />Submitted {{ document.last_edited }}</span></h3>
 			{% endfor %}
 		</div>
 		<div class="col-xs-12 col-md-4">
-			<h2>New Images</h2>
+			<h3>Images</h3>
 			{% load thumbnail %}
 			{% for image in images %}
 			<div class="media">
@@ -31,12 +36,23 @@
 			{% endfor %}
 		</div>
 		<div class="col-xs-12 col-md-4">
-		<h2>Most Prolific Contributors</h2>
-		<ol>
-		{% for user in users|dictsortreversed:'contributions' %}
-			<li>{{ user }} {{ user.contributions }}</li>
-		{% endfor %}
-		</ol>
+			<h3>Media</h3>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<hr />
+			<h2>Statistics</h2>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-md-4">
+			<h3>Most Prolific Contributors</h3>
+			<ol>
+			{% for user in users|dictsortreversed:'contributions' %}
+				<li>{{ user }} {{ user.contributions }}</li>
+			{% endfor %}
+			</ol>
 		</div>
 	</div>
 </div>

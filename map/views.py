@@ -211,6 +211,50 @@ def inform_user_of_content_publication(author, title, editor, message):
 
 
 @login_required
+def moderate_document(request, document):
+	"""View to allow administrators to edit and approve documents."""
+	if request.user.is_staff == False:
+		raise Http404('Document does not exist')
+
+	document = get_object_or_404(Document, id=document)
+
+	if request.method == 'POST':
+		"""Save the form if the request is a POST"""
+		form = AdminDocumentForm(request.POST, instance=document)
+
+		if form.is_valid():
+			d = form.save(commit=False)
+
+			published = request.POST.get('publish')
+
+			if published != None:
+				if published == False:
+					"""If the published checkbox isn't ticked (which it won't be an unless an editor's seen and checked it, put the document in pending."""
+					d.pending = True
+				else:
+					d.pending = False
+
+			d.save()
+			form.save_m2m()
+
+			if published == True:
+				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
+				editor = request.user
+				message = d.email_thanks
+				inform_user_of_content_publication(d.author, d.title, editor, message)
+				return dashboard(request)
+			else:
+				return dashboard(request)
+
+	else:
+		"""Display the form with its content if request is a GET"""
+		form = AdminDocumentForm(instance=document)
+
+	return render(request, 'map/moderate_document.html', {'form': form, 'document': document })
+
+
+
+@login_required
 def edit_document(request, feature, document=None):
 	"""View to allow users to add or edit documents."""
 	if document:
@@ -240,8 +284,7 @@ def edit_document(request, feature, document=None):
 			except Feature.DoesNotExist:
 				pass
 
-			if d.author == None:
-				d.author = request.user
+			d.author = request.user
 			
 			if document != None:
 				d.id = document.id
@@ -249,11 +292,8 @@ def edit_document(request, feature, document=None):
 			published = request.POST.get('publish')
 
 			if published != None:
-				if published == False:
-					"""If the published checkbox isn't ticked (which it won't be an unless an editor's seen and checked it, put the document in pending."""
-					d.pending = True
-				else:
-					d.pending = False
+				"""If there's no 'published' value, place the document in pending"""
+				d.pending = True
 
 			### Regex to get select2 tags working - fix fix fix!
 
@@ -266,14 +306,14 @@ def edit_document(request, feature, document=None):
 			d.save()
 			form.save_m2m()
 
-			if published == True and request.user.is_staff == True:
-				editor = request.user
-				message = d.email_thanks
-				inform_managers_of_content_submission(d.author, d.title, editor, message)
-				return dashboard(request)
+			#if published == True and request.user.is_staff == True:
+			#	editor = request.user
+			#	message = d.email_thanks
+			#	inform_user_of_content_publication(d.author, d.title, editor, message)
+			#	return dashboard(request)
 
-			if request.user.is_staff == True:
-				return dashboard(request)
+			#if request.user.is_staff == True:
+			#	return dashboard(request)
 
 			if d.pending != True:
 				return user_overview(request)
