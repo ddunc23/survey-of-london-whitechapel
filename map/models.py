@@ -60,10 +60,10 @@ class Feature(models.Model):
 	tags = TaggableManager(blank=True)
 
 	def __unicode__(self):
-		if self.b_name != None:
-			return self.b_name
-		else:
+		if (self.b_name == None) or (self.b_name == ''):
 			return self.address
+		else:
+			return self.b_name
 
 	class Meta:
 		verbose_name = 'Building'
