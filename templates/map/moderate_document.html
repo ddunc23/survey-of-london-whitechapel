@@ -4,7 +4,8 @@
 <div class="container">
 	<div class="row">
 		<div class="col-xs-12 col-md-8 col-md-offset-2">
-			<h2>Edit {{ document.author }}'s Submission About {% if document.feature.b_name %}{{ document.feature.b_name }}{% else %}{{ document.feature.address }}{% endif %}</h2>
+			<h2>Moderate {{ document.author }}'s Submission About {% if document.feature.b_name %}{{ document.feature.b_name }}{% else %}{{ document.feature.address }}{% endif %}</h2>
+			<h3><span class="small">{{ document.author.email }}</span></h3>
 			<hr />
 		</div>
 	</div>

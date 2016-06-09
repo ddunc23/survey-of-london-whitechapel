@@ -26,3 +26,5 @@ Thumbs.db
 *.log
 /logs/
 /logs/*
+/backups/
+/backups/*

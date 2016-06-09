@@ -17,7 +17,7 @@
 		<div class="col-xs-12 col-md-4">
 			<h3>Documents</h3>
 			{% for document in documents %}
-				<h3><a href="{% url 'edit_document' document.feature.id document.id %}">{{ document.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{{ document.author.userprofile.display_name }}</a> | {{ document.feature }}<br />Submitted {{ document.last_edited }}</span></h3>
+				<h3><a href="{% url 'moderate_document' document.id %}">{{ document.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{{ document.author.userprofile.display_name }}</a> | {{ document.feature }}<br />Submitted {{ document.last_edited }}</span></h3>
 			{% endfor %}
 		</div>
 		<div class="col-xs-12 col-md-4">
