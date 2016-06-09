@@ -23,7 +23,7 @@ def user_profile(request):
 			if profile_extra.is_valid():
 				profile.save()
 				profile_extra.save()
-				return user_overview(request, user)
+				return user_overview(request)
 		else:
 			print form.errors
 			form = WhitechapelUserProfileForm(instance=user)
