@@ -6,7 +6,7 @@ CURRENT_DATE=$(date +'%Y-%m-%d')
 DB_BACKUP_DIR=backups/databases
 MEDIA_DIR=media
 MEDIA_BACKUP_DIR=backups/media
-DATABASE=whitechapel_map_staging
+DATABASE=
 
 DB_FILENAME=${DB_BACKUP_DIR}/${DATABASE}_${CURRENT_DATE}.sql
 MEDIA_FILENAME=${MEDIA_BACKUP_DIR}/media_${CURRENT_DATE}.tar.gz
