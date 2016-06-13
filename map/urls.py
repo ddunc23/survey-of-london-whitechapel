@@ -35,4 +35,6 @@ urlpatterns = [
     url(r'^user/overview/$', views.user_overview, name='user_overview'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
     url(r'^document/(?P<document>\d+)/moderate/$', views.moderate_document, name='moderate_document'),
+    url(r'^image/(?P<image>\d+)/moderate/$', views.moderate_image, name='moderate_image'),
+    url(r'^media/(?P<media>\d+)/moderate/$', views.moderate_media, name='moderate_media'),
 ]

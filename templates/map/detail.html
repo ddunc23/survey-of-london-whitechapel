@@ -125,7 +125,7 @@
 						<div class="col-xs-12 col-sm-4 col-md-4">
 							<div class="item-card">
 								<a href="#" class="gallery_item" data-image="/media/{{ image.file }}" data-caption="{{ image.title }}" data-author="{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}"><img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}"></a>
-								<p>{{ image.title }}<br />Contributed by <a href="{% url 'all_content_by_author' image.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a></p>
+								<p>{{ image.title }}<br />Contributed by <a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a></p>
 							</div>
 						</div>	
 						{% endfor %}

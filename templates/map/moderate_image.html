@@ -4,14 +4,16 @@
 <div class="container">
 	<div class="row">
 		<div class="col-xs-12 col-md-8 col-md-offset-2">
-			<h2>Moderate {{ document.author }}'s Submission About <a href="{% url 'detail' document.feature.id %}">{% if document.feature.b_name %}{{ document.feature.b_name }}{% else %}{{ document.feature.address }}{% endif %}</a></h2>
-			<h3><span class="small">{{ document.author.email }}</span></h3>
+			<h2>Moderate {{ image.author }}'s Submission About {% if image.feature.b_name %}{{ image.feature.b_name }}{% else %}{{ image.feature.address }}{% endif %}</h2>
+			<h3><span class="small">{{ image.author.email }}</span></h3>
 			<hr />
 		</div>
 	</div>
 	<div class="row ugc-content-form-container">
-		<form id="document_form" method="post" action="{% url 'moderate_document' document.id %}">
+		<form id="document_form" method="post" action="{% url 'moderate_image' image.id %}">
 			<div class="col-xs-12 col-md-8 col-md-offset-2">
+			<img src="/media/{{ image.file }}" alt="{{ image.title }}" class="img-responsive img-rounded" />
+			<hr />
 				{% load crispy_forms_tags %}
 				{% csrf_token %}
 				{{ form|crispy }}

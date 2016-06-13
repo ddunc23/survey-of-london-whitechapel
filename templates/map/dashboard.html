@@ -8,38 +8,91 @@
 		<hr />
 		</div>
 	</div>
-	<div class="row">
+	<div class="row"> <!-- Pending Content -->
 		<div class="col-xs-12">
-			<h2>New Content</h2>
+			<h2>Pending Content</h2>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-xs-12 col-md-4">
 			<h3>Documents</h3>
 			{% for document in documents %}
-				<h3><a href="{% url 'moderate_document' document.id %}">{{ document.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{{ document.author.userprofile.display_name }}</a> | {{ document.feature }}<br />Submitted {{ document.last_edited }}</span></h3>
+				{% if document.pending == True %}
+					<h3><a href="{% url 'moderate_document' document.id %}">{{ document.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a> | {{ document.feature }}<br />Submitted {{ document.last_edited }}</span></h3>
+				{% endif %}
 			{% endfor %}
 		</div>
 		<div class="col-xs-12 col-md-4">
 			<h3>Images</h3>
 			{% load thumbnail %}
 			{% for image in images %}
-			<div class="media">
-				<div class="media-left">
-					<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded"></a>
-				</div>
-				<div class="media-body">
-					<h4 class="media-heading"><a href="{% url 'detail' image.feature.id %}#images">{{ image.feature }}</a><br /><span class="text-muted">{{ image.title }}</span></h4>
-					<span class="small"><a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a> | {{ image.last_edited }}</span>
-				</div>
-			</div>
+				{% if image.pending == True %}
+					<div class="media">
+						<div class="media-left">
+							<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded"></a>
+						</div>
+						<div class="media-body">
+							<h4 class="media-heading"><a href="{% url 'moderate_image' image.id %}">{{ image.feature }}</a><br /><span class="text-muted">{{ image.title }}</span></h4>
+							<span class="small"><a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a> | {{ image.last_edited }}</span>
+						</div>
+					</div>
+				{% endif %}
 			{% endfor %}
 		</div>
 		<div class="col-xs-12 col-md-4">
 			<h3>Media</h3>
+			{% for item in media %}
+				{% if item.pending == True %}
+					<h3><a href="{% url 'moderate_media' item.id %}">{{ item.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' item.author.id %}">{% if item.author.userprofile.display_name %}{{ item.author.userprofile.display_name }}{% else %}{{ item.author }}{% endif %}</a> | {{ item.feature }}<br />Submitted {{ item.last_edited }}</span></h3>
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div><!-- / Pending content -->
+
+	<div class="row"> <!-- Unsubmitted Drafts -->
+		<div class="col-xs-12">
+			<hr />
+			<h2>Unsubmitted Drafts</h2>
 		</div>
 	</div>
 	<div class="row">
+		<div class="col-xs-12 col-md-4">
+			<h3>Documents</h3>
+			{% for document in documents %}
+				{% if document.pending == False and document.published == False %}
+					<h3><a href="{% url 'moderate_document' document.id %}">{{ document.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a> | {{ document.feature }}<br />Submitted {{ document.last_edited }}</span></h3>
+				{% endif %}
+			{% endfor %}
+		</div>
+		<div class="col-xs-12 col-md-4">
+			<h3>Images</h3>
+			{% for image in images %}
+				{% if image.pending == False and image.published == False %}
+				<div class="media">
+					<div class="media-left">
+						<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded"></a>
+					</div>
+					<div class="media-body">
+						<h4 class="media-heading"><a href="{% url 'moderate_image' image.id %}">{{ image.feature }}</a><br /><span class="text-muted">{{ image.title }}</span></h4>
+						<span class="small"><a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a> | {{ image.last_edited }}</span>
+					</div>
+				</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+		<div class="col-xs-12 col-md-4">
+			<h3>Media</h3>
+			{% for item in media %}
+				{% if item.pending == False and item.published == False %}
+					<h3><a href="{% url 'moderate_media' item.id %}">{{ item.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' item.author.id %}">{% if item.author.userprofile.display_name %}{{ item.author.userprofile.display_name }}{% else %}{{ item.author }}{% endif %}</a> | {{ item.feature }}<br />Submitted {{ item.last_edited }}</span></h3>
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div><!-- / Pending content -->
+
+
+
+	<!-- <div class="row">
 		<div class="col-xs-12">
 			<hr />
 			<h2>Statistics</h2>
@@ -47,16 +100,13 @@
 	</div>
 	<div class="row">
 		<div class="col-xs-12 col-md-4">
-			<h3>Most Prolific Contributors</h3>
+			<h3>New Users</h3>
 			<ol>
-			{% for user in users|dictsortreversed:'contributions' %}
-				<li>{{ user }} {{ user.contributions }}</li>
+			{% for user in new_users %}
+				<li><a href="{% url 'all_content_by_author' user.id %}">{% if user.userprofile.display_name %}{{ user.userprofile.display_name }}{% else %}{{ user }}{% endif %}</a></li>
 			{% endfor %}
 			</ol>
 		</div>
-	</div>
+	</div> -->
 </div>
-{% endblock %}
-
-{% block footer %}
 {% endblock %}

@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from map.models import Feature, Document, Category, Image, Media
 from map.serializers import FeatureSerializer
-from map.forms import DocumentForm, ImageForm, MediaForm, AdminDocumentForm
+from map.forms import DocumentForm, ImageForm, MediaForm, AdminDocumentForm, AdminImageForm, AdminMediaForm
 from rest_framework.renderers import JSONRenderer
 from haystack.query import SearchQuerySet
 from django.contrib.auth.decorators import login_required
@@ -13,7 +13,7 @@ from django.views.decorators.cache import cache_page
 from itertools import chain
 import logging
 from taggit.models import Tag
-from django.core.mail import mail_managers
+from django.core.mail import mail_managers, send_mail
 import re
 from django.template import Context
 from datetime import datetime, timedelta
@@ -176,36 +176,35 @@ def dashboard(request):
 	if request.user.is_staff == False:
 		raise Http404("Staff Only!")
 	
-	documents = Document.objects.filter(pending=True).order_by('-last_edited')
-	images = Image.objects.filter(pending=True).order_by('last_edited')
-	media = Media.objects.filter(pending=True).order_by('last_edited')
-	new_users = User.objects.filter(date_joined__gte=datetime.now()-timedelta(days=7))
+	documents = Document.objects.all().order_by('-last_edited')
+	images = Image.objects.all().order_by('-last_edited')
+	media = Media.objects.all().order_by('-last_edited')
+	new_users = User.objects.filter(date_joined__gte=datetime.now()-timedelta(days=14))
 	users = User.objects.all()
 	for user in users:
 		user.contributions = len(Document.objects.filter(author=user)) + len(Image.objects.filter(author=user)) + len(Media.objects.filter(author=user))
 
 	return render(request, 'map/dashboard.html', {'documents': documents, 'images': images, 'media': media, 'new_users': new_users, 'users': users})
 
-@login_required
-def approve_document(request):
-	pass
-
 
 def inform_managers_of_content_submission(request):
 	"""Tell the SoL admins that a new document has been submitted."""
 	message = 'Hello Survey of London Editors.\nNew content has been submitted by ' + request.user.get_username() + ' and is awaiting moderation.\nThank you.'
-	html_message = '<p>Hello Survey of London Editors.</p><p>New content has been submitted by ' + request.user.get_username() + ' and is awaiting moderation. To review, edit, and approve it, click <a href="https://surveyoflondon.org/">here</a>.</p><p>Thank you.</p>'
+	html_message = '<p>Hello Survey of London Editors.</p><p>New content has been submitted by ' + request.user.get_username() + ' and is awaiting moderation. To review, edit, and approve it, click <a href="https://surveyoflondon.org/map/dashboard/">here</a>.</p><p>Thank you.</p>'
 	mail_managers('New Content Submitted', message=message, html_message=html_message)
 
 
 def inform_user_of_content_publication(author, title, editor, message):
 	"""Tell a contributor that their content has been published and copy in the editor who approved it"""
 	if message != '':
-		message = 'Hello ' + author + '.\nYour recent submission titled "' + title + '" has just been published on the Survey of London Whitechapel Website.\n' + message + 'Thanks for your contribution.'
+		message = 'Hello ' + author.get_username() + '.\nYour recent submission titled "' + title + '" has just been published on the Survey of London Whitechapel Website.\n' + message + '\nThanks for your contribution.'
 	else:
-		message = 'Hello ' + author + '.\nYour recent submission titled "' + title + '" has just been published on the Survey of London Whitechapel Website.\nThanks for your contribution.'
+		message = 'Hello ' + author.get_username() + '.\nYour recent submission titled "' + title + '" has just been published on the Survey of London Whitechapel Website.\nThanks for your contribution.'
 
-	recipient_list = [author.email, editor.email]
+	# recipient_list = [author.email, editor.email]
+	# For the moment, just email the editor - we need to get this right before we start sending automated emails willy-nilly
+
+	recipient_list = [editor.email]
 
 	send_mail(subject='Your Content has been Approved', message=message, from_email='admin@surveyoflondon.org', recipient_list=recipient_list)
 
@@ -228,19 +227,19 @@ def moderate_document(request, document):
 			published = request.POST.get('publish')
 
 			if published != None:
-				if published == False:
-					"""If the published checkbox isn't ticked (which it won't be an unless an editor's seen and checked it, put the document in pending."""
-					d.pending = True
-				else:
+				"""If the published checkbox isn't ticked (which it won't be an unless an editor's seen and checked it, put the document in pending."""
+				if published == 'Approve':
 					d.pending = False
+				else:
+					d.pending = True
 
 			d.save()
 			form.save_m2m()
 
-			if published == True:
+			if published == 'Approve':
 				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
 				editor = request.user
-				message = d.email_thanks
+				message = request.POST.get('email_thanks')
 				inform_user_of_content_publication(d.author, d.title, editor, message)
 				return dashboard(request)
 			else:
@@ -260,20 +259,13 @@ def edit_document(request, feature, document=None):
 	if document:
 		"""If the document exits, edit that document, otherwise present the user with a blank form"""
 		document = Document.objects.get(id=document)
-		if request.user.is_staff == False:
-			"""Stop people who aren't the author from editing the post unless they're a SoL admin"""
-			if request.user != document.author:
-				raise Http404("Document does not exist")
 	else:
 		document = None
 
 	if request.method == 'POST':
 		"""If request type is a 'POST', save the form"""
-		if request.user.is_staff == True:
-			"""If the user is an SoL administrator, process the admin version of the document form which includes a field to add extra text to the thankyou email; otherwise, process a standard DocumentForm"""
-			form = AdminDocumentForm(request.POST, instance=document)
-		else:
-			form = DocumentForm(request.POST, instance=document)
+
+		form = DocumentForm(request.POST, instance=document)
 		
 		if form.is_valid():
 			d = form.save(commit=False)
@@ -306,15 +298,6 @@ def edit_document(request, feature, document=None):
 			d.save()
 			form.save_m2m()
 
-			#if published == True and request.user.is_staff == True:
-			#	editor = request.user
-			#	message = d.email_thanks
-			#	inform_user_of_content_publication(d.author, d.title, editor, message)
-			#	return dashboard(request)
-
-			#if request.user.is_staff == True:
-			#	return dashboard(request)
-
 			if d.pending != True:
 				return user_overview(request)
 			else:
@@ -325,22 +308,54 @@ def edit_document(request, feature, document=None):
 			feature = Feature.objects.get(id=feature)
 
 	else:
-		if document == None:
-			if request.user.is_staff == True:
-				form = AdminDocumentForm(instance=document)
-			else:
-				form = DocumentForm(instance=document)
-		else:
-			if request.user.is_staff == True:
-				form = AdminDocumentForm(instance=document)
-			else:
-				form = DocumentForm(instance=document)
-	
+		form = DocumentForm(instance=document)	
 		feature = Feature.objects.get(id=feature)
 
 	tags = Tag.objects.all()
 
 	return render(request, 'map/add_document.html', {'feature': feature, 'form': form, 'document': document, 'tags': tags, })
+
+
+@login_required
+def moderate_image(request, image):
+	"""View to allow administrators to moderate images"""
+	if request.user.is_staff == False:
+		raise Http404('Image does not exist')
+
+	image = get_object_or_404(Image, id=image)
+
+	if request.method == 'POST':
+		"""Save the form if the request is a POST"""
+		form = AdminImageForm(request.POST, instance=image)
+		i = form.save(commit=False)
+
+		if form.is_valid():
+			published = request.POST.get('publish')
+
+			if published != None:
+				"""If the published checkbox isn't ticked (which it won't be an unless an editor's seen and checked it, put the document in pending."""
+				if published == 'Approve':
+					i.pending = False
+				else:
+					i.pending = True
+
+			i.save()
+			form.save_m2m()
+
+			if published == 'Approve':
+				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
+				editor = request.user
+				message = request.POST.get('email_thanks')
+				inform_user_of_content_publication(i.author, i.title, editor, message)
+				return dashboard(request)
+			else:
+				return dashboard(request)
+
+	else:
+		"""Display the form with its content if request is a GET"""
+		form = AdminImageForm(instance=image)
+
+	return render(request, 'map/moderate_image.html', {'form': form, 'image': image })
 
 
 @login_required
@@ -397,6 +412,50 @@ def edit_image(request, feature, image=None):
 	tags = Tag.objects.all()
 
 	return render(request, 'map/add_image.html', {'feature': feature, 'form': form, 'image': image, 'tags': tags })
+
+
+
+@login_required
+def moderate_media(request, media):
+	"""View to allow administrators to moderate media"""
+	if request.user.is_staff == False:
+		raise Http404('Media does not exist')
+
+	media = get_object_or_404(Media, id=media)
+
+	if request.method == 'POST':
+		"""Save the form if the request is a POST"""
+		form = AdminMediaForm(request.POST, instance=media)
+		m = form.save(commit=False)
+
+		if form.is_valid():
+			published = request.POST.get('publish')
+
+			if published != None:
+				"""If the published checkbox isn't ticked (which it won't be an unless an editor's seen and checked it, put the document in pending."""
+				if published == 'Approve':
+					m.pending = False
+				else:
+					m.pending = True
+
+			m.save()
+			form.save_m2m()
+
+			if published == 'Approve':
+				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
+				editor = request.user
+				message = request.POST.get('email_thanks')
+				inform_user_of_content_publication(m.author, m.title, editor, message)
+				return dashboard(request)
+			else:
+				return dashboard(request)
+
+	else:
+		"""Display the form with its content if request is a GET"""
+		form = AdminMediaForm(instance=media)
+
+	return render(request, 'map/moderate_media.html', {'form': form, 'media': media })
+
 
 
 @login_required
