@@ -206,7 +206,7 @@ def inform_user_of_content_publication(author, title, editor, message):
 
 	recipient_list = [editor.email]
 
-	send_mail(subject='Your Content has been Approved', message=message, from_email='admin@surveyoflondon.org', recipient_list=recipient_list)
+	send_mail(subject='Your Content has been Published', message=message, from_email='admin@surveyoflondon.org', recipient_list=recipient_list)
 
 
 @login_required
