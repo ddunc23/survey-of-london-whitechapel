@@ -7,7 +7,7 @@ def site_home(request):
 	page = Page.objects.get(is_front_page=True)
 	features = page.features.all()
 	categories = Category.objects.all()
-	images = Image.objects.filter(published=True).order_by('last_edited')[:5]
+	images = Image.objects.filter(published=True).order_by('created')[:5]
 
 	for feature in features:
 		feature.documents = Document.objects.filter(feature=feature)

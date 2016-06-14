@@ -88,12 +88,16 @@ def detail(request, feature):
 	subtitle = '| ' + str(feature)
 	tags = []
 	for document in documents:
-		tags.append(document.tags.all())
+		for tag in document.tags.all():
+			tags.append(tag)
 	for image in images:
-		tags.append(image.tags.all())
+		for tag in image.tags.all():
+			tags.append(tag)
 	for item in media:
-		tags.append(item.tags.all())
-	tags.append(feature.tags.all())
+		for tag in item.tags.all():
+			tags.append(tag)
+	for tag in feature.tags.all():
+		tags.append(tag)
 
 	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar, 'subtitle': subtitle, 'images': images, 'media': media, 'tags': tags, })
 

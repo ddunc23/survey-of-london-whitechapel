@@ -112,8 +112,15 @@ info.onAdd = function(map) {
 };
 
 info.update = function(properties) {
-    this._div.innerHTML =  (properties ?
-        '<b>' + properties.address + '</b>' : '');
+    var snippet;
+    if (properties) {
+    	if (properties.b_name) {
+    		snippet = properties.b_name;
+    	} else {
+    		snippet = properties.address;
+    	}
+    }
+    this._div.innerHTML =  (properties ? '<b>' + snippet + '</b>' : '');
 };
 
 

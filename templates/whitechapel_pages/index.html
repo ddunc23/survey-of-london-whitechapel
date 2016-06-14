@@ -47,7 +47,7 @@
 				</div>
 				<div class="media-body">
 					<h4 class="media-heading"><a href="{% url 'detail' image.feature.id %}#images">{{ image.feature }}</a><br /><span class="text-muted">{{ image.title }}</span></h4>
-					<span class="small"><a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a> | {{ image.last_edited }}</span>
+					<span class="small"><a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a> | {{ image.created }}</span>
 				</div>
 			</div>
 			{% endfor %}

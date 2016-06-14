@@ -5,7 +5,11 @@
 	<div class="row">
 		<div class="col-xs-12 col-md-8 col-md-offset-2">
 			<h2>Moderate {{ media.author }}'s Submission About {% if media.feature.b_name %}{{ media.feature.b_name }}{% else %}{{ media.feature.address }}{% endif %}</h2>
-			<h3><span class="small">{{ media.author.email }}</span></h3>
+			<hr />
+			<h3>Submission Details</h3>
+			<p>Author email: {{ media.author.email }}<br />
+			Created on {{ media.created }}<br />
+			Last edited on {{ media.last_edited }}</p>
 			<hr />
 		</div>
 	</div>

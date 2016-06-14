@@ -120,6 +120,7 @@ class Document(models.Model):
 	published = models.BooleanField(default=False)
 	pending = models.BooleanField(default=False)
 	anonymise = models.BooleanField(default=False)
+	created = models.DateField(auto_now_add=True, null=True, blank=True)
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
 	tags = TaggableManager(blank=True)
 
@@ -136,7 +137,7 @@ class Document(models.Model):
 	def save(self, *args, **kwargs):
 		"""Sanitize html input from users, add footnotes and update the 'count' attribute of the feature"""
 		# Clean the html
-		self.body = bleach.clean(self.body, tags=['p', 'b', 'strong', 'em', 'img', 'a', 'blockquote', 'i', 'li', 'ul', 'ol', 'h2', 'h3', 'br'], attributes={'img': ['alt'], 'a': ['href'],})
+		self.body = bleach.clean(self.body, tags=['p', 'b', 'strong', 'em', 'img', 'a', 'blockquote', 'i', 'li', 'ul', 'ol', 'h2', 'h3', 'br'], attributes={'img': ['alt', 'src', 'style'], 'a': ['href'],})
 		# Convert HTML to Markdown so you can run the footnote filter on it, then save as self.body_processed, which is what gets displayed on the site
 		h = html2text.HTML2Text()
 		h.ignore_images = False
@@ -160,6 +161,7 @@ class Image(models.Model):
 	file = models.ImageField(upload_to=feature_directory_path, null=True, blank=False, verbose_name='Image')
 	published = models.BooleanField(default=False)
 	pending = models.BooleanField(default=False)
+	created = models.DateField(auto_now_add=True, null=True, blank=True)
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
 	tags = TaggableManager(blank=True)
 
@@ -186,6 +188,7 @@ class Media(models.Model):
 	url = EmbedVideoField()
 	published = models.BooleanField(default=False)
 	pending = models.BooleanField(default=False)
+	created = models.DateField(auto_now_add=True, null=True, blank=True)
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
 	tags = TaggableManager(blank=True)
 
