@@ -51,9 +51,9 @@ def feature(request, feature):
 	images = Image.objects.filter(feature=feature).filter(published=True)
 	media = Media.objects.filter(feature=feature).filter(published=True)
 	categories = Category.objects.filter(feature=feature)
-	if feature.original != None:
-		lower = feature.original - 10
-		upper = feature.original + 10
+	if feature.current != None:
+		lower = feature.current - 10
+		upper = feature.current + 10
 	else:
 		lower = 0
 		upper = 0
@@ -64,9 +64,9 @@ def feature(request, feature):
 def feature_legend(request, feature):
 	"""Update the legend control buttons for year, street"""
 	feature = Feature.objects.get(id=feature)
-	if feature.original != None:
-		lower = feature.original - 10
-		upper = feature.original + 10
+	if feature.current != None:
+		lower = feature.current - 10
+		upper = feature.current + 10
 	else:
 		lower = 0
 		upper = 0
