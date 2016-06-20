@@ -36,14 +36,14 @@ class FeatureAdmin(LeafletGeoAdmin):
 			'classes': ('wide',),
 		}),
 		('Dates', {
-			'fields': ('original', 'rebuild_1', 'rebuild_2', 'f_date'),
+			'fields': ('current', 'previous_1', 'previous_2', 'previous_3', 'extension_1', 'extension_2', 'extension_3', 'f_date'),
 			'classes': ('wide',),
 		}),
 		('Building Information', {
-			'fields': ('storeys', 'basement', 'architect', 'builders', 'materials', 'c_area', 'listed',),
+			'fields': ('storeys', 'basement', 'architect', 'builders', 'materials', 'c_area', 'listed', 'b_type'),
 			'classes': ('wide',),
 		}),
-		('Other Metadata', {
+		('Catgeories, Tags, and Thumbnail Image', {
 			'fields': ('categories', 'thumbnail', 'tags',),
 			'classes': ('wide',),
 		}),

@@ -5,7 +5,7 @@
 <div class="jumbotron" style="background-image: url('/media/{{ page.banner_image }}');">
 	<div class="container">
 		<h1 class="text-center">{{ title }}</h1>
-		<h2 class="text-center">{{ page.title }}</h2>
+		<h2 class="text-center">{{ page.title }} | Draft</h2>
 		<br />
 		<div class="text-center">
 			<a href="{% url 'map_home' %}" class="btn btn-primary btn-lg">Explore the Map</a>
@@ -37,9 +37,20 @@
 			</div>
 		</div><!-- / Featured Contributions -->
 		
+		{% if page.images %}
+		<div class="col-xs-12 col-md-4"><!-- Featured Images -->
+			<h1 class="front-page-heading">Featured Images</h1>
+			{% load thumbnail %}
+			{% for image in page.images.all %}
+			<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 400x225 crop='0,0' %}" class="img-rounded" style="width: 100%;"></a>
+			<h3><span class="text-muted"><a href="{% url 'detail' image.feature.id %}#images">{{ image.title }}</a></span><br />
+			<span class="small"><a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a> | {{ image.feature }} | {{ image.created }}</span></h3>
+ 		{% endfor %}
+		</div>
+		{% endif %}
+
 		<div class="col-xs-12 col-md-4"><!-- Latest Images -->
 			<h1 class="front-page-heading">Latest Images</h1>
-			{% load thumbnail %}
 			{% for image in images %}
 			<div class="media">
 				<div class="media-left">
