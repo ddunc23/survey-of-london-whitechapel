@@ -32,6 +32,14 @@ class Category(models.Model):
 		return self.name
 
 
+class Site(models.Model):
+	"""A Site to which many features can belong"""
+	name = models.CharField(max_length=140)
+
+	def __unicode__(self):
+		return self.name
+
+
 class Feature(models.Model):
 	"""A building footprint, open space, or other interactable vector object"""
 	id = models.PositiveSmallIntegerField(primary_key=True)
@@ -74,6 +82,7 @@ class Feature(models.Model):
 	listed = models.CharField(max_length=8, null=True, blank=True, verbose_name='Listed', choices=LISTED_CHOICES, default='NO')
 	count = models.PositiveSmallIntegerField(default=0)
 	categories = models.ManyToManyField(Category, blank=True)
+	site = models.ForeignKey(Site, blank=True, null=True)
 	thumbnail = models.ImageField(upload_to=feature_directory_path, null=True, blank=True, verbose_name='Thumbnail Image')
 	tags = TaggableManager(blank=True)
 

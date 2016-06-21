@@ -6,7 +6,7 @@ from crispy_forms.layout import Submit
 class FeatureForm(forms.ModelForm):
 	class Meta:
 		model = Feature
-		fields = ('geom', 'b_number', 'b_name', 'street', 'postcode', 'address', 'b_type', 'current', 'previous_1', 'previous_2', 'previous_3', 'extension_1', 'extension_2', 'extension_3', 'f_date', 'storeys', 'basement', 'architect', 'builders', 'materials', 'short_description', 'c_area', 'listed', 'count', 'categories', 'thumbnail', 'tags',)
+		fields = ('geom', 'b_number', 'b_name', 'street', 'postcode', 'address', 'b_type', 'current', 'previous_1', 'previous_2', 'previous_3', 'extension_1', 'extension_2', 'extension_3', 'f_date', 'storeys', 'basement', 'architect', 'builders', 'materials', 'short_description', 'c_area', 'listed', 'count', 'categories', 'thumbnail', 'tags', 'site')
 		widgets = {
 			'basement': forms.Select(),
 			'c_area': forms.Select(),
