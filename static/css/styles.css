@@ -55,12 +55,17 @@ html, body {
 	display: none;
 	background-image: url('../img/ajax-loader.gif');
 	background-repeat: no-repeat;
-	background-position: top center;
+	background-position: 5px center;
 }
 
 .infobox-control p {
 	padding: 0 5px;
-	margin-bottom: 0px;
+	margin-bottom: 10px;
+}
+
+.infobox-control h2 {
+	font-size: 150%;
+	margin: 5px;
 }
 
 .close-this {
@@ -75,6 +80,20 @@ html, body {
 	padding-left: 38px;
 	bottom: 0;
 	width: 400px;
+}
+
+.feature-icons {
+	font-size: 22px;
+	color: #F58D16;
+	margin-left: 5px;
+}
+
+.feature-overview-thumbnail {
+	margin: 0 0 15px 0;
+}
+
+.feature-overview-thumbnail .feature-icons {
+	margin-top: -29px;
 }
 
 .info {
@@ -93,6 +112,11 @@ html, body {
 
 .infobox-control img {
 	width: 100%;
+}
+
+.feature-description {
+	font-size: 125% !important;
+	line-height: 160% !important;
 }
 
 .titlebox-control {

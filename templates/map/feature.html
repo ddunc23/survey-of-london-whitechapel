@@ -3,18 +3,28 @@
 
 	{% if feature.thumbnail %}
 		{% load thumbnail %}
-		<a href="{% url 'detail' feature.id %}"><img src="{% thumbnail feature.thumbnail 300x170 crop='0,0' %}"></a>
+		<div class="feature-overview-thumbnail">
+			<a href="{% url 'detail' feature.id %}"><img src="{% thumbnail feature.thumbnail 300x170 crop='0,0' %}"></a>
+			<div class="feature-icons">
+				{% if documents %}<span class="glyphicon glyphicon-file"></span> {% endif %}{% if images %}<span class="glyphicon glyphicon-picture"></span> {% endif %}{% if media %}<span class="glyphicon glyphicon-play"></span> {% endif %}
+			</div>
+		</div>
 	{% endif %}
 	<div class="feature-overview-footer">
 		{% if feature.b_name %}
-			<p><span class="small"><a href="{% url 'detail' feature.id %}">{{ feature.b_name }}</a></span><br /></p>
+			<h2><a href="{% url 'detail' feature.id %}">{{ feature.b_name }}</a></h2>
 			{% else %}
-			<p><span class="small"><a href="{% url 'detail' feature.id %}">{{ feature.address }}</a></span><br /></p>
+			<h2><a href="{% url 'detail' feature.id %}">{{ feature.address }}</a></h2>
 		{% endif %}
-			<p class="feature-icons">
+		{% if not feature.thumbnail %}
+			<div class="feature-icons">
 				{% if documents %}<span class="glyphicon glyphicon-file"></span> {% endif %}{% if images %}<span class="glyphicon glyphicon-picture"></span> {% endif %}{% if media %}<span class="glyphicon glyphicon-play"></span> {% endif %}
-			</p>
-			<div class="btn-group">{% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a> {% endif %}<a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-default btn-sm">Add Content</a> <a href="{% url 'detail' feature.id %}" class="btn btn-default btn-sm">Read More</a> </div>
+			</div>
+		{% endif %}
+		{% if feature.short_description %}
+			<p class="feature-description">{{ feature.short_description }}</p>
+		{% endif %}
+		<div class="btn-group">{% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a> {% endif %}<a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-default btn-sm">Add Content</a> <a href="{% url 'detail' feature.id %}" class="btn btn-default btn-sm">Read More</a> </div>
 	</div>
 		<script>
 			$('.close-this').click(function() {
