@@ -8,10 +8,11 @@
 		</div>
 		<div class="col-xs-12 col-md-7">
 			{% if feature.b_name %}
-			<h1>{{ feature.b_name }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Show on Map</a>{% if not histories and not descriptions and not stories and not images and not media %}{% else %}<a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a>{% endif %}</div></h1>
-			<h2><small>{{ feature.address }} {% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a></small> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
+				<h1>{{ feature.b_name }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Show on Map</a>{% if not histories and not descriptions and not stories and not images and not media %}{% else %}<a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a>{% endif %}</div></h1>
+				<h2><small>{{ feature.address }} {% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a></small> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
 			{% else %}
-			<h1>{{ feature.address }} {% if user.is_authenticated %}{% if not histories and not descriptions and not stories and not images and not media %}{% else %}<a href="{% url 'ugc_choice' feature.id %}" class="btn btn-default">Add Content</a>{% endif %}{% endif %}</h1>
+				<h1>{{ feature.address }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Show on Map</a>{% if not histories and not descriptions and not stories and not images and not media %}{% else %}<a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a>{% endif %}</div></h1>
+				{% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %}
 			{% endif %}
 		</div>
 		<div class="col-xs-2">
@@ -124,7 +125,7 @@
 						{% for image in images %}
 						<div class="col-xs-12 col-sm-4 col-md-4">
 							<div class="item-card">
-								<a href="#" class="gallery_item" data-image="/media/{{ image.file }}" data-caption="{{ image.title }}" data-author="{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}"><img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}"></a>
+								<a href="#" class="gallery_item" data-image="/media/{{ image.file }}" data-caption="{{ image.title }}" data-author="{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}" data-description="{{ image.description }}"><img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}"></a>
 								<p>{{ image.title }}<br />Contributed by <a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a></p>
 							</div>
 						</div>	
@@ -166,12 +167,10 @@
 				{% endfor %}
 				</ul>
 			{% endif %}
-			{% if tags.0|length > 0 or tags.1|length > 0 or tags.2|length > 0 %}
+			{% if tags|length > 0 %}
 				<h4>Tags</h4>
-				{% for tag_list in tags %}
-					{% for tag in tag_list %}
-						<a href="{% url 'tag' tag %}" class="btn btn-default btn-xs tag">{{ tag }}</a> 
-					{% endfor %}
+				{% for tag in tags %}
+					<a href="{% url 'tag' tag %}" class="btn btn-default btn-xs tag">{{ tag }}</a> 
 				{% endfor %}
 			{% endif %}
 		</div>
@@ -188,8 +187,8 @@
 	        		<button type="button" class="btn btn-default lightbox_prev">Previous</button>
 	        		<button type="button" class="btn btn-default lightbox_next">Next</button>
       			</div>
-        		<p id="lightbox_caption"></p>
-        		<p id="lightbox_image_author" class="small"></p>
+        		<h4><em><span id="lightbox_caption"></span></em><br /><span class="small" id="lightbox_image_author"></span></h4>
+        		<p id="lightbox_description"></p>
       		</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -212,6 +211,7 @@
 			$('#lightbox_image').attr('src', $(images[index]).data('image'));
 			$('#lightbox_image').attr('alt', $(images[index]).data('caption'));
 			$('#lightbox_caption').html($(images[index]).data('caption'));
+			$('#lightbox_description').html($(images[index]).data('description'));
 			$('#lightbox_image_author').html('Submitted by ' + $(images[index]).data('author'));
 		}
 
@@ -224,6 +224,7 @@
 				$('#lightbox_image').attr('src', $(images[index]).data('image'));
 				$('#lightbox_image').attr('alt', $(images[index]).data('caption'));
 				$('#lightbox_caption').html($(images[index]).data('caption'));
+				$('#lightbox_description').html($(images[index]).data('description'));
 				$('#lightbox_image_author').html('Submitted by ' + $(images[index]).data('author'));
 		}
 
@@ -253,9 +254,11 @@
 		var image = $(this).data('image');
 		var caption = $(this).data('caption');
 		var author = $(this).data('author');
+		var description = $(this).data('description');
 		$('#lightbox_image').attr('src', image);
 		$('#lightbox_image').attr('alt', caption);
 		$('#lightbox_caption').html(caption);
+		$('#lightbox_description').html(description);
 		$('#lightbox_image_author').html('Submitted by ' + author);
 		// Create an array of all the images in teh gallery, get the index of the current image
 		var images = $('.gallery_item');

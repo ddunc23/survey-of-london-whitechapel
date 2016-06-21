@@ -33,18 +33,6 @@ var show_all_buildings = L.Control.extend({
 	}
 })
 
-var titlebox = L.Control.extend({
-	options: {
-		position: 'topleft',
-	},
-	onAdd: function(map) {
-		var container = L.DomUtil.create('div', 'titlebox-control row');
-		container.innerHTML += title_box_title;
-		return container;
-	}
-});
-
-
 var myStyle = {
 	"color": "#F58D16",
 	"fillColor": "#F58D16",
@@ -124,8 +112,15 @@ info.onAdd = function(map) {
 };
 
 info.update = function(properties) {
-    this._div.innerHTML =  (properties ?
-        '<b>' + properties.address + '</b>' : '');
+    var snippet;
+    if (properties) {
+    	if (properties.b_name) {
+    		snippet = properties.b_name;
+    	} else {
+    		snippet = properties.address;
+    	}
+    }
+    this._div.innerHTML =  (properties ? '<b>' + snippet + '</b>' : '');
 };
 
 
@@ -180,8 +175,23 @@ var highlight;
 
 function loadFeatures(jsonUrl, mapType, allFeatures) {
 
+
+	var titlebox = L.Control.extend({
+		options: {
+			position: 'topleft',
+		},
+		onAdd: function(map) {
+			var container = L.DomUtil.create('div', 'titlebox-control row');
+			container.innerHTML += title_box_title;
+			if (allFeatures == false) {
+				container.innerHTML += ' | <a href="/map/">Show All</a>';
+			}
+			return container;
+		}
+	});
+
 	if (mapType == 'main') {
-		
+
 		function initMap(layers) {
 			map = L.map('map', {
 				zoom: 16,
@@ -198,7 +208,7 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				geojson = data;
 
-				sketchylayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/whitechapel_building_footprints_with_open_spaces/{z}/{x}/{y}.png', {maxZoom: 20});
+				sketchylayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/whitechapel_building_footprints_june_2016/{z}/{x}/{y}.png', {maxZoom: 20});
 
 				buildings = L.geoJson(geojson, {
 					onEachFeature: onEachFeature,
@@ -241,10 +251,10 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 				}).addTo(map);
 				
 				map.addControl(new infobox());
-				// map.addControl(new feature_legend());
-				if (allFeatures == false) {
+				
+				/*if (allFeatures == false) {
 					map.addControl(new show_all_buildings());
-				}
+				}*/
 
 				if (title_box_title != '') {
 					map.addControl(new titlebox());

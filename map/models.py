@@ -41,19 +41,37 @@ class Feature(models.Model):
 	street = models.CharField(max_length=100, null=True, blank=True)
 	postcode = models.CharField(max_length=8)
 	address = models.CharField(max_length=100, verbose_name='Formatted Address')
-	b_type = models.CharField(max_length=100, null=True, blank=True)
-	original = models.PositiveSmallIntegerField(null=True, blank=True)
-	rebuild_1 = models.PositiveSmallIntegerField(null=True, blank=True)
-	rebuild_2 = models.PositiveSmallIntegerField(null=True, blank=True)
+	b_type = models.CharField(max_length=100, null=True, blank=True, verbose_name='Building Type')
+	current = models.PositiveSmallIntegerField(null=True, blank=True)
+	previous_1 = models.PositiveSmallIntegerField(null=True, blank=True)
+	previous_2 = models.PositiveSmallIntegerField(null=True, blank=True)
+	previous_3 = models.PositiveSmallIntegerField(null=True, blank=True)
+	extension_1 = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Extension/Alteration 1')
+	extension_2 = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Extension/Alteration 2')
+	extension_3 = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Extension/Alteration 3')
 	f_date = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Facade Date')
 	storeys = models.PositiveSmallIntegerField(null=True, blank=True)
-	basement = models.CharField(max_length=8,null=True, blank=True)
+	BASEMENT_CHOICES = (
+		('YES', 'Yes'),
+		('NO', 'No'),
+	)
+	basement = models.CharField(max_length=8,null=True, blank=True, choices=BASEMENT_CHOICES, default='NO')
 	architect = models.CharField(max_length=100, null=True, blank=True)
 	builders = models.CharField(max_length=100, null=True, blank=True)
 	materials = models.CharField(max_length=100, null=True, blank=True)
 	short_description = models.CharField(max_length=140, null=True, blank=True, verbose_name='Short Description')
-	c_area = models.CharField(max_length=8,null=True, blank=True, verbose_name='Conservation Area')
-	listed = models.CharField(max_length=8,null=True, blank=True, verbose_name='Listed')
+	C_AREA_CHOICES = (
+		('YES', 'Yes'),
+		('NO', 'No'),
+	)
+	c_area = models.CharField(max_length=8, null=True, blank=True, verbose_name='Conservation Area', choices=C_AREA_CHOICES, default='NO')
+	LISTED_CHOICES = (
+		('NO', 'Not Listed'),
+		('GRADE_1', 'Grade I'),
+		('GRADE_2', 'Grade II'),
+		('GRADE_2*', 'Grade II*'),
+	)
+	listed = models.CharField(max_length=8, null=True, blank=True, verbose_name='Listed', choices=LISTED_CHOICES, default='NO')
 	count = models.PositiveSmallIntegerField(default=0)
 	categories = models.ManyToManyField(Category, blank=True)
 	thumbnail = models.ImageField(upload_to=feature_directory_path, null=True, blank=True, verbose_name='Thumbnail Image')
@@ -120,6 +138,7 @@ class Document(models.Model):
 	published = models.BooleanField(default=False)
 	pending = models.BooleanField(default=False)
 	anonymise = models.BooleanField(default=False)
+	created = models.DateField(auto_now_add=True, null=True, blank=True)
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
 	tags = TaggableManager(blank=True)
 
@@ -136,7 +155,7 @@ class Document(models.Model):
 	def save(self, *args, **kwargs):
 		"""Sanitize html input from users, add footnotes and update the 'count' attribute of the feature"""
 		# Clean the html
-		self.body = bleach.clean(self.body, tags=['p', 'b', 'strong', 'em', 'img', 'a', 'blockquote', 'i', 'li', 'ul', 'ol', 'h2', 'h3', 'br'], attributes={'img': ['alt'], 'a': ['href'],})
+		self.body = bleach.clean(self.body, tags=['p', 'b', 'strong', 'em', 'img', 'a', 'blockquote', 'i', 'li', 'ul', 'ol', 'h2', 'h3', 'br'], attributes={'img': ['alt', 'src', 'style'], 'a': ['href'],})
 		# Convert HTML to Markdown so you can run the footnote filter on it, then save as self.body_processed, which is what gets displayed on the site
 		h = html2text.HTML2Text()
 		h.ignore_images = False
@@ -160,6 +179,7 @@ class Image(models.Model):
 	file = models.ImageField(upload_to=feature_directory_path, null=True, blank=False, verbose_name='Image')
 	published = models.BooleanField(default=False)
 	pending = models.BooleanField(default=False)
+	created = models.DateField(auto_now_add=True, null=True, blank=True)
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
 	tags = TaggableManager(blank=True)
 
@@ -186,6 +206,7 @@ class Media(models.Model):
 	url = EmbedVideoField()
 	published = models.BooleanField(default=False)
 	pending = models.BooleanField(default=False)
+	created = models.DateField(auto_now_add=True, null=True, blank=True)
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
 	tags = TaggableManager(blank=True)
 

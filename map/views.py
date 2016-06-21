@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from map.models import Feature, Document, Category, Image, Media
 from map.serializers import FeatureSerializer
-from map.forms import DocumentForm, ImageForm, MediaForm
+from map.forms import DocumentForm, ImageForm, MediaForm, AdminDocumentForm, AdminImageForm, AdminMediaForm
 from rest_framework.renderers import JSONRenderer
 from haystack.query import SearchQuerySet
 from django.contrib.auth.decorators import login_required
@@ -13,9 +13,10 @@ from django.views.decorators.cache import cache_page
 from itertools import chain
 import logging
 from taggit.models import Tag
-from django.core.mail import mail_managers
+from django.core.mail import mail_managers, send_mail
 import re
 from django.template import Context
+from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
 
@@ -50,9 +51,9 @@ def feature(request, feature):
 	images = Image.objects.filter(feature=feature).filter(published=True)
 	media = Media.objects.filter(feature=feature).filter(published=True)
 	categories = Category.objects.filter(feature=feature)
-	if feature.original != None:
-		lower = feature.original - 10
-		upper = feature.original + 10
+	if feature.current != None:
+		lower = feature.current - 10
+		upper = feature.current + 10
 	else:
 		lower = 0
 		upper = 0
@@ -63,9 +64,9 @@ def feature(request, feature):
 def feature_legend(request, feature):
 	"""Update the legend control buttons for year, street"""
 	feature = Feature.objects.get(id=feature)
-	if feature.original != None:
-		lower = feature.original - 10
-		upper = feature.original + 10
+	if feature.current != None:
+		lower = feature.current - 10
+		upper = feature.current + 10
 	else:
 		lower = 0
 		upper = 0
@@ -87,12 +88,16 @@ def detail(request, feature):
 	subtitle = '| ' + str(feature)
 	tags = []
 	for document in documents:
-		tags.append(document.tags.all())
+		for tag in document.tags.all():
+			tags.append(tag)
 	for image in images:
-		tags.append(image.tags.all())
+		for tag in image.tags.all():
+			tags.append(tag)
 	for item in media:
-		tags.append(item.tags.all())
-	tags.append(feature.tags.all())
+		for tag in item.tags.all():
+			tags.append(tag)
+	for tag in feature.tags.all():
+		tags.append(tag)
 
 	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar, 'subtitle': subtitle, 'images': images, 'media': media, 'tags': tags, })
 
@@ -169,25 +174,103 @@ def ugc_thanks(request, feature):
 	return render(request, 'map/ugc_thanks.html', {'feature': feature})
 
 
+@login_required
+def dashboard(request):
+	"""An overview of new submissions, users, and useful statistics"""
+	if request.user.is_staff == False:
+		raise Http404("Staff Only!")
+	
+	documents = Document.objects.all().order_by('-last_edited')
+	images = Image.objects.all().order_by('-last_edited')
+	media = Media.objects.all().order_by('-last_edited')
+	new_users = User.objects.filter(date_joined__gte=datetime.now()-timedelta(days=14))
+	users = User.objects.all()
+	for user in users:
+		user.contributions = len(Document.objects.filter(author=user)) + len(Image.objects.filter(author=user)) + len(Media.objects.filter(author=user))
+
+	return render(request, 'map/dashboard.html', {'documents': documents, 'images': images, 'media': media, 'new_users': new_users, 'users': users})
+
+
 def inform_managers_of_content_submission(request):
-	# Tell the SoL admins that a new document has been submitted.
+	"""Tell the SoL admins that a new document has been submitted."""
 	message = 'Hello Survey of London Editors.\nNew content has been submitted by ' + request.user.get_username() + ' and is awaiting moderation.\nThank you.'
-	html_message = '<p>Hello Survey of London Editors.</p><p>New content has been submitted by ' + request.user.get_username() + ' and is awaiting moderation. To review, edit, and approve it, click <a href="#">here</a>.</p><p>Thank you.</p>'
+	html_message = '<p>Hello Survey of London Editors.</p><p>New content has been submitted by ' + request.user.get_username() + ' and is awaiting moderation. To review, edit, and approve it, click <a href="https://surveyoflondon.org/map/dashboard/">here</a>.</p><p>Thank you.</p>'
 	mail_managers('New Content Submitted', message=message, html_message=html_message)
+
+
+def inform_user_of_content_publication(author, title, editor, message):
+	"""Tell a contributor that their content has been published and copy in the editor who approved it"""
+	if message != '':
+		message = 'Hello ' + author.get_username() + '.\nYour recent submission titled "' + title + '" has just been published on the Survey of London Whitechapel Website.\n' + message + '\nThanks for your contribution.'
+	else:
+		message = 'Hello ' + author.get_username() + '.\nYour recent submission titled "' + title + '" has just been published on the Survey of London Whitechapel Website.\nThanks for your contribution.'
+
+	# recipient_list = [author.email, editor.email]
+	# For the moment, just email the editor - we need to get this right before we start sending automated emails willy-nilly
+
+	recipient_list = [editor.email]
+
+	send_mail(subject='Your Content has been Published', message=message, from_email='admin@surveyoflondon.org', recipient_list=recipient_list)
+
+
+@login_required
+def moderate_document(request, document):
+	"""View to allow administrators to edit and approve documents."""
+	if request.user.is_staff == False:
+		raise Http404('Document does not exist')
+
+	document = get_object_or_404(Document, id=document)
+
+	if request.method == 'POST':
+		"""Save the form if the request is a POST"""
+		form = AdminDocumentForm(request.POST, instance=document)
+
+		if form.is_valid():
+			d = form.save(commit=False)
+
+			published = request.POST.get('publish')
+
+			if published != None:
+				"""If the published checkbox isn't ticked (which it won't be an unless an editor's seen and checked it, put the document in pending."""
+				if published == 'Approve':
+					d.pending = False
+				else:
+					d.pending = True
+
+			d.save()
+			form.save_m2m()
+
+			if published == 'Approve':
+				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
+				editor = request.user
+				message = request.POST.get('email_thanks')
+				inform_user_of_content_publication(d.author, d.title, editor, message)
+				return dashboard(request)
+			else:
+				return dashboard(request)
+
+	else:
+		"""Display the form with its content if request is a GET"""
+		form = AdminDocumentForm(instance=document)
+
+	return render(request, 'map/moderate_document.html', {'form': form, 'document': document })
+
 
 
 @login_required
 def edit_document(request, feature, document=None):
 	"""View to allow users to add or edit documents."""
 	if document:
+		"""If the document exits, edit that document, otherwise present the user with a blank form"""
 		document = Document.objects.get(id=document)
-		if request.user != document.author:
-			raise Http404("Document does not exist")
 	else:
 		document = None
 
 	if request.method == 'POST':
+		"""If request type is a 'POST', save the form"""
+
 		form = DocumentForm(request.POST, instance=document)
+		
 		if form.is_valid():
 			d = form.save(commit=False)
 			
@@ -198,12 +281,14 @@ def edit_document(request, feature, document=None):
 				pass
 
 			d.author = request.user
+			
 			if document != None:
 				d.id = document.id
 
 			published = request.POST.get('publish')
 
 			if published != None:
+				"""If there's no 'published' value, place the document in pending"""
 				d.pending = True
 
 			### Regex to get select2 tags working - fix fix fix!
@@ -227,15 +312,54 @@ def edit_document(request, feature, document=None):
 			feature = Feature.objects.get(id=feature)
 
 	else:
-		if document == None:
-			form = DocumentForm(instance=document)
-		else:
-			form = DocumentForm(instance=document)
+		form = DocumentForm(instance=document)	
 		feature = Feature.objects.get(id=feature)
 
 	tags = Tag.objects.all()
 
 	return render(request, 'map/add_document.html', {'feature': feature, 'form': form, 'document': document, 'tags': tags, })
+
+
+@login_required
+def moderate_image(request, image):
+	"""View to allow administrators to moderate images"""
+	if request.user.is_staff == False:
+		raise Http404('Image does not exist')
+
+	image = get_object_or_404(Image, id=image)
+
+	if request.method == 'POST':
+		"""Save the form if the request is a POST"""
+		form = AdminImageForm(request.POST, instance=image)
+		i = form.save(commit=False)
+
+		if form.is_valid():
+			published = request.POST.get('publish')
+
+			if published != None:
+				"""If the published checkbox isn't ticked (which it won't be an unless an editor's seen and checked it, put the document in pending."""
+				if published == 'Approve':
+					i.pending = False
+				else:
+					i.pending = True
+
+			i.save()
+			form.save_m2m()
+
+			if published == 'Approve':
+				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
+				editor = request.user
+				message = request.POST.get('email_thanks')
+				inform_user_of_content_publication(i.author, i.title, editor, message)
+				return dashboard(request)
+			else:
+				return dashboard(request)
+
+	else:
+		"""Display the form with its content if request is a GET"""
+		form = AdminImageForm(instance=image)
+
+	return render(request, 'map/moderate_image.html', {'form': form, 'image': image })
 
 
 @login_required
@@ -292,6 +416,50 @@ def edit_image(request, feature, image=None):
 	tags = Tag.objects.all()
 
 	return render(request, 'map/add_image.html', {'feature': feature, 'form': form, 'image': image, 'tags': tags })
+
+
+
+@login_required
+def moderate_media(request, media):
+	"""View to allow administrators to moderate media"""
+	if request.user.is_staff == False:
+		raise Http404('Media does not exist')
+
+	media = get_object_or_404(Media, id=media)
+
+	if request.method == 'POST':
+		"""Save the form if the request is a POST"""
+		form = AdminMediaForm(request.POST, instance=media)
+		m = form.save(commit=False)
+
+		if form.is_valid():
+			published = request.POST.get('publish')
+
+			if published != None:
+				"""If the published checkbox isn't ticked (which it won't be an unless an editor's seen and checked it, put the document in pending."""
+				if published == 'Approve':
+					m.pending = False
+				else:
+					m.pending = True
+
+			m.save()
+			form.save_m2m()
+
+			if published == 'Approve':
+				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
+				editor = request.user
+				message = request.POST.get('email_thanks')
+				inform_user_of_content_publication(m.author, m.title, editor, message)
+				return dashboard(request)
+			else:
+				return dashboard(request)
+
+	else:
+		"""Display the form with its content if request is a GET"""
+		form = AdminMediaForm(instance=media)
+
+	return render(request, 'map/moderate_media.html', {'form': form, 'media': media })
+
 
 
 @login_required

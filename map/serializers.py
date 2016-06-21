@@ -7,4 +7,4 @@ class FeatureSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = Feature
         geo_field = 'geom'
-        fields = ('id', 'b_name', 'address', 'postcode', 'street', 'categories', 'count', 'original')
+        fields = ('id', 'b_name', 'address', 'postcode', 'street', 'categories', 'count', 'current')

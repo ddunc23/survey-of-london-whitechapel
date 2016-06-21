@@ -1,0 +1,56 @@
+{% extends 'map/base.html' %}
+
+{% block content %}
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-md-8 col-md-offset-2">
+			<h2>Moderate {{ image.author }}'s Submission About {% if image.feature.b_name %}{{ image.feature.b_name }}{% else %}{{ image.feature.address }}{% endif %}</h2>
+			<hr />
+			<h3>Submission Details</h3>
+			<p>Author Email: {{ image.author.email }}<br />
+			Created on {{ image.created }}<br />
+			Last Edited on {{ image.last_edited }}</p>
+			<hr />
+		</div>
+	</div>
+	<div class="row ugc-content-form-container">
+		<form id="document_form" method="post" action="{% url 'moderate_image' image.id %}">
+			<div class="col-xs-12 col-md-8 col-md-offset-2">
+			<img src="/media/{{ image.file }}" alt="{{ image.title }}" class="img-responsive img-rounded" />
+			<hr />
+				{% load crispy_forms_tags %}
+				{% csrf_token %}
+				{{ form|crispy }}
+			</div>
+			<div class="col-xs-12 col-md-8 col-md-offset-2">
+					<button class="btn btn-primary approve">Save Changes</button>
+			</div>
+			<!-- Approve Modal -->
+			<div class="modal fade" id="approve_confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h1>Approve this content?</h1>
+						</div>
+						<div class="modal-body">
+			        		<p>This content will be added to the map once it's been approved, and the contributor will be informed by email that it's been published.</p>
+			      		</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+							<input type="submit" name="publish" value="Approve" class="btn btn-primary"/>
+			    		</div>
+			    	</div>
+				</div>
+			</div> 
+			<!-- / Approve Modal -->
+		</form>
+	</div>
+</div>
+
+{% load staticfiles %}
+<script src="{% static 'js/ugc_functions.js' %}"></script>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

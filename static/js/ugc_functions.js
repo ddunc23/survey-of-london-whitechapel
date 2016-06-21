@@ -28,3 +28,11 @@ $('.are_you_sure').click(function(e) {
 	e.preventDefault();
 	$('#submit_confirm').modal('show');
 });
+
+$('.approve').click(function(e) {
+	if( $('#id_published').is(':checked')) {
+		e.preventDefault();
+		$('#approve_confirm').modal('show');
+	}
+});
+
