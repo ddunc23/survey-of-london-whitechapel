@@ -83,6 +83,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'whitechapel_pages.context_processors.menu_links',
+                'whitechapel_pages.context_processors.category_links',
                 'map.context_processors.last_feature',
             ],
         },

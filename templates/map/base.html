@@ -69,6 +69,14 @@
 			      	<ul class="nav navbar-nav navbar-right">
 	    				<li><a href="{% url 'site_home' %}">Home</a></li>
 	    				<li><a href="{% url 'map_home' %}">Map</a></li>
+	    				<li class="dropdown">
+    						<a id="categoryLinksLabel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">Themes <span class="caret"></span></a>
+    						<ul class="dropdown-menu" aria-labelledby="categoryLinksLabel">
+			    				{% for category in category_links %}
+			    				<li><a href="{% url 'category' category.id %}">{{ category }}</a></li>
+			    				{% endfor %}
+			    			</ul>
+			    		</li>
     					<li class="dropdown">
     						<a id="pageLinksLabel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About <span class="caret"></span></a>
     						<ul class="dropdown-menu" aria-labelledby="pageLinksLabel">
