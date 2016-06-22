@@ -50,9 +50,9 @@ def feature(request, feature):
 	feature = get_object_or_404(Feature, id=feature)
 
 	if feature.site != None:
-		documents = Document.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, anonymise=True)).filter(published=True)
-		images = Image.objects.filter(Q(feature=feature) | Q(feature__site=feature.site)).filter(published=True)
-		media = Media.objects.filter(Q(feature=feature) | Q(feature__site=feature.site)).filter(published=True)
+		documents = Document.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True)
+		images = Image.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True)
+		media = Media.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True)
 	else:
 		documents = Document.objects.filter(feature=feature).filter(published=True)
 		images = Image.objects.filter(feature=feature).filter(published=True)
@@ -67,7 +67,7 @@ def feature(request, feature):
 		upper = 0
 	build_range ={'upper': upper, 'lower': lower}
 
-	return render(request, 'map/feature.html', {'feature': feature, 'documents': documents, 'categories': categories, 'build_range': build_range, 'images': images })
+	return render(request, 'map/feature.html', {'feature': feature, 'documents': documents, 'categories': categories, 'build_range': build_range, 'images': images, 'media': media, })
 
 
 def feature_legend(request, feature):
@@ -89,13 +89,15 @@ def detail(request, feature):
 	feature = get_object_or_404(Feature, id=feature)
 	
 	if feature.site != None:
-		documents = Document.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, anonymise=True)).filter(published=True)
-		images = Image.objects.filter(Q(feature=feature) | Q(feature__site=feature.site)).filter(published=True)
-		media = Media.objects.filter(Q(feature=feature) | Q(feature__site=feature.site)).filter(published=True)
+		documents = Document.objects.filter(feature=feature).filter(published=True, aggregate=False)
+		images = Image.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True)
+		media = Media.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True)
+		site_docs = Document.objects.filter(feature__site=feature.site, aggregate=True, published=True)
 	else:
 		documents = Document.objects.filter(feature=feature).filter(published=True)
 		images = Image.objects.filter(feature=feature).filter(published=True)
 		media = Media.objects.filter(feature=feature).filter(published=True)
+		site_docs = None
 
 	histories = documents.filter(document_type='HISTORY')
 	descriptions = documents.filter(document_type='DESCRIPTION')
@@ -117,7 +119,7 @@ def detail(request, feature):
 	for tag in feature.tags.all():
 		tags.append(tag)
 
-	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar, 'subtitle': subtitle, 'images': images, 'media': media, 'tags': tags, })
+	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar, 'subtitle': subtitle, 'images': images, 'media': media, 'tags': tags, 'site_docs': site_docs })
 
 
 def category(request, category):
@@ -594,9 +596,9 @@ def features_by_tag(request, tag):
 
 def features_by_author(request, author):
 	if request.method == 'GET':
-		documents = Feature.objects.filter(document__author=author)
-		images = Feature.objects.filter(image__author=author)
-		media = Feature.objects.filter(media__author=author)
+		documents = Feature.objects.filter(document__author=author).filter(published=True)
+		images = Feature.objects.filter(image__author=author).filter(published=True)
+		media = Feature.objects.filter(media__author=author).filter(published=True)
 		features = list(chain(documents, images, media))
 		serializer = FeatureSerializer(features, many=True)
 		return JSONResponse(serializer.data)

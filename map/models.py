@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import User
 from djgeojson.fields import PolygonField
 from django.contrib.gis.db import models
@@ -121,11 +122,22 @@ feature_mapping = {
 
 def update_feature_count(ugc_item):
 	"""Update feature.count whenever a new document, image, or media item is added"""
-	documents = len(Document.objects.filter(feature=ugc_item.feature).filter(published=True))
-	images = len(Image.objects.filter(feature=ugc_item.feature).filter(published=True))
-	media = len(Media.objects.filter(feature=ugc_item.feature).filter(published=True))
-	ugc_item.feature.count = documents + images + media
-	ugc_item.feature.save()
+	if ugc_item.feature.site != None:
+		on_this_site = Feature.objects.filter(site=ugc_item.feature.site)
+		for feature in on_this_site:
+			documents = Document.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True).count()
+			images = Image.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True).count()
+			media = Media.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True).count()
+			count = documents + images + media
+			feature.count = count
+			feature.save()
+
+	else:
+		documents = Document.objects.filter(feature=ugc_item.feature).filter(published=True).count()
+		images = Image.objects.filter(feature=ugc_item.feature).filter(published=True).count()
+		media = Media.objects.filter(feature=ugc_item.feature).filter(published=True).count()
+		ugc_item.feature.count = documents + images + media
+		ugc_item.feature.save()
 
 
 class Document(models.Model):
@@ -146,7 +158,7 @@ class Document(models.Model):
 	document_type = models.CharField(max_length=16, choices=DOCUMENT_TYPE_CHOICES, default='HISTORY')
 	published = models.BooleanField(default=False)
 	pending = models.BooleanField(default=False)
-	anonymise = models.BooleanField(default=False)
+	aggregate = models.BooleanField(default=False, verbose_name="Aggregate to Site")
 	created = models.DateField(auto_now_add=True, null=True, blank=True)
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
 	tags = TaggableManager(blank=True)
@@ -188,6 +200,7 @@ class Image(models.Model):
 	file = models.ImageField(upload_to=feature_directory_path, null=True, blank=False, verbose_name='Image')
 	published = models.BooleanField(default=False)
 	pending = models.BooleanField(default=False)
+	aggregate = models.BooleanField(default=False, verbose_name="Aggregate to Site")
 	created = models.DateField(auto_now_add=True, null=True, blank=True)
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
 	tags = TaggableManager(blank=True)
@@ -215,6 +228,7 @@ class Media(models.Model):
 	url = EmbedVideoField()
 	published = models.BooleanField(default=False)
 	pending = models.BooleanField(default=False)
+	aggregate = models.BooleanField(default=False, verbose_name="Aggregate to Site")
 	created = models.DateField(auto_now_add=True, null=True, blank=True)
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
 	tags = TaggableManager(blank=True)

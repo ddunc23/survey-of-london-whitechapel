@@ -33,7 +33,7 @@ class DocumentForm(forms.ModelForm):
 class AdminDocumentForm(DocumentForm):
 	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here.', required=False, widget=forms.Textarea)
 	class Meta(DocumentForm.Meta):
-		fields = ('title', 'tags', 'body', 'email_thanks', 'document_type', 'order', 'published',)
+		fields = ('title', 'tags', 'body', 'email_thanks', 'document_type', 'order', 'published', 'aggregate')
 		labels = {
 			'title': 'Edit the title',
 			'tags': 'Add more tags as necessary',
@@ -41,6 +41,7 @@ class AdminDocumentForm(DocumentForm):
 			'published': 'Tick this box to approve this submission and publish it on the map.',
 			'document_type': 'Choose a category for this submission.',
 			'order': 'Order',
+			'aggregate': 'Tick this box to attach this content to all the buildings on this site.'
 		}
 		help_texts = {
 			'order': 'What priority should this have on the building page? 0 is highest, higher numbers determine what order each piece of content appears.'
@@ -54,7 +55,7 @@ class ImageForm(forms.ModelForm):
 		labels = {
 			'title': 'Give your contribution a title',
 			'file': 'Upload Image',
-			'tags': 'Add one or two tags so people can find your image more easily'
+			'tags': 'Add one or two tags so people can find your image more easily',
 		}
 		widgets = {
 			'file': forms.ClearableFileInput(attrs={'class':'img-upload'}),
@@ -68,11 +69,12 @@ class ImageForm(forms.ModelForm):
 class AdminImageForm(ImageForm):
 	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here.', required=False, widget=forms.Textarea)
 	class Meta(ImageForm.Meta):
-		fields = ('title', 'tags', 'email_thanks', 'published',)
+		fields = ('title', 'tags', 'email_thanks', 'published', 'aggregate')
 		labels = {
 			'title': 'Edit the title',
 			'tags': 'Add more tags as necessary',
 			'published': 'Tick this box to approve this submission and publish it on the map.',
+			'aggregate': 'Tick this box to attach this content to all the buildings on this site.',
 		}
 
 
@@ -95,10 +97,11 @@ class MediaForm(forms.ModelForm):
 class AdminMediaForm(MediaForm):
 	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here.', required=False, widget=forms.Textarea)
 	class Meta(MediaForm.Meta):
-		fields = ('title', 'tags', 'url', 'email_thanks', 'published',)
+		fields = ('title', 'tags', 'url', 'email_thanks', 'published', 'aggregate')
 		labels = {
 			'title': 'Edit the title',
 			'tags': 'Add more tags as necessary',
 			'url': 'Check to see if the URL is correct',
 			'published': 'Tick this box to approve this submission and publish it on the map.',
+			'aggregate': 'Tick this box to attach this content to all the buildings on this site.',
 		}

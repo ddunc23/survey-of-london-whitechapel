@@ -58,9 +58,9 @@ function setDocNumberStyle(layer) {
 	if (count == 0) {
 		layer.setStyle({fillOpacity: 0});
 	} else if (count >= 1 && count <= 2) {
-		layer.setStyle({fillOpacity: 0.8});
+		layer.setStyle({fillOpacity: 0.4});
 	} else if (count >= 3 && count <= 6) {
-		layer.setStyle({fillOpacity: 0.8});
+		layer.setStyle({fillOpacity: 0.6});
 	} else if (count >= 7 && count <= 10) {
 		layer.setStyle({fillOpacity: 0.8});
 	}

@@ -11,7 +11,7 @@
 				<h1>{{ feature.b_name }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Show on Map</a>{% if not histories and not descriptions and not stories and not images and not media %}{% else %}<a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a>{% endif %}</div></h1>
 				<h2><small>{{ feature.address }} {% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a></small> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
 			{% else %}
-				<h1>{{ feature.address }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Show on Map</a>{% if not histories and not descriptions and not stories and not images and not media %}{% else %}<a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a>{% endif %}</div></h1>
+				<h1>{{ feature.address }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Show on Map</a><a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a></div></h1>
 				{% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %}
 			{% endif %}
 		</div>
@@ -21,7 +21,7 @@
 	<div class="row">
 		<div class="col-md-3"></div>
 		<div class="col-xs-12 col-md-7">
-		{% if not histories and not descriptions and not stories and not images and not media %}
+		{% if not histories and not descriptions and not stories and not images and not media and not site_docs %}
 			<hr />
 			<h2>We Don't Have Any Information About This Place Yet</h2>
 			<p>Do you know something about the history of this building or the people who have lived or worked here? {% if user.is_authenticated %}<a href="{% url 'ugc_choice' feature.id %}">Contribute it here.</a>{% else %}<a href="{% url 'account_login' %}">Contribute it here.</a>{% endif %}</p>
@@ -31,19 +31,22 @@
 
 			<ul class="nav nav-tabs" role="tablist" id="docTabs">
 				{% if histories %}
-				<li role="presentation" class="active"><a href="#history" aria-controls="history" role="tab" data-toggle="tab">Research</a></li>
+					<li role="presentation" class="active"><a href="#history" aria-controls="history" role="tab" data-toggle="tab">Research</a></li>
 				{% endif %}
 				{% if descriptions %}
-				<li role="presentation" {% if not histories %}class="active"{% endif %}><a href="#description" aria-controls="description" role="tab" data-toggle="tab">Description</a></li>
+					<li role="presentation" {% if not histories %}class="active"{% endif %}><a href="#description" aria-controls="description" role="tab" data-toggle="tab">Description</a></li>
 				{% endif %}
 				{% if stories %}
-				<li role="presentation"{% if not histories and not descriptions %}class="active"{% endif %}><a href="#story" aria-controls="stories" role="tab" data-toggle="tab">Memories</a></li>
+					<li role="presentation"{% if not histories and not descriptions %}class="active"{% endif %}><a href="#story" aria-controls="stories" role="tab" data-toggle="tab">Memories</a></li>
+				{% endif %}
+				{% if feature.site %}
+					<li role="presentation"{% if not histories and not descriptions and not stories %}class="active"{% endif %}><a href="#site" aria-controls="site" role="tab" data-toggle="tab">{{ feature.site }}</a></li>
 				{% endif %}
 				{% if images %}
-				<li role="presentation"{% if not histories and not descriptions and not stories %}class="active"{% endif %}><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images</a></li>
+					<li role="presentation"{% if not histories and not descriptions and not stories and not feature.site %}class="active"{% endif %}><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images</a></li>
 				{% endif %}
 				{% if media %}
-				<li role="presentation"{% if not histories and not descriptions and not stories %}class="active"{% endif %}><a href="#media" aria-controls="images" role="tab" data-toggle="tab">Media</a></li>
+					<li role="presentation"{% if not histories and not descriptions and not stories and not feature.site and not images %}class="active"{% endif %}><a href="#media" aria-controls="media" role="tab" data-toggle="tab">Audio and Video</a></li>
 				{% endif %}
 			</ul>
 		</div>
@@ -53,10 +56,12 @@
 			<ul data-spy="affix" data-offset-top="300" data-offset-bottom="0" class="nav nav-stacked hidden-sm hidden-xs">
 			{% if histories %}
 					{% for document in histories %}
-						{% if document.start_year %}
-							<li><a href="#{{ document.title|slugify }}">{{ document.title }}<br /><span class="small">{{ document.start_year }} - {{ document.end_year }}</span></a></li>
-						{% else %}
-							<li><a href="#{{ document.title|slugify }}">{{ document.title }}</span></a></li>
+						{% if document.aggregate == False %}
+							{% if document.start_year %}
+								<li><a href="#{{ document.title|slugify }}">{{ document.title }}<br /><span class="small">{{ document.start_year }} - {{ document.end_year }}</span></a></li>
+							{% else %}
+								<li><a href="#{{ document.title|slugify }}">{{ document.title }}</span></a></li>
+							{% endif %}
 						{% endif %}
 					{% endfor %}
 			{% endif %}
@@ -82,6 +87,17 @@
 					{% endfor %}
 				{% endif %}
 			{% endif %}
+			{% if site_docs %}
+				{% if not histories and not descriptions and not stories %}
+					{% for document in site_docs %}
+						{% if document.start_year %}
+							<li><a href="#{{ document.title|slugify }}">{{ document.title }}<br /><span class="small">{{ document.start_year }} - {{ document.end_year }}</span></a></li>
+						{% else %}
+							<li><a href="#{{ document.title|slugify }}">{{ document.title }}</span></a></li>
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+			{% endif %}
 			</ul>
 		</div>
 		<div class="col-xs-12 col-md-7 feature-detail">
@@ -89,11 +105,13 @@
 				{% if histories %}
 					<div role="tabpanel" class="tab-pane active" id="history">
 					{% for document in histories %}
+						{% if document.aggregate == False %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
 							<h2>{{ document.title }}<br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a></span></h2>
 							{{ document.body_processed|safe }}
-						</div>				
+						</div>
+						{% endif %}
 					{% endfor %}
 					</div>
 				{% endif %}
@@ -119,13 +137,24 @@
 					{% endfor %}
 					</div>
 				{% endif %}
+				{% if feature.site %}
+					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories %} active{% endif %}" id="site">
+					{% for document in site_docs %}
+						<div class="document">
+							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
+							<h2>{{ document.title }}<br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a></span></h2>
+							{{ document.body_processed|safe }}
+						</div>
+					{% endfor %}
+					</div>
+				{% endif %}
 				{% if images %}
-					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories %} active{% endif %} row" id="images">
+					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories and not feature.site %} active{% endif %} row" id="images">
 						{% load thumbnail %}
 						{% for image in images %}
 						<div class="col-xs-12 col-sm-4 col-md-4">
 							<div class="item-card">
-								<a href="#" class="gallery_item" data-image="/media/{{ image.file }}" data-caption="{{ image.title }}" data-author="{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}" data-description="{{ image.description }}"><img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}"></a>
+								<a href="#" class="gallery_item" data-image="/media/{{ image.file }}" data-caption="{{ image.title }}" data-author="{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}" data-description="{% if image.description %}{{ image.description }}{% endif %}"><img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}"></a>
 								<p>{{ image.title }}<br />Contributed by <a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a></p>
 							</div>
 						</div>	
@@ -133,7 +162,7 @@
 					</div>
 				{% endif %}
 				{% if media %}
-					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories %} active{% endif %} row" id="media">
+					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories and not feature.site and not images %} active{% endif %} row" id="media">
 						<div class="col-xs-12">
 							{% load embed_video_tags %}
 							{% for embed in media %}
@@ -146,7 +175,7 @@
 						</div>
 					</div>
 				{% endif %}
-
+				
 			</div>
 		{% endif %} 
 		</div>
@@ -274,6 +303,8 @@
 
 	var storyNav = '{% for document in stories %}{% if document.start_year %}<li><a href="#{{ document.title|slugify }}">{{ document.start_year }} - {{ document.end_year }}<br /><span class="small">{{ document.title }}</span></a></li>{% else %}<li><a href="#{{ document.title|slugify }}">{{ document.title }}</span></a></li>{% endif %}{% endfor %}';
 
+	var siteNav = '{% for document in site_docs %}{% if document.start_year %}<li><a href="#{{ document.title|slugify }}">{{ document.start_year }} - {{ document.end_year }}<br /><span class="small">{{ document.title }}</span></a></li>{% else %}<li><a href="#{{ document.title|slugify }}">{{ document.title }}</span></a></li>{% endif %}{% endfor %}'
+
 	$('#docTabs a').click(function(e) {
 		e.preventDefault();
 		$(this).tab('show');
@@ -283,6 +314,8 @@
 			$('#fixed-nav ul').html(historyNav);
 		} else if ($(this).html() == 'Memories') {
 			$('#fixed-nav ul').html(storyNav);
+		} else if ($(this).attr('href') == '#site') {
+			$('#fixed-nav ul').html(siteNav);
 		} else {
 			$('#fixed-nav ul').html('');
 		}
@@ -300,6 +333,8 @@
 	    } else if (tabAnchor == 'history') {
 			$('#fixed-nav ul').html(historyNav);
 		} else if (tabAnchor == 'story') {
+			$('#fixed-nav ul').html(storyNav);
+		} else if (tabAnchor == 'site') {
 			$('#fixed-nav ul').html(storyNav);
 		} else {
 			$('#fixed-nav ul').html('');
