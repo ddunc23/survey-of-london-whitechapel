@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 def map_home(request):
 	"""Base map"""
-	features = Feature.objects.all()
+	# features = Feature.objects.all()
 	subtitle = '| Map'
 	first_visit = None
 	try:
@@ -42,7 +42,7 @@ def map_home(request):
 	else:
 		pass
 
-	return render(request, 'map/index.html', {'title': 'Survey of London', 'features': features, 'subtitle': subtitle, 'first_visit': first_visit })
+	return render(request, 'map/index.html', {'title': 'Survey of London', """'features': features,""" 'subtitle': subtitle, 'first_visit': first_visit })
 
 
 def feature(request, feature):
