@@ -42,14 +42,15 @@ var myStyle = {
 
 var hoverStyle = {
 	"opacity": 1,
-	"weight": 2.5,
+	"weight": 3,
 	"color": "#1AA9FF",
 }
 
 var highlightStyle = {
+	"opacity": 1,
 	"color": "#1AA9FF",
 	"fillColor": "#1AA9FF",
-	"weight": 2.5
+	"weight": 4.5
 };
 
 
@@ -126,12 +127,12 @@ info.update = function(properties) {
 
 function onEachFeature(feature, layer) {
 	if (feature.properties) {
-		if (feature.properties.b_name) {
+		/*if (feature.properties.b_name) {
 			layer.bindPopup('<a href="feature/' + feature.id + '/detail/">' + feature.properties.b_name + '</a>');
 		}
 		else if (feature.properties.address) {
 			layer.bindPopup('<a href="feature/' + feature.id + '/detail/">' + feature.properties.address + '</a>');
-		}
+		}*/
 		var hl = getUrlVars()['highlight'];
 		if (feature.id == hl) {
 			highlight = layer;
@@ -275,14 +276,14 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				$('.leaflet-control').mouseout(function() {
 					buildings.eachLayer(function(layer) {			
-						if (layer.feature.properties) {
+						/*if (layer.feature.properties) {
 							if (layer.feature.properties.b_name) {
 								layer.bindPopup('<a href="feature/' + layer.feature.id + '/detail/">' + layer.feature.properties.b_name + '</a>');
 							}
 							else if (layer.feature.properties.address) {
 								layer.bindPopup('<a href="feature/' + layer.feature.id + '/detail/">' + layer.feature.properties.address + '</a>');
 							}
-						}
+						}*/
 						layer.on("mouseover", function(e) {
 							setFootprintColour(layer, e);
 							info.update(layer.feature.properties);
