@@ -211,12 +211,14 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				sketchylayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/whitechapel_building_footprints_2016-06-27/{z}/{x}/{y}.png', {maxZoom: 20});
 
+				scanlayer = L.tileLayer('https://a.surveyoflondon.org/tileserver.php?/index.json?/test_scan/{z}/{x}/{y}.png', {maxZoom: 20});
+
 				buildings = L.geoJson(geojson, {
 					onEachFeature: onEachFeature,
 				});
 
 				if (geojson.features.length > 0) {
-					layers = [sketchylayer, buildings];
+					layers = [sketchylayer, scanlayer, buildings];
 					initMap(layers);
 					map.fitBounds(buildings);
 				} else {
@@ -231,6 +233,7 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				var baseMaps = {
 					"Base Map": sketchylayer,
+					"Test Scan": scanlayer,
 				};
 				
 				var overlayMaps = {
