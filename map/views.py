@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from map.models import Feature, Document, Category, Image, Media
+from map.models import Feature, Document, Category, Image, Media, Site
 from map.serializers import FeatureSerializer
 from map.forms import DocumentForm, ImageForm, MediaForm, AdminDocumentForm, AdminImageForm, AdminMediaForm
 from rest_framework.renderers import JSONRenderer
@@ -20,11 +20,12 @@ from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
 
+
 # Map Views
 
 def map_home(request):
 	"""Base map"""
-	features = Feature.objects.all()
+	# features = Feature.objects.all()
 	subtitle = '| Map'
 	first_visit = None
 	try:
@@ -41,15 +42,22 @@ def map_home(request):
 	else:
 		pass
 
-	return render(request, 'map/index.html', {'title': 'Survey of London', 'features': features, 'subtitle': subtitle, 'first_visit': first_visit })
+	return render(request, 'map/index.html', {'title': 'Survey of London', """'features': features,""" 'subtitle': subtitle, 'first_visit': first_visit })
+
 
 def feature(request, feature):
 	"""Get info about a single feature"""
 	feature = get_object_or_404(Feature, id=feature)
-	documents = Document.objects.filter(feature=feature).filter(published=True)
-	histories = documents.filter(document_type='HISTORY').order_by('order')
-	images = Image.objects.filter(feature=feature).filter(published=True)
-	media = Media.objects.filter(feature=feature).filter(published=True)
+
+	if feature.site != None:
+		documents = Document.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True)
+		images = Image.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True)
+		media = Media.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True)
+	else:
+		documents = Document.objects.filter(feature=feature).filter(published=True)
+		images = Image.objects.filter(feature=feature).filter(published=True)
+		media = Media.objects.filter(feature=feature).filter(published=True)
+	
 	categories = Category.objects.filter(feature=feature)
 	if feature.current != None:
 		lower = feature.current - 10
@@ -59,7 +67,8 @@ def feature(request, feature):
 		upper = 0
 	build_range ={'upper': upper, 'lower': lower}
 
-	return render(request, 'map/feature.html', {'feature': feature, 'documents': documents, 'categories': categories, 'build_range': build_range, 'histories': histories, 'images': images, })
+	return render(request, 'map/feature.html', {'feature': feature, 'documents': documents, 'categories': categories, 'build_range': build_range, 'images': images, 'media': media, })
+
 
 def feature_legend(request, feature):
 	"""Update the legend control buttons for year, street"""
@@ -74,12 +83,22 @@ def feature_legend(request, feature):
 
 	return render(request, 'map/legendcontrol.html', {'feature': feature, 'build_range': build_range })
 
+
 def detail(request, feature):
 	"""Detailed view of documents and media attached to a single feature"""
 	feature = get_object_or_404(Feature, id=feature)
-	images = Image.objects.filter(feature=feature).filter(published=True)
-	documents = Document.objects.filter(feature=feature).filter(published=True).order_by('order')
-	media = Media.objects.filter(feature=feature).filter(published=True)
+	
+	if feature.site != None:
+		documents = Document.objects.filter(feature=feature).filter(published=True, aggregate=False)
+		images = Image.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True)
+		media = Media.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True)
+		site_docs = Document.objects.filter(feature__site=feature.site, aggregate=True, published=True)
+	else:
+		documents = Document.objects.filter(feature=feature).filter(published=True)
+		images = Image.objects.filter(feature=feature).filter(published=True)
+		media = Media.objects.filter(feature=feature).filter(published=True)
+		site_docs = None
+
 	histories = documents.filter(document_type='HISTORY')
 	descriptions = documents.filter(document_type='DESCRIPTION')
 	stories = documents.filter(document_type='STORY')
@@ -87,6 +106,7 @@ def detail(request, feature):
 	similar = feature.tags.similar_objects()
 	subtitle = '| ' + str(feature)
 	tags = []
+	
 	for document in documents:
 		for tag in document.tags.all():
 			tags.append(tag)
@@ -99,7 +119,8 @@ def detail(request, feature):
 	for tag in feature.tags.all():
 		tags.append(tag)
 
-	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar, 'subtitle': subtitle, 'images': images, 'media': media, 'tags': tags, })
+	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar, 'subtitle': subtitle, 'images': images, 'media': media, 'tags': tags, 'site_docs': site_docs })
+
 
 def category(request, category):
 	"""Features by category"""
@@ -575,9 +596,9 @@ def features_by_tag(request, tag):
 
 def features_by_author(request, author):
 	if request.method == 'GET':
-		documents = Feature.objects.filter(document__author=author)
-		images = Feature.objects.filter(image__author=author)
-		media = Feature.objects.filter(media__author=author)
+		documents = Feature.objects.filter(document__author=author).filter(published=True)
+		images = Feature.objects.filter(image__author=author).filter(published=True)
+		media = Feature.objects.filter(media__author=author).filter(published=True)
 		features = list(chain(documents, images, media))
 		serializer = FeatureSerializer(features, many=True)
 		return JSONResponse(serializer.data)

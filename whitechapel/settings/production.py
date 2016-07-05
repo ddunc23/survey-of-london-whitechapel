@@ -3,7 +3,7 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['surveyoflondon.org', 'staging.surveyoflondon.org']
+ALLOWED_HOSTS = ['surveyoflondon.org', 'staging.surveyoflondon.org', 'surveyoflondonmedia.org']
 
 SECURE_SSL_HOST = True
 

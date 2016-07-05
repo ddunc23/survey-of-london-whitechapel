@@ -86,6 +86,8 @@ html, body {
 	font-size: 22px;
 	color: #F58D16;
 	margin-left: 5px;
+	height: 33px;
+	display: block;
 }
 
 .feature-overview-thumbnail {

@@ -42,14 +42,15 @@ var myStyle = {
 
 var hoverStyle = {
 	"opacity": 1,
-	"weight": 2.5,
+	"weight": 3,
 	"color": "#1AA9FF",
 }
 
 var highlightStyle = {
+	"opacity": 1,
 	"color": "#1AA9FF",
 	"fillColor": "#1AA9FF",
-	"weight": 2.5
+	"weight": 4.5
 };
 
 
@@ -58,9 +59,9 @@ function setDocNumberStyle(layer) {
 	if (count == 0) {
 		layer.setStyle({fillOpacity: 0});
 	} else if (count >= 1 && count <= 2) {
-		layer.setStyle({fillOpacity: 0.8});
+		layer.setStyle({fillOpacity: 0.4});
 	} else if (count >= 3 && count <= 6) {
-		layer.setStyle({fillOpacity: 0.8});
+		layer.setStyle({fillOpacity: 0.6});
 	} else if (count >= 7 && count <= 10) {
 		layer.setStyle({fillOpacity: 0.8});
 	}
@@ -126,12 +127,12 @@ info.update = function(properties) {
 
 function onEachFeature(feature, layer) {
 	if (feature.properties) {
-		if (feature.properties.b_name) {
+		/*if (feature.properties.b_name) {
 			layer.bindPopup('<a href="feature/' + feature.id + '/detail/">' + feature.properties.b_name + '</a>');
 		}
 		else if (feature.properties.address) {
 			layer.bindPopup('<a href="feature/' + feature.id + '/detail/">' + feature.properties.address + '</a>');
-		}
+		}*/
 		var hl = getUrlVars()['highlight'];
 		if (feature.id == hl) {
 			highlight = layer;
@@ -195,7 +196,7 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 		function initMap(layers) {
 			map = L.map('map', {
 				zoom: 16,
-				minZoom: 16,
+				minZoom: 15,
 				maxZoom: 20,
 				zoomControl: false,
 				layers: layers
@@ -208,14 +209,16 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				geojson = data;
 
-				sketchylayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/whitechapel_building_footprints_june_2016/{z}/{x}/{y}.png', {maxZoom: 20});
+				sketchylayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/whitechapel_building_footprints_2016-06-27/{z}/{x}/{y}.png', {maxZoom: 20});
+
+				// scanlayer = L.tileLayer('https://a.surveyoflondon.org/tileserver.php?/index.json?/test_scan/{z}/{x}/{y}.png', {maxZoom: 20});
 
 				buildings = L.geoJson(geojson, {
 					onEachFeature: onEachFeature,
 				});
 
 				if (geojson.features.length > 0) {
-					layers = [sketchylayer, buildings];
+					layers = [sketchylayer, /*scanlayer,*/ buildings];
 					initMap(layers);
 					map.fitBounds(buildings);
 				} else {
@@ -230,6 +233,7 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				var baseMaps = {
 					"Base Map": sketchylayer,
+					/*"Test Scan": scanlayer,*/
 				};
 				
 				var overlayMaps = {
@@ -275,14 +279,14 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				$('.leaflet-control').mouseout(function() {
 					buildings.eachLayer(function(layer) {			
-						if (layer.feature.properties) {
+						/*if (layer.feature.properties) {
 							if (layer.feature.properties.b_name) {
 								layer.bindPopup('<a href="feature/' + layer.feature.id + '/detail/">' + layer.feature.properties.b_name + '</a>');
 							}
 							else if (layer.feature.properties.address) {
 								layer.bindPopup('<a href="feature/' + layer.feature.id + '/detail/">' + layer.feature.properties.address + '</a>');
 							}
-						}
+						}*/
 						layer.on("mouseover", function(e) {
 							setFootprintColour(layer, e);
 							info.update(layer.feature.properties);
