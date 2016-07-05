@@ -596,9 +596,9 @@ def features_by_tag(request, tag):
 
 def features_by_author(request, author):
 	if request.method == 'GET':
-		documents = Feature.objects.filter(document__author=author).filter(published=True)
-		images = Feature.objects.filter(image__author=author).filter(published=True)
-		media = Feature.objects.filter(media__author=author).filter(published=True)
+		documents = Feature.objects.filter(document__author=author, document__published=True)
+		images = Feature.objects.filter(image__author=author, image__published=True)
+		media = Feature.objects.filter(media__author=author, media__published=True)
 		features = list(chain(documents, images, media))
 		serializer = FeatureSerializer(features, many=True)
 		return JSONResponse(serializer.data)
