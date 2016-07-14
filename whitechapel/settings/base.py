@@ -50,9 +50,9 @@ INSTALLED_APPS = (
     'allauth.account',
     'allauth.socialaccount',
     # django-allauth login providers
-    #'allauth.socialaccount.providers.facebook',
-    #'allauth.socialaccount.providers.twitter',
-    #'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+    #'allauth.socialaccount.providers.twitter', // Twitter won't provide an email address, so leaving off
+    'allauth.socialaccount.providers.google',
     #'allauth.socialaccount.providers.pinterest',
     #'allauth.socialaccount.providers.instagram',
 )
@@ -218,6 +218,8 @@ SITE_ID = 1
 LOGIN_REDIRECT_URL = '/map/'
 
 ACCOUNT_EMAIL_REQUIRED = True
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 
