@@ -42,7 +42,7 @@
     			</div>
     			<div class="collapse navbar-collapse" id="navbar-collapse">
 	    			<ul class="nav navbar-nav navbar-right">
-	    			{% if user.is_authenticated %}
+	    			{% if request.user.is_authenticated %}
 	    				<li class="dropdown">
 	    					<a id="userLinksLabel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> {% if user.userprofile.display_name %}{{ user.userprofile.display_name }}{% else %}{{ user }}{% endif %} <span class="caret"></span></a>
 	    					<ul class="dropdown-menu" aria-labelledby="userLinksLabel">
@@ -56,9 +56,9 @@
 								<li><a href="{% url 'account_logout' %}">Logout</a></li>
 							</ul>
 	    				</li>
-	    				{% else %}
+	    			{% else %}
 	    				<a href="{% url 'account_login' %}" class="btn btn-default navbar-btn btn-block">Sign In</a>
-	    				{% endif %}
+	    			{% endif %}
 	    			</ul>
 	    			<form class="navbar-form navbar-right" role="search" action="{% url 'search_map' %}" type="get">
 				        <div class="form-group">
