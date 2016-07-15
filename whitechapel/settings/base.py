@@ -53,7 +53,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.facebook',
     #'allauth.socialaccount.providers.twitter', // Twitter won't provide an email address, so leaving off
     'allauth.socialaccount.providers.google',
-    #'allauth.socialaccount.providers.pinterest',
+    'allauth.socialaccount.providers.pinterest',
     #'allauth.socialaccount.providers.instagram',
 )
 

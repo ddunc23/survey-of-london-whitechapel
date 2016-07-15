@@ -34,10 +34,10 @@ var show_all_buildings = L.Control.extend({
 })
 
 var myStyle = {
-	"color": "#F58D16",
-	"fillColor": "#F58D16",
-	"weight": 2.5,
-	"opacity": 0.4
+	"color": "#F58216",
+	"fillColor": "#F58216",
+	"weight": 2,
+	"opacity": 0.6
 };
 
 var hoverStyle = {
