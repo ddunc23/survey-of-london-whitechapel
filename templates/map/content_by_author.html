@@ -5,7 +5,7 @@
 	<div class="row results_pane">		
 		<div class="col-xs-12 col-md-4"><!-- Results Side Bar-->
 			<div class="col-xs-12">
-				<h2>All Contributions from {% if user.userprofile.display_name %}{{ user.userprofile.display_name }}{% else %}{{ user }}{% endif %}</h2>
+				<h2>All Contributions from {% if author.userprofile.display_name %}{{ author.userprofile.display_name }}{% else %}{{ author }}{% endif %}</h2>
 				<hr />
 				{% regroup documents by feature as document_list %}
 				<h3>Documents</h3>
@@ -43,8 +43,8 @@
 		<div class="col-xs-12 col-md-8 map-results" id="map">
 		</div>
 		<script>
-			var jsonUrl = '{% url "features_by_author" user.id %}';
-			var title_box_title = 'Showing places with contributions from {% if user.userprofile.display_name %}{{ user.userprofile.display_name }}{% else %}{{ user }}{% endif %}';
+			var jsonUrl = '{% url "features_by_author" author.id %}';
+			var title_box_title = 'Showing places with contributions from {% if author.userprofile.display_name %}{{ author.userprofile.display_name }}{% else %}{{ user }}{% endif %}';
 			loadFeatures(jsonUrl, 'main', false);
 		</script>
 	</div>

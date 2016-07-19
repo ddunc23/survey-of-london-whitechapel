@@ -211,7 +211,7 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				sketchylayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/dumps/{z}/{x}/{y}.png', {maxZoom: 20});
 
-				// scanlayer = L.tileLayer('https://a.surveyoflondon.org/tileserver.php?/index.json?/test_scan/{z}/{x}/{y}.png', {maxZoom: 20});
+				scanlayer = L.tileLayer('https://a.surveyoflondon.org/tileserver.php?/index.json?/test_scan_e6a6f6/{z}/{x}/{y}.png', {maxZoom: 20});
 
 				buildings = L.geoJson(geojson, {
 					onEachFeature: onEachFeature,
@@ -233,7 +233,7 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				var baseMaps = {
 					"Base Map": sketchylayer,
-					/*"Test Scan": scanlayer,*/
+					"Ordnance Survey 1873": scanlayer,
 				};
 				
 				var overlayMaps = {

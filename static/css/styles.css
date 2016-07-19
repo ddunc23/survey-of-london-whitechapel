@@ -397,8 +397,13 @@ p#lightbox_caption, p#lightbox_image_author {
 }
 .results_pane .col-xs-12 {
 	height: 100%;
-	overflow: scroll;
+	overflow: auto;
+	padding-right: 0;
 }
+.results_pane .map-results {
+	overflow: hidden;
+}
+
 .footer p {
 	font-size: 14px;
 	line-height: 22px;
@@ -429,6 +434,12 @@ p#lightbox_caption, p#lightbox_image_author {
 .ugc-content-form-container {
 	margin-bottom: 300px;
 }
+
+p.divider {
+	color: #666666;
+	margin: 5px;
+} 
+
 
 /* Medium Editor */
 

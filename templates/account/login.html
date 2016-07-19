@@ -15,7 +15,8 @@
           <h3>Contribute to Survey of London Whitechapel</h3>
           <hr>
           <p>This website is a collaboration between the Survey of London and you, the reading public.</p>
-          <p>To start contributing your memories, research, images or media about Whitechapel's buildings and history, sign in, or, if you don't have an account yet, <a href="{{ signup_url }}">sign up here</a>.</p>
+          <p>To start contributing your memories, research, images or media about Whitechapel's buildings and history, sign in using the form on the right.</p>
+          <p>If you don't have an account yet, <a href="{{ signup_url }}">sign up here</a>.</p>
           </div>
         <div class="col-xs-12 col-md-5">
         <h3>Sign In</h3>
@@ -25,7 +26,7 @@
         {% if socialaccount_providers %}
         <div class="socialaccount_ballot">
           {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-          <hr />
+          <p class="text-center divider"><em>Or</em></p>
         </div>
 
         {% include "socialaccount/snippets/login_extra.html" %}

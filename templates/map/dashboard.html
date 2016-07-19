@@ -8,8 +8,48 @@
 		<hr />
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<h2>Statistics</h2>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-md-6">
+			<h3>Top Contributors</h3>
+			<canvas id="topContributorsChart" width="" height="200px"></canvas>
+		</div>
+		<div class="col-xs-12 col-md-6">
+			<h3>Total Contributions</h3>
+			<canvas id ="contributionsChart" width="" height="200px"></canvas>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-md-4">
+			<h3>{{ total_contributions }} Contributions</h3>
+			<ul class="list-unstyled">
+				<li>{{ documents|length }} documents, {{ new_documents|length }} new this week</li>
+				<li>{{ images|length }} images, {{ new_images|length }} new this week</li>
+				<li>{{ media|length }} media, {{ new_media|length }} new this week</li>
+			</ul>
+		</div>
+		<div class="col-xs-12 col-md-4">
+			<h3>{{ users|length}} Contributors</h3>
+			<ul class="list-unstyled">
+				<li>{{ new_users|length }} new this week</li>
+			</ul>
+			<h3>Top Contributors</h3>
+			<ul class="list-unstyled">
+				{% for user in users|dictsortreversed:'contributions'|slice:':10' %}
+				<li>{{ user }} {{ user.contributions }}</li>
+				{% endfor %}
+			</ul>
+		</div>
+		<div class="col-xs-12 col-md-4">
+		</div>
+	</div>
 	<div class="row"> <!-- Pending Content -->
 		<div class="col-xs-12">
+			<hr />
 			<h2>Pending Content</h2>
 		</div>
 	</div>
@@ -89,24 +129,84 @@
 			{% endfor %}
 		</div>
 	</div><!-- / Pending content -->
-
-
-
-	<!-- <div class="row">
-		<div class="col-xs-12">
-			<hr />
-			<h2>Statistics</h2>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-12 col-md-4">
-			<h3>New Users</h3>
-			<ol>
-			{% for user in new_users %}
-				<li><a href="{% url 'all_content_by_author' user.id %}">{% if user.userprofile.display_name %}{{ user.userprofile.display_name }}{% else %}{{ user }}{% endif %}</a></li>
-			{% endfor %}
-			</ol>
-		</div>
-	</div> -->
 </div>
+
+<script>
+	
+	var topContributorsCtx = $("#topContributorsChart");
+	var topContributorsData =[{% for user in users|dictsortreversed:'contributions'|slice:':6' %}{{ user.contributions }}, {% endfor %}];
+	var topContributorsLabels = [{% for user in users|dictsortreversed:'contributions'|slice:':6' %}'{{ user }}', {% endfor %}];
+
+	var myChart = new Chart(topContributorsCtx, {
+	    type: 'bar',
+	    data: {
+	        labels: topContributorsLabels,
+	        datasets: [{
+	            label: 'Contributions',
+	            data: topContributorsData,
+	            backgroundColor: [
+	                'rgba(255, 99, 132, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(255, 206, 86, 1)',
+	                'rgba(75, 192, 192, 1)',
+	                'rgba(153, 102, 255, 1)',
+	                'rgba(255, 159, 64, 1)'
+	            ],
+	            borderColor: [
+	                'rgba(255,99,132,1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(255, 206, 86, 1)',
+	                'rgba(75, 192, 192, 1)',
+	                'rgba(153, 102, 255, 1)',
+	                'rgba(255, 159, 64, 1)'
+	            ],
+	            borderWidth: 1
+	        }]
+	    },
+	    options: {
+	        responsive: true,
+	        scales: {
+	            yAxes: [{
+	                ticks: {
+	                    beginAtZero:true
+	                }
+	            }]
+	        }
+	    }
+	});
+
+
+	var contributionsCtx = $("#contributionsChart");
+	var contributionsData =[{{ documents|length }}, {{ images|length }}, {{ media|length }}];
+	var contributionsLabels = ['Documents', 'Images', 'Media'];
+
+	var myChart = new Chart(contributionsCtx, {
+	    type: 'pie',
+	    data: {
+	        labels: contributionsLabels,
+	        datasets: [{
+	            label: 'Contributions',
+	            data: contributionsData,
+	            backgroundColor: [
+	                'rgba(255, 99, 132, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(255, 206, 86, 1)'
+	            ],
+	            borderColor: [
+	                'rgba(255,99,132,1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(255, 206, 86, 1)'
+	            ],
+	            borderWidth: 1
+	        }]
+	    },
+	    options: {
+	        responsive: true,
+	    }
+	});
+
+
+
+</script>
+
 {% endblock %}
