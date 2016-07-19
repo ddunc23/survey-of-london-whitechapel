@@ -15,6 +15,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 MANAGERS = (
         ('Duncan Hay', 'd.hay@ucl.ac.uk'),
+        ('Survey Editors', 'solwhitechapel.bartlett@ucl.ac.uk'),
     )
 
 LOGGING = {
