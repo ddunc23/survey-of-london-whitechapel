@@ -4,121 +4,128 @@
 <div class="container">
 	<div class="row">
 		<div class="col-xs-12">
-		<h1>Dashboard</h1>
-		<hr />
+			<h1>Dashboard</h1>
+			<ul class="nav nav-tabs" role="tablist">
+				<li role="presentation" class="active"><a href="#statistics" aria-controls="statistics" role="tab" data-toggle="tab">Statistics</a></li>
+				<li role="presentation"><a href="#moderation" aria-controls="moderation" role="tab" data-toggle="tab">Moderation <span class="badge">{{ pending_documents|length|add:pending_images|length|add:pending_media|length }}</span></a></li>
+			</ul>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-xs-12">
-			<h2>Statistics</h2>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-12 col-md-6">
-			<h3>Top Contributors</h3>
-			<canvas id="topContributorsChart" width="" height="200px"></canvas>
-		</div>
-		<div class="col-xs-12 col-md-6 row">
-			<h3>Month by Month</h3>
-			<canvas id="signupsChart" width="" height="200px"></canvas>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-12 col-md-4">
-			<h3>All Contributions</h3>
-			<canvas id ="contributionsChart" width="" height="200px"></canvas>
-		</div>
-		<div class="col-xs-12 col-md-4">
-			<h3>Contributions in the Last 30 Days</h3>
-			<canvas id="recentContributionsChart" width="" height="200px"></canvas>
-		</div>
-		<div class="col-xs-12 col-md-4">
-			<h3>Survey to User Ratio</h3>
-			<canvas id="surveyUgcRatioChart" width="" height="200px"></canvas>
-		</div>
-	</div>
-	<div class="row"> <!-- Pending Content -->
-		<div class="col-xs-12">
-			<hr />
-			<h2>Pending Content</h2>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-12 col-md-4">
-			<h3>Documents</h3>
-			{% for document in documents %}
-				{% if document.pending == True %}
-					<h3><a href="{% url 'moderate_document' document.id %}">{{ document.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a> | {{ document.feature }}<br />Submitted {{ document.last_edited }}</span></h3>
-				{% endif %}
-			{% endfor %}
-		</div>
-		<div class="col-xs-12 col-md-4">
-			<h3>Images</h3>
-			{% load thumbnail %}
-			{% for image in images %}
-				{% if image.pending == True %}
-					<div class="media">
-						<div class="media-left">
-							<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded"></a>
-						</div>
-						<div class="media-body">
-							<h4 class="media-heading"><a href="{% url 'moderate_image' image.id %}">{{ image.feature }}</a><br /><span class="text-muted">{{ image.title }}</span></h4>
-							<span class="small"><a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a> | {{ image.last_edited }}</span>
-						</div>
-					</div>
-				{% endif %}
-			{% endfor %}
-		</div>
-		<div class="col-xs-12 col-md-4">
-			<h3>Media</h3>
-			{% for item in media %}
-				{% if item.pending == True %}
-					<h3><a href="{% url 'moderate_media' item.id %}">{{ item.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' item.author.id %}">{% if item.author.userprofile.display_name %}{{ item.author.userprofile.display_name }}{% else %}{{ item.author }}{% endif %}</a> | {{ item.feature }}<br />Submitted {{ item.last_edited }}</span></h3>
-				{% endif %}
-			{% endfor %}
-		</div>
-	</div><!-- / Pending content -->
-
-	<div class="row"> <!-- Unsubmitted Drafts -->
-		<div class="col-xs-12">
-			<hr />
-			<h2>Unsubmitted Drafts</h2>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-12 col-md-4">
-			<h3>Documents</h3>
-			{% for document in documents %}
-				{% if document.pending == False and document.published == False %}
-					<h3><a href="{% url 'moderate_document' document.id %}">{{ document.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a> | {{ document.feature }}<br />Submitted {{ document.last_edited }}</span></h3>
-				{% endif %}
-			{% endfor %}
-		</div>
-		<div class="col-xs-12 col-md-4">
-			<h3>Images</h3>
-			{% for image in images %}
-				{% if image.pending == False and image.published == False %}
-				<div class="media">
-					<div class="media-left">
-						<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded"></a>
-					</div>
-					<div class="media-body">
-						<h4 class="media-heading"><a href="{% url 'moderate_image' image.id %}">{{ image.feature }}</a><br /><span class="text-muted">{{ image.title }}</span></h4>
-						<span class="small"><a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a> | {{ image.last_edited }}</span>
-					</div>
+	<div class="tab-content">
+		<div role="tabpanel" class="tab-pane active" id="statistics">
+			<div class="row">
+				<div class="col-xs-12">
+					<h2>Statistics</h2>
 				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-md-6">
+					<h3>Top Contributors</h3>
+					<canvas id="topContributorsChart" width="" height="200px"></canvas>
+				</div>
+				<div class="col-xs-12 col-md-6 row">
+					<h3>Month by Month</h3>
+					<canvas id="signupsChart" width="" height="200px"></canvas>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-md-4">
+					<h3>All Contributions</h3>
+					<canvas id ="contributionsChart" width="" height="200px"></canvas>
+				</div>
+				<div class="col-xs-12 col-md-4">
+					<h3>Contributions in the Last 30 Days</h3>
+					<canvas id="recentContributionsChart" width="" height="200px"></canvas>
+				</div>
+				<div class="col-xs-12 col-md-4">
+					<h3>Survey to User Ratio</h3>
+					<canvas id="surveyUgcRatioChart" width="" height="200px"></canvas>
+				</div>
+			</div>
+		</div><!-- / statistics panel -->
+		<div role="tabpanel" class="tab-pane" id="moderation">
+			<div class="row"> <!-- Pending Content -->
+				<div class="col-xs-12">
+					<h2>Pending Content</h2>
+				</div>
+			</div>
+			<div class="row">
+				{% if not pending_documents and not pending_images and not pending_media %}
+					<div class="col-xs-12">
+						<h3>No Submissions Awaiting Moderation</h3>
+					</div>
+				{% else %}
+					<div class="col-xs-12 col-md-4">
+						<h3>Documents</h3>
+						{% for document in pending_documents %}
+							<h3><a href="{% url 'moderate_document' document.id %}">{{ document.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a> | {{ document.feature }}<br />Submitted {{ document.last_edited }}</span></h3>
+						{% endfor %}
+					</div>
+					<div class="col-xs-12 col-md-4">
+						<h3>Images</h3>
+						{% load thumbnail %}
+						{% for image in pending_images %}
+							<div class="media">
+								<div class="media-left">
+									<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded"></a>
+								</div>
+								<div class="media-body">
+									<h4 class="media-heading"><a href="{% url 'moderate_image' image.id %}">{{ image.feature }}</a><br /><span class="text-muted">{{ image.title }}</span></h4>
+									<span class="small"><a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a> | {{ image.last_edited }}</span>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+					<div class="col-xs-12 col-md-4">
+						<h3>Media</h3>
+						{% for item in pending_media %}
+							<h3><a href="{% url 'moderate_media' item.id %}">{{ item.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' item.author.id %}">{% if item.author.userprofile.display_name %}{{ item.author.userprofile.display_name }}{% else %}{{ item.author }}{% endif %}</a> | {{ item.feature }}<br />Submitted {{ item.last_edited }}</span
+						{% endfor %}
+					</div>
 				{% endif %}
-			{% endfor %}
-		</div>
-		<div class="col-xs-12 col-md-4">
-			<h3>Media</h3>
-			{% for item in media %}
-				{% if item.pending == False and item.published == False %}
-					<h3><a href="{% url 'moderate_media' item.id %}">{{ item.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' item.author.id %}">{% if item.author.userprofile.display_name %}{{ item.author.userprofile.display_name }}{% else %}{{ item.author }}{% endif %}</a> | {{ item.feature }}<br />Submitted {{ item.last_edited }}</span></h3>
-				{% endif %}
-			{% endfor %}
-		</div>
-	</div><!-- / Pending content -->
+			</div><!-- / Pending content -->
+			<div class="row"> <!-- Unsubmitted Drafts -->
+				<div class="col-xs-12">
+					<hr />
+					<h2>Unsubmitted Drafts</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-md-4">
+					<h3>Documents</h3>
+					{% for document in documents %}
+						{% if document.pending == False and document.published == False %}
+							<h3><a href="{% url 'moderate_document' document.id %}">{{ document.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a> | {{ document.feature }}<br />Submitted {{ document.last_edited }}</span></h3>
+						{% endif %}
+					{% endfor %}
+				</div>
+				<div class="col-xs-12 col-md-4">
+					<h3>Images</h3>
+					{% for image in images %}
+						{% if image.pending == False and image.published == False %}
+						<div class="media">
+							<div class="media-left">
+								<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded"></a>
+							</div>
+							<div class="media-body">
+								<h4 class="media-heading"><a href="{% url 'moderate_image' image.id %}">{{ image.feature }}</a><br /><span class="text-muted">{{ image.title }}</span></h4>
+								<span class="small"><a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a> | {{ image.last_edited }}</span>
+							</div>
+						</div>
+						{% endif %}
+					{% endfor %}
+				</div>
+				<div class="col-xs-12 col-md-4">
+					<h3>Media</h3>
+					{% for item in media %}
+						{% if item.pending == False and item.published == False %}
+							<h3><a href="{% url 'moderate_media' item.id %}">{{ item.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' item.author.id %}">{% if item.author.userprofile.display_name %}{{ item.author.userprofile.display_name }}{% else %}{{ item.author }}{% endif %}</a> | {{ item.feature }}<br />Submitted {{ item.last_edited }}</span></h3>
+						{% endif %}
+					{% endfor %}
+				</div>
+			</div><!-- / Unsubmitted drafts -->
+		</div><!-- / Moderation panel -->
+	</div><!-- / Tab Panels -->
 </div>
 
 <script>
