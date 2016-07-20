@@ -9,7 +9,7 @@ class UserProfile(models.Model):
 	display_name = models.CharField(max_length=100, blank=True, null=True)
 
 	def __unicode__(self):
-		if self.display_name != null:
+		if self.display_name != None:
 			return self.display_name
 		else:
 			return self.user.username
