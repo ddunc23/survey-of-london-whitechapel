@@ -17,6 +17,7 @@ from django.core.mail import mail_managers, send_mail
 import re
 from django.template import Context
 from datetime import datetime, timedelta
+from dateutil.relativedelta import *
 
 logger = logging.getLogger(__name__)
 
@@ -201,20 +202,33 @@ def dashboard(request):
 	if request.user.is_staff == False:
 		raise Http404("Staff Only!")
 	
-	documents = Document.objects.all().order_by('-created')
-	images = Image.objects.all().order_by('-created')
-	media = Media.objects.all().order_by('-created')
-	new_documents = documents.filter(created__gte=datetime.now()-timedelta(days=7))
-	new_images = images.filter(created__gte=datetime.now()-timedelta(days=7))
-	new_media = media.filter(created__gte=datetime.now()-timedelta(days=7))
-	users = User.objects.filter(is_staff=False)
+	documents = Document.objects.filter(author__is_staff=False).order_by('-created')
+	images = Image.objects.filter(author__is_staff=False).order_by('-created')
+	media = Media.objects.filter(author__is_staff=False).order_by('-created')
+	new_documents = documents.filter(created__gte=datetime.now()-timedelta(days=30))
+	new_images = images.filter(created__gte=datetime.now()-timedelta(days=30))
+	new_media = media.filter(created__gte=datetime.now()-timedelta(days=30))
+	users = User.objects.filter(is_staff=False).order_by('date_joined')
 	new_users = users.filter(date_joined__gte=datetime.now()-timedelta(days=14))
 	for user in users:
-		user.contributions = len(documents.filter(author=user)) + len(images.filter(author=user)) + len(media.filter(author=user))
+		user.contributions = documents.filter(author=user).count() + images.filter(author=user).count() + media.filter(author=user).count()
 
-	total_contributions = len(list(chain(documents, images, media)))
+	previous_months = []
 
-	return render(request, 'map/dashboard.html', {'documents': documents, 'images': images, 'media': media, 'new_users': new_users, 'users': users, 'new_documents': new_documents, 'new_images': new_images, 'new_media': new_media, 'total_contributions': total_contributions})
+	for i in range(12):
+		date = datetime.now() - relativedelta(months=i)
+		documents_this_month = documents.filter(created__year=date.year, created__month=date.month).count()
+		images_this_month = images.filter(created__year=date.year, created__month=date.month).count()
+		media_this_month = media.filter(created__year=date.year, created__month=date.month).count()
+		users_this_month = users.filter(date_joined__year=date.year, date_joined__month=date.month).count()
+		previous_months.append({'month': date.strftime('%B %Y'), 'documents': documents_this_month, 'images': images_this_month, 'media': media_this_month, 'users': users_this_month})
+
+	previous_months.reverse()
+
+	total_ugc = documents.count() + images.count() + media.count()
+	total_survey = Document.objects.filter(author__is_staff=True).count() + Image.objects.filter(author__is_staff=True).count() + Media.objects.filter(author__is_staff=True).count()
+
+	return render(request, 'map/dashboard.html', {'documents': documents, 'images': images, 'media': media, 'new_users': new_users, 'users': users, 'new_documents': new_documents, 'new_images': new_images, 'new_media': new_media, 'previous_months': previous_months, 'total_ugc': total_ugc, 'total_survey': total_survey })
 
 
 def inform_managers_of_content_submission(request):

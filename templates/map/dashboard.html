@@ -18,33 +18,23 @@
 			<h3>Top Contributors</h3>
 			<canvas id="topContributorsChart" width="" height="200px"></canvas>
 		</div>
-		<div class="col-xs-12 col-md-6">
-			<h3>Total Contributions</h3>
-			<canvas id ="contributionsChart" width="" height="200px"></canvas>
+		<div class="col-xs-12 col-md-6 row">
+			<h3>Month by Month</h3>
+			<canvas id="signupsChart" width="" height="200px"></canvas>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-xs-12 col-md-4">
-			<h3>{{ total_contributions }} Contributions</h3>
-			<ul class="list-unstyled">
-				<li>{{ documents|length }} documents, {{ new_documents|length }} new this week</li>
-				<li>{{ images|length }} images, {{ new_images|length }} new this week</li>
-				<li>{{ media|length }} media, {{ new_media|length }} new this week</li>
-			</ul>
+			<h3>All Contributions</h3>
+			<canvas id ="contributionsChart" width="" height="200px"></canvas>
 		</div>
 		<div class="col-xs-12 col-md-4">
-			<h3>{{ users|length}} Contributors</h3>
-			<ul class="list-unstyled">
-				<li>{{ new_users|length }} new this week</li>
-			</ul>
-			<h3>Top Contributors</h3>
-			<ul class="list-unstyled">
-				{% for user in users|dictsortreversed:'contributions'|slice:':10' %}
-				<li>{{ user }} {{ user.contributions }}</li>
-				{% endfor %}
-			</ul>
+			<h3>Contributions in the Last 30 Days</h3>
+			<canvas id="recentContributionsChart" width="" height="200px"></canvas>
 		</div>
 		<div class="col-xs-12 col-md-4">
+			<h3>Survey to User Ratio</h3>
+			<canvas id="surveyUgcRatioChart" width="" height="200px"></canvas>
 		</div>
 	</div>
 	<div class="row"> <!-- Pending Content -->
@@ -134,10 +124,10 @@
 <script>
 	
 	var topContributorsCtx = $("#topContributorsChart");
-	var topContributorsData =[{% for user in users|dictsortreversed:'contributions'|slice:':6' %}{{ user.contributions }}, {% endfor %}];
-	var topContributorsLabels = [{% for user in users|dictsortreversed:'contributions'|slice:':6' %}'{{ user }}', {% endfor %}];
+	var topContributorsData =[{% for user in users|dictsortreversed:'contributions'|slice:':10' %}{{ user.contributions }}, {% endfor %}];
+	var topContributorsLabels = [{% for user in users|dictsortreversed:'contributions'|slice:':10' %}'{{ user }}', {% endfor %}];
 
-	var myChart = new Chart(topContributorsCtx, {
+	var topContributorsChart = new Chart(topContributorsCtx, {
 	    type: 'bar',
 	    data: {
 	        labels: topContributorsLabels,
@@ -145,20 +135,28 @@
 	            label: 'Contributions',
 	            data: topContributorsData,
 	            backgroundColor: [
-	                'rgba(255, 99, 132, 1)',
 	                'rgba(54, 162, 235, 1)',
-	                'rgba(255, 206, 86, 1)',
-	                'rgba(75, 192, 192, 1)',
-	                'rgba(153, 102, 255, 1)',
-	                'rgba(255, 159, 64, 1)'
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(54, 162, 235, 1)',
 	            ],
 	            borderColor: [
-	                'rgba(255,99,132,1)',
 	                'rgba(54, 162, 235, 1)',
-	                'rgba(255, 206, 86, 1)',
-	                'rgba(75, 192, 192, 1)',
-	                'rgba(153, 102, 255, 1)',
-	                'rgba(255, 159, 64, 1)'
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(54, 162, 235, 1)',
 	            ],
 	            borderWidth: 1
 	        }]
@@ -176,16 +174,15 @@
 	});
 
 
-	var contributionsCtx = $("#contributionsChart");
+	var contributionsCtx = $('#contributionsChart');
 	var contributionsData =[{{ documents|length }}, {{ images|length }}, {{ media|length }}];
 	var contributionsLabels = ['Documents', 'Images', 'Media'];
 
-	var myChart = new Chart(contributionsCtx, {
+	var contributionsChart = new Chart(contributionsCtx, {
 	    type: 'pie',
 	    data: {
 	        labels: contributionsLabels,
 	        datasets: [{
-	            label: 'Contributions',
 	            data: contributionsData,
 	            backgroundColor: [
 	                'rgba(255, 99, 132, 1)',
@@ -203,6 +200,129 @@
 	    options: {
 	        responsive: true,
 	    }
+	});
+
+	var recentContributionsCtx = $('#recentContributionsChart');
+	var recentContributionsData =[{{ documents|length }}, {{ images|length }}, {{ media|length }}];
+	var recentContributionsLabels = ['Documents', 'Images', 'Media'];
+
+	var recentContributionsChart = new Chart(recentContributionsCtx, {
+	    type: 'pie',
+	    data: {
+	        labels: recentContributionsLabels,
+	        datasets: [{
+	            data: recentContributionsData,
+	            backgroundColor: [
+	                'rgba(255, 99, 132, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(255, 206, 86, 1)'
+	            ],
+	            borderColor: [
+	                'rgba(255,99,132,1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(255, 206, 86, 1)'
+	            ],
+	            borderWidth: 1
+	        }]
+	    },
+	    options: {
+	        responsive: true,
+	    }
+	});
+
+	var surveyUgcRatioCtx = $('#surveyUgcRatioChart');
+	var surveyUgcRatioData = [{{ total_ugc }}, {{ total_survey }}];
+	var surveyUgcRatioLabels = ['Contributors', 'Survey of London']
+
+	var surveyUgcRatioChart = new Chart(surveyUgcRatioCtx, {
+		type: 'pie',
+		data: {
+			labels: surveyUgcRatioLabels,
+			datasets: [{
+				data: surveyUgcRatioData,
+				backgroundColor: [
+					'rgba(255, 99, 132, 1)',
+	                'rgba(54, 162, 235, 1)',
+				],
+				borderColor: [
+	                'rgba(255,99,132,1)',
+	                'rgba(54, 162, 235, 1)',
+	            ],
+	            borderWidth: 1
+			}]
+		},
+		options: {
+			responsive: true,
+		}
+	});
+
+	var signupsCtx = $('#signupsChart');
+	var signupsData = [{% for month in previous_months %}{{ month.users }}, {% endfor %}];
+	var signupsLabels = [{% for month in previous_months %}'{{ month.month }}', {% endfor %}];
+	var documentsData = [{% for month in previous_months %}{{ month.documents }}, {% endfor %}];
+	var imagesData = [{% for month in previous_months %}{{ month.images }}, {% endfor %}];
+	var mediaData = [{% for month in previous_months %}{{ month.media }}, {% endfor %}];
+
+
+/*borderColor: [
+	                'rgba(255,99,132,1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(255, 206, 86, 1)',
+	                'rgba(75, 192, 192, 1)',*/
+
+
+	var signupsChart = new Chart(signupsCtx, {
+		type: 'line',
+		data: {
+			labels: signupsLabels,
+			datasets: [{
+				fill: false,
+				label: 'Signups',
+				data: signupsData,
+				backgroundColor: [
+					'rgba(255,99,132,1)',
+				],
+				borderColor: [
+					'rgba(255,99,132,1)',
+				]
+			},
+			{
+				fill: false,
+				label: 'Documents',
+				data: documentsData,
+				backgroundColor: [
+					'rgba(54, 162, 235, 1)',
+				],
+				borderColor: [
+					'rgba(54, 162, 235, 1)',
+				]
+			},
+			{
+				fill: false,
+				label: 'Images',
+				data: imagesData,
+				backgroundColor: [
+					'rgba(255, 206, 86, 1)',
+				],
+				borderColor: [
+					'rgba(255, 206, 86, 1)',
+				]
+			},
+			{
+				fill: false,
+				label: 'Media',
+				data: mediaData,
+				backgroundColor: [
+					'rgba(255, 159, 64, 1)'
+				],
+				borderColor: [
+					'rgba(255, 159, 64, 1)'
+				]
+			},	
+		]},
+		options: {
+			responsive: true,
+		}
 	});
 
 
