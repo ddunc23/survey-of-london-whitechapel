@@ -8,10 +8,10 @@
 		</div>
 		<div class="col-xs-12 col-md-7">
 			{% if feature.b_name %}
-				<h1>{{ feature.b_name }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Show on Map</a>{% if not histories and not descriptions and not stories and not images and not media %}{% else %}<a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a>{% endif %}</div></h1>
+				<h1>{{ feature.b_name }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Back to Map</a>{% if not histories and not descriptions and not stories and not images and not media %}{% else %}<a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a>{% endif %}</div></h1>
 				<h2><small>{{ feature.address }} {% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a></small> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
 			{% else %}
-				<h1>{{ feature.address }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Show on Map</a><a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a></div></h1>
+				<h1>{{ feature.address }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Back to Map</a><a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a></div></h1>
 				{% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %}
 			{% endif %}
 		</div>

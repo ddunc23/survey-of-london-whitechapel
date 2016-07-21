@@ -205,7 +205,8 @@ def dashboard(request):
 	documents = Document.objects.filter(author__is_staff=False).order_by('-created')
 	images = Image.objects.filter(author__is_staff=False).order_by('-created')
 	media = Media.objects.filter(author__is_staff=False).order_by('-created')
-	
+	features = Feature.objects.all()
+
 	pending_documents = documents.filter(pending=True)
 	pending_images = images.filter(pending=True)
 	pending_media = media.filter(pending=True)
@@ -235,7 +236,7 @@ def dashboard(request):
 	total_ugc = documents.count() + images.count() + media.count()
 	total_survey = Document.objects.filter(author__is_staff=True).count() + Image.objects.filter(author__is_staff=True).count() + Media.objects.filter(author__is_staff=True).count()
 
-	return render(request, 'map/dashboard.html', {'documents': documents, 'images': images, 'media': media, 'new_users': new_users, 'users': users, 'new_documents': new_documents, 'new_images': new_images, 'new_media': new_media, 'previous_months': previous_months, 'total_ugc': total_ugc, 'total_survey': total_survey, 'pending_documents': pending_documents, 'pending_images': pending_images, 'pending_media': pending_media })
+	return render(request, 'map/dashboard.html', {'documents': documents, 'images': images, 'media': media, 'new_users': new_users, 'users': users, 'new_documents': new_documents, 'new_images': new_images, 'new_media': new_media, 'previous_months': previous_months, 'total_ugc': total_ugc, 'total_survey': total_survey, 'pending_documents': pending_documents, 'pending_images': pending_images, 'pending_media': pending_media, 'features': features })
 
 
 def inform_managers_of_content_submission(request):

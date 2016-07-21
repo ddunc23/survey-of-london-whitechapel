@@ -23,7 +23,7 @@
 					<h3>Top Contributors</h3>
 					<canvas id="topContributorsChart" width="" height="200px"></canvas>
 				</div>
-				<div class="col-xs-12 col-md-6 row">
+				<div class="col-xs-12 col-md-6">
 					<h3>Month by Month</h3>
 					<canvas id="signupsChart" width="" height="200px"></canvas>
 				</div>
@@ -40,6 +40,12 @@
 				<div class="col-xs-12 col-md-4">
 					<h3>Survey to User Ratio</h3>
 					<canvas id="surveyUgcRatioChart" width="" height="200px"></canvas>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-md-6">
+					<h3>Places with Most Contributions</h3>
+					<canvas id="topFeaturesChart" width="" height="200px"></canvas>
 				</div>
 			</div>
 		</div><!-- / statistics panel -->
@@ -270,14 +276,6 @@
 	var imagesData = [{% for month in previous_months %}{{ month.images }}, {% endfor %}];
 	var mediaData = [{% for month in previous_months %}{{ month.media }}, {% endfor %}];
 
-
-/*borderColor: [
-	                'rgba(255,99,132,1)',
-	                'rgba(54, 162, 235, 1)',
-	                'rgba(255, 206, 86, 1)',
-	                'rgba(75, 192, 192, 1)',*/
-
-
 	var signupsChart = new Chart(signupsCtx, {
 		type: 'line',
 		data: {
@@ -330,6 +328,58 @@
 		options: {
 			responsive: true,
 		}
+	});
+
+	var topFeaturesCtx = $("#topFeaturesChart");
+	var topFeaturesData =[{% for feature in features|dictsortreversed:'count'|slice:':10' %}{{ feature.count }}, {% endfor %}];
+	var topFeaturesLabels = [{% for feature in features|dictsortreversed:'count'|slice:':10' %}"{{ feature|safe|truncatechars:20 }}", {% endfor %}];
+
+	var topFeaturesChart = new Chart(topFeaturesCtx, {
+	    type: 'bar',
+	    data: {
+	        labels: topFeaturesLabels,
+	        datasets: [{
+	            label: 'Contributions',
+	            data: topFeaturesData,
+	            backgroundColor: [
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	            ],
+	            borderColor: [
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	                'rgba(255,99,132,1)',
+	            ],
+	            borderWidth: 1
+	        }]
+	    },
+	    options: {
+	        responsive: true,
+	        scales: {
+	            yAxes: [{
+	                ticks: {
+	                    beginAtZero:true
+	                }
+	            }]
+	        }
+	    }
 	});
 
 

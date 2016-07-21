@@ -51,10 +51,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     # django-allauth login providers
     'allauth.socialaccount.providers.facebook',
-    #'allauth.socialaccount.providers.twitter', // Twitter won't provide an email address, so leaving off
     'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.pinterest',
-    #'allauth.socialaccount.providers.instagram',
 )
 
 MIDDLEWARE_CLASSES = (

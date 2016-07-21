@@ -44,7 +44,7 @@
 		</div>
 		<script>
 			var jsonUrl = '{% url "features_by_author" author.id %}';
-			var title_box_title = 'Showing places with contributions from {% if author.userprofile.display_name %}{{ author.userprofile.display_name }}{% else %}{{ user }}{% endif %}';
+			var title_box_title = 'Showing places with contributions from {{ author }}';
 			loadFeatures(jsonUrl, 'main', false);
 		</script>
 	</div>
