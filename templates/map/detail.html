@@ -39,7 +39,7 @@
 				{% if stories %}
 					<li role="presentation"{% if not histories and not descriptions %}class="active"{% endif %}><a href="#story" aria-controls="stories" role="tab" data-toggle="tab">Memories</a></li>
 				{% endif %}
-				{% if feature.site %}
+				{% if feature.site and site_docs %}
 					<li role="presentation"{% if not histories and not descriptions and not stories %}class="active"{% endif %}><a href="#site" aria-controls="site" role="tab" data-toggle="tab">{{ feature.site }}</a></li>
 				{% endif %}
 				{% if images %}
