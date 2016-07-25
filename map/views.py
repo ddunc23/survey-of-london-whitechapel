@@ -211,6 +211,8 @@ def dashboard(request):
 	pending_images = images.filter(pending=True)
 	pending_media = media.filter(pending=True)
 
+	all_pending = pending_documents.count() + pending_images.count() + pending_media.count()
+
 	new_documents = documents.filter(created__gte=datetime.now()-timedelta(days=30))
 	new_images = images.filter(created__gte=datetime.now()-timedelta(days=30))
 	new_media = media.filter(created__gte=datetime.now()-timedelta(days=30))
@@ -229,14 +231,14 @@ def dashboard(request):
 		images_this_month = images.filter(created__year=date.year, created__month=date.month).count()
 		media_this_month = media.filter(created__year=date.year, created__month=date.month).count()
 		users_this_month = users.filter(date_joined__year=date.year, date_joined__month=date.month).count()
-		previous_months.append({'month': date.strftime('%B %Y'), 'documents': documents_this_month, 'images': images_this_month, 'media': media_this_month, 'users': users_this_month})
+		previous_months.append({'month': date.strftime('%B %Y'), 'documents': documents_this_month, 'images': images_this_month, 'media': media_this_month, 'users': users_this_month })
 
 	previous_months.reverse()
 
 	total_ugc = documents.count() + images.count() + media.count()
 	total_survey = Document.objects.filter(author__is_staff=True).count() + Image.objects.filter(author__is_staff=True).count() + Media.objects.filter(author__is_staff=True).count()
 
-	return render(request, 'map/dashboard.html', {'documents': documents, 'images': images, 'media': media, 'new_users': new_users, 'users': users, 'new_documents': new_documents, 'new_images': new_images, 'new_media': new_media, 'previous_months': previous_months, 'total_ugc': total_ugc, 'total_survey': total_survey, 'pending_documents': pending_documents, 'pending_images': pending_images, 'pending_media': pending_media, 'features': features })
+	return render(request, 'map/dashboard.html', {'documents': documents, 'images': images, 'media': media, 'new_users': new_users, 'users': users, 'new_documents': new_documents, 'new_images': new_images, 'new_media': new_media, 'previous_months': previous_months, 'total_ugc': total_ugc, 'total_survey': total_survey, 'pending_documents': pending_documents, 'pending_images': pending_images, 'pending_media': pending_media, 'features': features, 'all_pending': all_pending })
 
 
 def inform_managers_of_content_submission(request):
