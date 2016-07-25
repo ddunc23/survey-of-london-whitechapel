@@ -34,10 +34,10 @@ var show_all_buildings = L.Control.extend({
 })
 
 var myStyle = {
-	"color": "#F58D16",
-	"fillColor": "#F58D16",
-	"weight": 2.5,
-	"opacity": 0.4
+	"color": "#F58216",
+	"fillColor": "#F58216",
+	"weight": 2,
+	"opacity": 0.6
 };
 
 var hoverStyle = {
@@ -209,9 +209,9 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				geojson = data;
 
-				sketchylayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/whitechapel_building_footprints_2016-06-27/{z}/{x}/{y}.png', {maxZoom: 20});
+				sketchylayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/dumps/{z}/{x}/{y}.png', {maxZoom: 20});
 
-				// scanlayer = L.tileLayer('https://a.surveyoflondon.org/tileserver.php?/index.json?/test_scan/{z}/{x}/{y}.png', {maxZoom: 20});
+				scanlayer = L.tileLayer('https://a.surveyoflondon.org/tileserver.php?/index.json?/test_scan_e6a6f6/{z}/{x}/{y}.png', {maxZoom: 20});
 
 				buildings = L.geoJson(geojson, {
 					onEachFeature: onEachFeature,
@@ -233,7 +233,7 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				var baseMaps = {
 					"Base Map": sketchylayer,
-					/*"Test Scan": scanlayer,*/
+					"Ordnance Survey 1873": scanlayer,
 				};
 				
 				var overlayMaps = {

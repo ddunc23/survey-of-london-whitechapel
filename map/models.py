@@ -96,6 +96,7 @@ class Feature(models.Model):
 	class Meta:
 		verbose_name = 'Building'
 
+
 # Auto-generated `LayerMapping` dictionary for Feature model
 feature_mapping = {
     'id' : 'id',
@@ -118,6 +119,7 @@ feature_mapping = {
     'address' : 'Address',
     'geom' : 'MULTIPOLYGON',
 }
+
 
 
 def update_feature_count(ugc_item):

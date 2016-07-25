@@ -8,10 +8,10 @@
 		</div>
 		<div class="col-xs-12 col-md-7">
 			{% if feature.b_name %}
-				<h1>{{ feature.b_name }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Show on Map</a>{% if not histories and not descriptions and not stories and not images and not media %}{% else %}<a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a>{% endif %}</div></h1>
+				<h1>{{ feature.b_name }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Back to Map</a>{% if not histories and not descriptions and not stories and not images and not media %}{% else %}<a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a>{% endif %}</div></h1>
 				<h2><small>{{ feature.address }} {% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a></small> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
 			{% else %}
-				<h1>{{ feature.address }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Show on Map</a><a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a></div></h1>
+				<h1>{{ feature.address }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Back to Map</a><a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a></div></h1>
 				{% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %}
 			{% endif %}
 		</div>
@@ -39,7 +39,7 @@
 				{% if stories %}
 					<li role="presentation"{% if not histories and not descriptions %}class="active"{% endif %}><a href="#story" aria-controls="stories" role="tab" data-toggle="tab">Memories</a></li>
 				{% endif %}
-				{% if feature.site %}
+				{% if feature.site and site_docs %}
 					<li role="presentation"{% if not histories and not descriptions and not stories %}class="active"{% endif %}><a href="#site" aria-controls="site" role="tab" data-toggle="tab">{{ feature.site }}</a></li>
 				{% endif %}
 				{% if images %}
@@ -108,7 +108,7 @@
 						{% if document.aggregate == False %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a></span></h2>
+							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a></span></h2>
 							{{ document.body_processed|safe }}
 						</div>
 						{% endif %}
@@ -120,7 +120,7 @@
 					{% for document in descriptions %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a></span></h2>
+							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a></span></h2>
 							{{ document.body_processed|safe }}
 						</div>	
 					{% endfor %}
@@ -131,7 +131,7 @@
 					{% for document in stories %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a></span></h2>
+							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a></span></h2>
 							{{ document.body_processed|safe }}
 						</div>	
 					{% endfor %}
@@ -142,7 +142,7 @@
 					{% for document in site_docs %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a></span></h2>
+							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a></span></h2>
 							{{ document.body_processed|safe }}
 						</div>
 					{% endfor %}

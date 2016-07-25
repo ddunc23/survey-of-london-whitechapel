@@ -4,7 +4,8 @@ from map.models import Feature
 
 class FeatureSerializer(GeoFeatureModelSerializer):
     categories = serializers.StringRelatedField(many=True)
+    site = serializers.StringRelatedField()
     class Meta:
         model = Feature
         geo_field = 'geom'
-        fields = ('id', 'b_name', 'address', 'postcode', 'street', 'categories', 'count', 'current')
+        fields = ('id', 'b_name', 'address', 'postcode', 'street', 'categories', 'count', 'current', 'site')

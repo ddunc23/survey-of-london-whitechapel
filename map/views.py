@@ -17,6 +17,7 @@ from django.core.mail import mail_managers, send_mail
 import re
 from django.template import Context
 from datetime import datetime, timedelta
+from dateutil.relativedelta import *
 
 logger = logging.getLogger(__name__)
 
@@ -152,12 +153,12 @@ def search_map(request):
 
 def all_content_by_author(request, user):
 	"""Show all documents, images, and media by a single author. I'll display this as a list for the moment, but should there be a map as well?"""
-	user = User.objects.get(id=user)
+	author = User.objects.get(id=user)
 	features = Feature.objects.filter(Q(document__author=user) | Q(image__author=user)).distinct('id')
 	documents = Document.objects.filter(author=user).filter(published=True)
 	images = Image.objects.filter(author=user).filter(published=True)
 
-	return render(request, 'map/content_by_author.html', {'user': user, 'documents': documents, 'images': images, 'features': features})
+	return render(request, 'map/content_by_author.html', {'author': author, 'documents': documents, 'images': images, 'features': features})
 
 
 
@@ -201,15 +202,41 @@ def dashboard(request):
 	if request.user.is_staff == False:
 		raise Http404("Staff Only!")
 	
-	documents = Document.objects.all().order_by('-last_edited')
-	images = Image.objects.all().order_by('-last_edited')
-	media = Media.objects.all().order_by('-last_edited')
-	new_users = User.objects.filter(date_joined__gte=datetime.now()-timedelta(days=14))
-	users = User.objects.all()
-	for user in users:
-		user.contributions = len(Document.objects.filter(author=user)) + len(Image.objects.filter(author=user)) + len(Media.objects.filter(author=user))
+	documents = Document.objects.filter(author__is_staff=False).order_by('-created')
+	images = Image.objects.filter(author__is_staff=False).order_by('-created')
+	media = Media.objects.filter(author__is_staff=False).order_by('-created')
+	features = Feature.objects.all()
 
-	return render(request, 'map/dashboard.html', {'documents': documents, 'images': images, 'media': media, 'new_users': new_users, 'users': users})
+	pending_documents = documents.filter(pending=True)
+	pending_images = images.filter(pending=True)
+	pending_media = media.filter(pending=True)
+
+	new_documents = documents.filter(created__gte=datetime.now()-timedelta(days=30))
+	new_images = images.filter(created__gte=datetime.now()-timedelta(days=30))
+	new_media = media.filter(created__gte=datetime.now()-timedelta(days=30))
+	
+	users = User.objects.filter(is_staff=False).order_by('date_joined')
+	new_users = users.filter(date_joined__gte=datetime.now()-timedelta(days=14))
+	
+	for user in users:
+		user.contributions = documents.filter(author=user).count() + images.filter(author=user).count() + media.filter(author=user).count()
+
+	previous_months = []
+
+	for i in range(12):
+		date = datetime.now() - relativedelta(months=i)
+		documents_this_month = documents.filter(created__year=date.year, created__month=date.month).count()
+		images_this_month = images.filter(created__year=date.year, created__month=date.month).count()
+		media_this_month = media.filter(created__year=date.year, created__month=date.month).count()
+		users_this_month = users.filter(date_joined__year=date.year, date_joined__month=date.month).count()
+		previous_months.append({'month': date.strftime('%B %Y'), 'documents': documents_this_month, 'images': images_this_month, 'media': media_this_month, 'users': users_this_month})
+
+	previous_months.reverse()
+
+	total_ugc = documents.count() + images.count() + media.count()
+	total_survey = Document.objects.filter(author__is_staff=True).count() + Image.objects.filter(author__is_staff=True).count() + Media.objects.filter(author__is_staff=True).count()
+
+	return render(request, 'map/dashboard.html', {'documents': documents, 'images': images, 'media': media, 'new_users': new_users, 'users': users, 'new_documents': new_documents, 'new_images': new_images, 'new_media': new_media, 'previous_months': previous_months, 'total_ugc': total_ugc, 'total_survey': total_survey, 'pending_documents': pending_documents, 'pending_images': pending_images, 'pending_media': pending_media, 'features': features })
 
 
 def inform_managers_of_content_submission(request):
@@ -221,13 +248,10 @@ def inform_managers_of_content_submission(request):
 
 def inform_user_of_content_publication(author, title, editor, message):
 	"""Tell a contributor that their content has been published and copy in the editor who approved it"""
-	if message != '':
-		message = 'Hello ' + author.get_username() + '.\nYour recent submission titled "' + title + '" has just been published on the Survey of London Whitechapel Website.\n' + message + '\nThanks for your contribution.'
-	else:
-		message = 'Hello ' + author.get_username() + '.\nYour recent submission titled "' + title + '" has just been published on the Survey of London Whitechapel Website.\nThanks for your contribution.'
+
+	# For the moment, just email the editor - we need to get this right before we start sending automated emails willy-nilly
 
 	# recipient_list = [author.email, editor.email]
-	# For the moment, just email the editor - we need to get this right before we start sending automated emails willy-nilly
 
 	recipient_list = [editor.email]
 
