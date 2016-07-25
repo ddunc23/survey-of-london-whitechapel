@@ -2,6 +2,7 @@ from django import forms
 from map.models import Feature, Document, Image, Media
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+from dal import autocomplete
 
 class FeatureForm(forms.ModelForm):
 	class Meta:
@@ -23,7 +24,7 @@ class DocumentForm(forms.ModelForm):
 			'body': 'Text',
 		}
 		widgets = {
-			# 'body': forms.TextInput(attrs={'class': 'medium-editor-input'})
+			'tags': autocomplete.TaggitSelect2(url='tag-autocomplete'),
 		}
 		help_texts = {
 			'tags': '',
@@ -59,7 +60,7 @@ class ImageForm(forms.ModelForm):
 		}
 		widgets = {
 			'file': forms.ClearableFileInput(attrs={'class':'img-upload'}),
-			#'tags': forms.SelectMultiple(),
+			'tags': autocomplete.TaggitSelect2(url='tag-autocomplete'),
 		}
 		help_texts = {
 			'tags': '',
@@ -88,7 +89,7 @@ class MediaForm(forms.ModelForm):
 			'tags': 'Add one or two tags so people can find your contribution more easily'
 		}
 		widgets = {
-			#'tags': forms.SelectMultiple()
+			'tags': autocomplete.TaggitSelect2(url='tag-autocomplete'),
 		}
 		help_texts = {
 			'tags': '',

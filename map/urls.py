@@ -37,4 +37,6 @@ urlpatterns = [
     url(r'^document/(?P<document>\d+)/moderate/$', views.moderate_document, name='moderate_document'),
     url(r'^image/(?P<image>\d+)/moderate/$', views.moderate_image, name='moderate_image'),
     url(r'^media/(?P<media>\d+)/moderate/$', views.moderate_media, name='moderate_media'),
+    # Tag Autocomplete
+    url(r'^tag-autocomplete/$', views.TagAutocomplete.as_view(), name='tag-autocomplete'),
 ]
