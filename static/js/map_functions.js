@@ -53,6 +53,17 @@ var highlightStyle = {
 	"weight": 4.5
 };
 
+var greyStyle = {
+	"color": '#d1d1d1',
+	"weight": 2,
+	"opacity": 0.6
+}
+
+function greaterWhitechapelStyle(layer) {
+	if (layer.feature.properties.id >= 1408 && layer.feature.properties.id <= 1634) {
+		layer.setStyle(greyStyle);
+	}
+}
 
 function setDocNumberStyle(layer) {
 	var count = layer.feature.properties.count
@@ -151,6 +162,7 @@ function onEachFeature(feature, layer) {
 		info.update()
 	})
 	setDocNumberStyle(layer);
+	greaterWhitechapelStyle(layer);
 	layer.on("click", function(e) {
 		setFootprintColour(layer, e);
 	});
