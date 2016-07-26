@@ -61,6 +61,7 @@ var greyStyle = {
 
 function greaterWhitechapelStyle(layer) {
 	if (layer.feature.properties.id >= 1408) {
+		console.log(layer.feature.properties.id)
 		layer.setStyle(greyStyle);
 	}
 }
