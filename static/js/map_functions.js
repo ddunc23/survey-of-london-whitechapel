@@ -102,8 +102,12 @@ function setFootprintColour(layer, e) {
 		layer.setStyle(hoverStyle);
 	} else if (e.type == 'mouseout') {
 		for (var prop in layer._layers) {
-			if (layer._layers[prop].options.fillColor != '#1AA9FF') {
+			if (layer._layers[prop].options.fillColor == '#F58216') {
 				layer.setStyle(myStyle);
+			} else if (layer._layers[prop].options.fillColor == '#1AA9FF') {
+				layer.setStyle(hoverStyle);
+			} else if (layer._layers[prop].options.color == '#d1d1d1') {
+				layer.setStyle(greyStyle);
 			}
 			break;
 		}
