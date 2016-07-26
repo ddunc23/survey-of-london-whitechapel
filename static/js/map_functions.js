@@ -82,6 +82,7 @@ function setDocNumberStyle(layer) {
 function resetColours(vectorlayer) {
 	vectorlayer.eachLayer(function(layer) {
 		layer.setStyle(myStyle);
+		greaterWhitechapelStyle(layer);
 	})
 }
 
