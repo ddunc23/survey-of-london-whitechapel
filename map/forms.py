@@ -12,6 +12,7 @@ class FeatureForm(forms.ModelForm):
 			'basement': forms.Select(),
 			'c_area': forms.Select(),
 			'listed':  forms.Select(),
+			#'tags': autocomplete.TaggitSelect2(url='tag-autocomplete'),
 		}
 
 class DocumentForm(forms.ModelForm):

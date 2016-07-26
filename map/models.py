@@ -11,6 +11,7 @@ import markdown
 import html2text
 import re
 
+
 def feature_directory_path(instance, filename):
 	"""Function to ensure image files will be uploaded to /uploads/features/<feature.id>/filename"""
 	try:
