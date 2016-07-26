@@ -56,7 +56,8 @@ var highlightStyle = {
 var greyStyle = {
 	"color": '#d1d1d1',
 	"weight": 2,
-	"opacity": 0.6
+	"opacity": 0.6,
+	"fillColor": '#d1d1d1',
 }
 
 function greaterWhitechapelStyle(layer) {
@@ -106,7 +107,7 @@ function setFootprintColour(layer, e) {
 				layer.setStyle(myStyle);
 			} else if (layer._layers[prop].options.fillColor == '#1AA9FF') {
 				layer.setStyle(hoverStyle);
-			} else if (layer._layers[prop].options.color == '#d1d1d1') {
+			} else if (layer._layers[prop].options.fillColor == '#d1d1d1') {
 				layer.setStyle(greyStyle);
 			}
 			break;
