@@ -113,3 +113,6 @@ class AddDescriptionActionForm(forms.Form):
 class AddThumbnailActionForm(forms.Form):
 	file = forms.FileField(label='Thumbnail')
 
+class AddAddressActionForm(forms.Form):
+	address = forms.CharField(label='Formatted Address')
+

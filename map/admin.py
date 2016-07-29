@@ -3,7 +3,7 @@ from map.models import Feature, Document, Category, Image, Media, Site
 from whitechapel_users.models import UserProfile
 from djgeojson.fields import GeoJSONField
 from leaflet.admin import LeafletGeoAdmin
-from map.forms import FeatureForm, AddDescriptionActionForm, AddThumbnailActionForm
+from map.forms import FeatureForm, AddDescriptionActionForm, AddThumbnailActionForm, AddAddressActionForm
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from django.shortcuts import render
@@ -61,7 +61,7 @@ class FeatureAdmin(LeafletGeoAdmin):
 		'DEFAULT_ZOOM': 5
 	}
 	list_display = ('id', 'b_name', 'address', 'postcode', 'short_description', 'thumbnail')
-	actions = ['set_description_action', 'add_thumbnail_action']
+	actions = ['set_description_action', 'add_thumbnail_action', 'set_address_action']
 
 	def set_description_action(self, request, queryset):
 		if 'do_action' in request.POST:
@@ -79,7 +79,7 @@ class FeatureAdmin(LeafletGeoAdmin):
 
 		return render(request, 'admin/map/action_short_description.html', {'title': 'Add a Description', 'objects': queryset, 'form': form})
 
-	set_description_action.short_description = 'Add a short description to selected features'
+	set_description_action.short_description = 'Add a short description to selected Buildings'
 
 	def add_thumbnail_action(self, request, queryset):
 		if 'do_action' in request.POST:
@@ -97,7 +97,25 @@ class FeatureAdmin(LeafletGeoAdmin):
 
 		return render(request, 'admin/map/action_add_thumbnail.html', {'title': 'Add a Thumbnail', 'objects': queryset, 'form': form})
 
-	add_thumbnail_action.short_description = 'Add a thumbnail to selected features'
+	add_thumbnail_action.short_description = 'Add a thumbnail to selected Buildings'
+
+	def set_address_action(self, request, queryset):
+		if 'do_action' in request.POST:
+			form = AddAddressActionForm(request.POST)
+			if form.is_valid():
+				address = form.cleaned_data['address']
+				for feature in queryset:
+					feature.address = address
+					feature.save()
+				updated = len(queryset)
+				messages.success(request, '{0} features were updated'.format(updated))
+				return
+		else:
+			form = AddAddressActionForm()
+
+		return render(request, 'admin/map/action_address.html', {'title': 'Update Address', 'objects': queryset, 'form': form})
+
+	set_address_action.short_description = 'Update the addresses of selected Buildings'
 
 
 
