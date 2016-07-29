@@ -100,6 +100,7 @@ def detail(request, feature):
 		images = Image.objects.filter(feature=feature).filter(published=True)
 		media = Media.objects.filter(feature=feature).filter(published=True)
 		site_docs = None
+		other_features = None
 
 	histories = documents.filter(document_type='HISTORY').order_by('order')
 	descriptions = documents.filter(document_type='DESCRIPTION').order_by('order')
