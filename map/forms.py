@@ -29,7 +29,6 @@ class DocumentForm(forms.ModelForm):
 			'tags': '',
 		}
 
-
 class AdminDocumentForm(DocumentForm):
 	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here.', required=False, widget=forms.Textarea, initial='Hello.\nYour submission has been published on the Survey of London Whitechapel Website.\nThanks for your contribution.')
 	class Meta(DocumentForm.Meta):
@@ -105,3 +104,12 @@ class AdminMediaForm(MediaForm):
 			'published': 'Tick this box to approve this submission and publish it on the map.',
 			'aggregate': 'Tick this box to attach this content to all the buildings on this site.',
 		}
+
+# Admin Action Forms
+
+class AddDescriptionActionForm(forms.Form):
+	short_description = forms.CharField(label='Short description')
+
+class AddThumbnailActionForm(forms.Form):
+	file = forms.FileField(label='Thumbnail')
+

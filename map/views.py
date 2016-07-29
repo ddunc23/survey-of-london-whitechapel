@@ -94,15 +94,16 @@ def detail(request, feature):
 		images = Image.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True)
 		media = Media.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True)
 		site_docs = Document.objects.filter(feature__site=feature.site, aggregate=True, published=True)
+		other_features = Feature.objects.filter(site=feature.site).exclude(id=feature.id)
 	else:
 		documents = Document.objects.filter(feature=feature).filter(published=True)
 		images = Image.objects.filter(feature=feature).filter(published=True)
 		media = Media.objects.filter(feature=feature).filter(published=True)
 		site_docs = None
 
-	histories = documents.filter(document_type='HISTORY')
-	descriptions = documents.filter(document_type='DESCRIPTION')
-	stories = documents.filter(document_type='STORY')
+	histories = documents.filter(document_type='HISTORY').order_by('order')
+	descriptions = documents.filter(document_type='DESCRIPTION').order_by('order')
+	stories = documents.filter(document_type='STORY').order_by('order')
 	categories = Category.objects.filter(feature=feature)
 	similar = feature.tags.similar_objects()
 	subtitle = '| ' + str(feature)
@@ -120,7 +121,7 @@ def detail(request, feature):
 	for tag in feature.tags.all():
 		tags.append(tag)
 
-	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar, 'subtitle': subtitle, 'images': images, 'media': media, 'tags': tags, 'site_docs': site_docs })
+	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar, 'subtitle': subtitle, 'images': images, 'media': media, 'tags': tags, 'site_docs': site_docs, 'other_features': other_features })
 
 
 def category(request, category):

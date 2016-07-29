@@ -43,7 +43,7 @@
 					<li role="presentation"{% if not histories and not descriptions and not stories %}class="active"{% endif %}><a href="#site" aria-controls="site" role="tab" data-toggle="tab">{{ feature.site }}</a></li>
 				{% endif %}
 				{% if images %}
-					<li role="presentation"{% if not histories and not descriptions and not stories and not feature.site %}class="active"{% endif %}><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images</a></li>
+					<li role="presentation"{% if not histories and not descriptions and not stories and not site_docs %}class="active"{% endif %}><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images</a></li>
 				{% endif %}
 				{% if media %}
 					<li role="presentation"{% if not histories and not descriptions and not stories and not feature.site and not images %}class="active"{% endif %}><a href="#media" aria-controls="media" role="tab" data-toggle="tab">Audio and Video</a></li>
@@ -137,7 +137,7 @@
 					{% endfor %}
 					</div>
 				{% endif %}
-				{% if feature.site %}
+				{% if feature.site and site_docs %}
 					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories %} active{% endif %}" id="site">
 					{% for document in site_docs %}
 						<div class="document">
@@ -149,7 +149,7 @@
 					</div>
 				{% endif %}
 				{% if images %}
-					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories and not feature.site %} active{% endif %} row" id="images">
+					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories and not site_docs %} active{% endif %} row" id="images">
 						{% load thumbnail %}
 						{% for image in images %}
 						<div class="col-xs-12 col-sm-4 col-md-4">
@@ -180,11 +180,19 @@
 		{% endif %} 
 		</div>
 		<div class="col-xs-12 col-md-2">
+			{% if other_features %}
+				<h4>Other Places on this Site</h4>
+				<ul class="list-unstyled">
+				{% for feature in other_features %}
+					<li><a href="{% url 'detail' feature.id %}">{{ feature }}</a></li>
+				{% endfor %}
+				</ul>
+			{% endif %}
 			{% if similar %}
 				<h4>Similar Places</h4>
 				<ul class="list-unstyled">
 				{% for feature in similar %}
-					<li><a href="{% url 'detail' feature.id %}">{{ feature.name }}</a></li>
+					<li><a href="{% url 'detail' feature.id %}">{{ feature }}</a></li>
 				{% endfor %}
 				</ul>
 			{% endif %}

@@ -3,9 +3,11 @@ from map.models import Feature, Document, Category, Image, Media, Site
 from whitechapel_users.models import UserProfile
 from djgeojson.fields import GeoJSONField
 from leaflet.admin import LeafletGeoAdmin
-from map.forms import FeatureForm
+from map.forms import FeatureForm, AddDescriptionActionForm, AddThumbnailActionForm
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
+from django.shortcuts import render
+from django.contrib import messages
 
 # Register your models here.
 
@@ -58,6 +60,47 @@ class FeatureAdmin(LeafletGeoAdmin):
 	settings_overrides = {
 		'DEFAULT_ZOOM': 5
 	}
+	list_display = ('id', 'b_name', 'address', 'postcode', 'short_description', 'thumbnail')
+	actions = ['set_description_action', 'add_thumbnail_action']
+
+	def set_description_action(self, request, queryset):
+		if 'do_action' in request.POST:
+			form = AddDescriptionActionForm(request.POST)
+			if form.is_valid():
+				short_description = form.cleaned_data['short_description']
+				for feature in queryset:
+					feature.short_description = short_description
+					feature.save()
+				updated = len(queryset)
+				messages.success(request, '{0} features were updated'.format(updated))
+				return
+		else:
+			form = AddDescriptionActionForm()
+
+		return render(request, 'admin/map/action_short_description.html', {'title': 'Add a Description', 'objects': queryset, 'form': form})
+
+	set_description_action.short_description = 'Add a short description to selected features'
+
+	def add_thumbnail_action(self, request, queryset):
+		if 'do_action' in request.POST:
+			form = AddThumbnailActionForm(request.POST, request.FILES)
+			if form.is_valid():
+				thumbnail = request.FILES['file']
+				for feature in queryset:
+					feature.thumbnail = thumbnail
+					feature.save()
+				updated = len(queryset)
+				messages.success(request, '{0} features were updated'.format(updated))
+				return
+		else:
+			form = AddThumbnailActionForm()
+
+		return render(request, 'admin/map/action_add_thumbnail.html', {'title': 'Add a Thumbnail', 'objects': queryset, 'form': form})
+
+	add_thumbnail_action.short_description = 'Add a thumbnail to selected features'
+
+
+
 
 class UserProfileInline(admin.StackedInline):
 	model = UserProfile
