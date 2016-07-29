@@ -61,6 +61,7 @@ class FeatureAdmin(LeafletGeoAdmin):
 		'DEFAULT_ZOOM': 5
 	}
 	list_display = ('id', 'b_name', 'address', 'postcode', 'short_description', 'thumbnail')
+	list_editable = ('short_description', 'address')
 	actions = ['set_description_action', 'add_thumbnail_action', 'set_address_action']
 
 	def set_description_action(self, request, queryset):
