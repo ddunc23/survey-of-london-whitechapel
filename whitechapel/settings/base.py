@@ -21,6 +21,8 @@ BASE_DIR = Path(__file__).ancestor(3)
 # Application definition
 
 INSTALLED_APPS = (
+    'dal',
+    'dal_select2',
     'grappelli',
     'filebrowser',
     'django.contrib.admin',
