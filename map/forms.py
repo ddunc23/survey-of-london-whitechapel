@@ -86,7 +86,7 @@ class MediaForm(forms.ModelForm):
 			'title': 'Give your contribution a title',
 			'url': 'Paste a link to YouTube, Vimeo or SoundCloud media here',
 			'tags': 'Add one or two tags so people can find your contribution more easily',
-			'description': 'Tell us a little about this image',
+			'description': 'Tell us a little about this media',
 		}
 		widgets = {
 			#'tags': forms.SelectMultiple()
