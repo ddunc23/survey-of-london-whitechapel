@@ -1,4 +1,8 @@
 {{ object.b_name }}
 {{ object.address }}
-{% for tag in object.tags.all %} {{ tag.name }} {% endfor %}
+{{ object.street }}
 {{ object.postcode }}
+{{ object.short_description }}
+{% for category in object.categories_set.all %} {{ category.name }} {% endfor %}
+{% for tag in object.tags_set.all %} {{ tag.name }} {% endfor %}
+{% for document in object.document_set.all %} {{ document.title }} {{ document.body }} {% endfor %}
