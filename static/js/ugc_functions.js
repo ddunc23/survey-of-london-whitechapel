@@ -16,7 +16,7 @@ $('.toggle-help').click(function(e) {
 		hidden = true;
 	} else {
 		$('.editor-help').animate({
-			height: '220px',	
+			height: '270px',	
 		});
 		$('.toggle-help').html('Hide Help');
 		hidden = false;
