@@ -50,11 +50,12 @@ class AdminDocumentForm(DocumentForm):
 class ImageForm(forms.ModelForm):
 	class Meta:
 		model = Image
-		fields = ('title', 'file', 'tags')
+		fields = ('title', 'file', 'tags', 'description')
 		labels = {
 			'title': 'Give your contribution a title',
 			'file': 'Upload Image',
 			'tags': 'Add one or two tags so people can find your image more easily',
+			'description': 'Tell us a little about this image',
 		}
 		widgets = {
 			'file': forms.ClearableFileInput(attrs={'class':'img-upload'}),
@@ -80,11 +81,12 @@ class AdminImageForm(ImageForm):
 class MediaForm(forms.ModelForm):
 	class Meta:
 		model = Media
-		fields = ('title', 'url', 'tags')
+		fields = ('title', 'url', 'tags', 'description')
 		labels = {
 			'title': 'Give your contribution a title',
 			'url': 'Paste a link to YouTube, Vimeo or SoundCloud media here',
-			'tags': 'Add one or two tags so people can find your contribution more easily'
+			'tags': 'Add one or two tags so people can find your contribution more easily',
+			'description': 'Tell us a little about this image',
 		}
 		widgets = {
 			#'tags': forms.SelectMultiple()

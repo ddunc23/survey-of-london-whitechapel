@@ -4,7 +4,6 @@ var editor = new MediumEditor('#id_body', {
 		hideOnClick: true,
 	}
 });
-var editor = new MediumEditor('#id_description');
 
 var hidden = false;
 
