@@ -18,6 +18,7 @@ import re
 from django.template import Context
 from datetime import datetime, timedelta
 from dateutil.relativedelta import *
+from dal import autocomplete
 
 logger = logging.getLogger(__name__)
 
@@ -340,14 +341,6 @@ def edit_document(request, feature, document=None):
 				"""If there's no 'published' value, place the document in pending"""
 				d.pending = True
 
-			### Regex to get select2 tags working - fix fix fix!
-
-			#data = form.cleaned_data['tags']
-			#string = ', '.join(data)
-			#uni = re.sub(r'u"|u\'|[\[\]"\']', '', string)
-			#form.cleaned_data['tags'] = repr(uni)
-			# form.cleaned_data['tags'] = data
-
 			d.save()
 			form.save_m2m()
 
@@ -563,6 +556,22 @@ def edit_media(request, feature, media=None):
 	tags = Tag.objects.all()
 
 	return render(request, 'map/add_media.html', {'feature': feature, 'form': form, 'media': media, 'tags': tags })
+
+
+
+# Tag Autocomplete
+
+class TagAutocomplete(autocomplete.Select2QuerySetView):
+	def get_queryset(self):
+		if not self.request.user.is_authenticated():
+			return Tag.objects.none()
+
+		qs = Tag.objects.all()
+
+		if self.q:
+			qs = qs.filter(name__istartswith=self.q)
+
+		return qs
 
 
 # API Views
