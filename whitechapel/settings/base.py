@@ -134,12 +134,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# STATIC_ROOT = BASE_DIR.child('static')
+STATIC_ROOT = BASE_DIR.child('static')
 
-STATICFILES_DIRS = [
-    BASE_DIR.child('static'),
-    'static/',
-]
+#STATICFILES_DIRS = [
+#    BASE_DIR.child('static'),
+#    'static/',
+#]
 
 # Media Settings
 
