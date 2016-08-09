@@ -27,15 +27,14 @@ logger = logging.getLogger(__name__)
 
 def map_home(request):
 	"""Base map"""
-	# features = Feature.objects.all()
 	subtitle = '| Map'
 	first_visit = None
+
 	try:
 		request.session['has_visited']
 	except KeyError:
 		first_visit = True
 		request.session['has_visited'] = True
-
 	
 	last_feature = request.GET.get('last_feature')
 	if last_feature is not None and last_feature !='':
@@ -107,7 +106,8 @@ def detail(request, feature):
 	descriptions = documents.filter(document_type='DESCRIPTION').order_by('order')
 	stories = documents.filter(document_type='STORY').order_by('order')
 	categories = Category.objects.filter(feature=feature)
-	similar = feature.tags.similar_objects()
+	all_similar = feature.tags.similar_objects()
+	similar_features = [x for x in all_similar if hasattr(x, 'geom') == True] 
 	subtitle = '| ' + str(feature)
 	tags = []
 	
@@ -123,7 +123,7 @@ def detail(request, feature):
 	for tag in feature.tags.all():
 		tags.append(tag)
 
-	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar, 'subtitle': subtitle, 'images': images, 'media': media, 'tags': tags, 'site_docs': site_docs, 'other_features': other_features })
+	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar_features, 'subtitle': subtitle, 'images': images, 'media': media, 'tags': tags, 'site_docs': site_docs, 'other_features': other_features })
 
 
 def category(request, category):
