@@ -229,3 +229,6 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 
+ACCOUNT_FORMS = {
+    'signup': 'whitechapel_users.forms.WhitechapelSignupForm',
+}

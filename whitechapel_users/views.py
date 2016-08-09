@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from whitechapel_users.forms import WhitechapelUserProfileForm, WhitechapelUserProfileFormExtra
 from django.contrib.auth.models import User
 from whitechapel_users.models import UserProfile
-from map.views import user_overview
+from map.views import user_overview, map_home
 from allauth.account.views import login
 
 # Create your views here.
@@ -23,7 +25,7 @@ def user_profile(request):
 			if profile_extra.is_valid():
 				profile.save()
 				profile_extra.save()
-				return user_overview(request)
+				return HttpResponseRedirect(reverse('map_home'))
 		else:
 			print form.errors
 			form = WhitechapelUserProfileForm(instance=user)
