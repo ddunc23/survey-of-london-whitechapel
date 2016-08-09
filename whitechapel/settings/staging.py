@@ -35,3 +35,5 @@ LOGGING = {
         },
     },
 }
+
+GOOGLE_ANALYTICS_PROPERTY_ID = 'UA-82231014-2'

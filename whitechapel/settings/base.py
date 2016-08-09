@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'crispy_forms',
     'easy_thumbnails',
     'embed_video',
+    'analytical',
     # django-allauth and login providers
     'django.contrib.sites',
     'allauth',
@@ -72,7 +73,6 @@ ROOT_URLCONF = 'whitechapel.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # 'DIRS': [os.path.join(BASE_DIR, 'templates/')],
         'DIRS': (BASE_DIR.child('templates'),),
         'APP_DIRS': True,
         'OPTIONS': {
