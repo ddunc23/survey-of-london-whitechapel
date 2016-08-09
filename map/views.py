@@ -187,10 +187,6 @@ def ugc_choice(request, feature):
 	feature = Feature.objects.get(id=feature)
 	return render(request, 'map/ugc_choice.html', {'feature': feature})
 
-@login_required
-def ugc_submit_confirmation(request, feature, document):
-	"""Check with the user that they really want to publish a document, because they won't be able to edit it after it's been submitted"""
-	pass
 
 @login_required
 def ugc_thanks(request, feature):
@@ -257,10 +253,11 @@ def inform_user_of_content_publication(author, title, editor, message):
 	# For the moment, just email the editor - we need to get this right before we start sending automated emails willy-nilly
 
 	# recipient_list = [author.email, editor.email]
-
-	recipient_list = [editor.email]
-
-	send_mail(subject='Your Content has been Published', message=message, from_email='admin@surveyoflondon.org', recipient_list=recipient_list)
+	if author.userprofile.emails == True:
+		recipient_list = [author.email, editor.email]
+		send_mail(subject='Your Content has been Published', message=message, from_email='admin@surveyoflondon.org', recipient_list=recipient_list)
+	else:
+		pass
 
 
 @login_required
@@ -294,7 +291,8 @@ def moderate_document(request, document):
 				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
 				editor = request.user
 				message = request.POST.get('email_thanks')
-				inform_user_of_content_publication(d.author, d.title, editor, message)
+				if request.POST['send_email']:
+					inform_user_of_content_publication(d.author, d.title, editor, message)
 				return dashboard(request)
 			else:
 				return dashboard(request)
@@ -392,7 +390,8 @@ def moderate_image(request, image):
 				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
 				editor = request.user
 				message = request.POST.get('email_thanks')
-				inform_user_of_content_publication(i.author, i.title, editor, message)
+				if request.POST['send_email']:
+					inform_user_of_content_publication(i.author, i.title, editor, message)
 				return dashboard(request)
 			else:
 				return dashboard(request)
@@ -491,7 +490,8 @@ def moderate_media(request, media):
 				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
 				editor = request.user
 				message = request.POST.get('email_thanks')
-				inform_user_of_content_publication(m.author, m.title, editor, message)
+				if request.POST['send_email']:
+					inform_user_of_content_publication(m.author, m.title, editor, message)
 				return dashboard(request)
 			else:
 				return dashboard(request)

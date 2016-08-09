@@ -31,9 +31,10 @@ class DocumentForm(forms.ModelForm):
 		}
 
 class AdminDocumentForm(DocumentForm):
-	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here.', required=False, widget=forms.Textarea, initial='Hello.\nYour submission has been published on the Survey of London Whitechapel Website.\nThanks for your contribution.')
+	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here. If a contributor has opted out of email updates they won\'t receive this.', required=False, widget=forms.Textarea, initial='Hello.\nYour submission has been published on the Survey of London Whitechapel Website.\nThanks for your contribution.')
+	send_email = forms.BooleanField(label='Send Email?', help_text='If you don\'t want to notify a contributor by email that their contribution has been approved, uncheck this box.', initial=True)
 	class Meta(DocumentForm.Meta):
-		fields = ('title', 'tags', 'body', 'email_thanks', 'document_type', 'order', 'published', 'aggregate')
+		fields = ('title', 'tags', 'body', 'email_thanks', 'send_email', 'document_type', 'order', 'published', 'aggregate')
 		labels = {
 			'title': 'Edit the title',
 			'tags': 'Add more tags as necessary',
@@ -68,9 +69,10 @@ class ImageForm(forms.ModelForm):
 
 
 class AdminImageForm(ImageForm):
-	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here.', required=False, widget=forms.Textarea)
+	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here. If a contributor has opted out of email updates they won\'t receive this.', required=False, widget=forms.Textarea, initial='Hello.\nYour submission has been published on the Survey of London Whitechapel Website.\nThanks for your contribution.')
+	send_email = forms.BooleanField(label='Send Email?', help_text='If you don\'t want to notify a contributor by email that their contribution has been approved, uncheck this box.', initial=True)
 	class Meta(ImageForm.Meta):
-		fields = ('title', 'tags', 'email_thanks', 'published', 'aggregate')
+		fields = ('title', 'tags', 'email_thanks', 'send_email', 'published', 'aggregate')
 		labels = {
 			'title': 'Edit the title',
 			'tags': 'Add more tags as necessary',
@@ -97,9 +99,10 @@ class MediaForm(forms.ModelForm):
 		}
 
 class AdminMediaForm(MediaForm):
-	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here.', required=False, widget=forms.Textarea)
+	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here. If a contributor has opted out of email updates they won\'t receive this.', required=False, widget=forms.Textarea, initial='Hello.\nYour submission has been published on the Survey of London Whitechapel Website.\nThanks for your contribution.')
+	send_email = forms.BooleanField(label='Send Email?', help_text='If you don\'t want to notify a contributor by email that their contribution has been approved, uncheck this box.', initial=True)
 	class Meta(MediaForm.Meta):
-		fields = ('title', 'tags', 'url', 'email_thanks', 'published', 'aggregate')
+		fields = ('title', 'tags', 'url', 'email_thanks', 'send_email', 'published', 'aggregate')
 		labels = {
 			'title': 'Edit the title',
 			'tags': 'Add more tags as necessary',
