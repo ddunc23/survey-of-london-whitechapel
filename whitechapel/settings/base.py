@@ -233,4 +233,4 @@ ACCOUNT_FORMS = {
     'signup': 'whitechapel_users.forms.WhitechapelSignupForm',
 }
 
-SOCIALACCOUNT_ADAPTER = 'whitechapel_users.adaptor.SocialAccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'whitechapel_users.adapter.SocialAccountAdapter'
