@@ -232,3 +232,5 @@ SOCIALACCOUNT_PROVIDERS = {
 ACCOUNT_FORMS = {
     'signup': 'whitechapel_users.forms.WhitechapelSignupForm',
 }
+
+SOCIALACCOUNT_ADAPTER = 'whitechapel_users.adaptor.SocialAccountAdapter'
