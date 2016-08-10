@@ -35,3 +35,11 @@ def user_profile(request):
 		profile_extra = WhitechapelUserProfileFormExtra(instance=user)
 
 	return render(request, 'whitechapel_users/profile.html', {'form': form, 'profile_extra': profile_extra})
+
+@login_required
+def check_first_login(request):
+    threshold = 90
+    if (request.user.last_login - request.user.date_joined).seconds < threshold:
+    	return HttpResponseRedirect(reverse('user_profile'))
+    else:
+    	return HttpResponseRedirect(reverse('map_home'))
