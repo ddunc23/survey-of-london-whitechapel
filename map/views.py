@@ -14,6 +14,7 @@ from itertools import chain
 import logging
 from taggit.models import Tag
 from django.core.mail import mail_managers, send_mail
+from django.core.mail.message import EmailMessage
 import re
 from django.template import Context
 from datetime import datetime, timedelta
@@ -247,15 +248,11 @@ def inform_managers_of_content_submission(request):
 	mail_managers('New Content Submitted', message=message, html_message=html_message)
 
 
-def inform_user_of_content_publication(author, title, editor, message):
-	"""Tell a contributor that their content has been published and copy in the editor who approved it"""
-
-	# For the moment, just email the editor - we need to get this right before we start sending automated emails willy-nilly
-
-	# recipient_list = [author.email, editor.email]
+def inform_user_of_content_publication(author, title, message):
 	if author.userprofile.emails == True:
-		recipient_list = [author.email, editor.email]
-		send_mail(subject='Your Content has been Published', message=message, from_email='admin@surveyoflondon.org', recipient_list=recipient_list)
+		recipient_list = [author.email, 'solwhitechapel.bartlett@ucl.ac.uk']
+		email = EmailMessage('Your Content has been Published on Survey of London Whitechapel', message, 'admin@surveyoflondon.org', [author.email], ['solwhitechapel.bartlett@ucl.ac.uk'])
+		email.send()
 	else:
 		pass
 
@@ -289,10 +286,9 @@ def moderate_document(request, document):
 
 			if published == 'Approve':
 				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
-				editor = request.user
 				message = request.POST.get('email_thanks')
 				if request.POST['send_email']:
-					inform_user_of_content_publication(d.author, d.title, editor, message)
+					inform_user_of_content_publication(d.author, d.title, message)
 				return dashboard(request)
 			else:
 				return dashboard(request)
@@ -388,10 +384,9 @@ def moderate_image(request, image):
 
 			if published == 'Approve':
 				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
-				editor = request.user
 				message = request.POST.get('email_thanks')
 				if request.POST['send_email']:
-					inform_user_of_content_publication(i.author, i.title, editor, message)
+					inform_user_of_content_publication(i.author, i.title, message)
 				return dashboard(request)
 			else:
 				return dashboard(request)
@@ -488,10 +483,9 @@ def moderate_media(request, media):
 
 			if published == 'Approve':
 				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
-				editor = request.user
 				message = request.POST.get('email_thanks')
 				if request.POST['send_email']:
-					inform_user_of_content_publication(m.author, m.title, editor, message)
+					inform_user_of_content_publication(m.author, m.title, message)
 				return dashboard(request)
 			else:
 				return dashboard(request)

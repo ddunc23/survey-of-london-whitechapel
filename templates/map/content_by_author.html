@@ -6,6 +6,7 @@
 		<div class="col-xs-12 col-md-4"><!-- Results Side Bar-->
 			<div class="col-xs-12">
 				<h2>All Contributions from {% if author.userprofile.display_name %}{{ author.userprofile.display_name }}{% else %}{{ author }}{% endif %}</h2>
+				{% if author.userprofile.bio %}<p class="text-muted">{{ author.userprofile.bio }}</p>{% endif %}
 				<hr />
 				{% regroup documents by feature as document_list %}
 				<h3>Documents</h3>

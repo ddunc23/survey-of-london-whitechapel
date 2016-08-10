@@ -28,7 +28,7 @@
 							<h1>Have you finished editing?</h1>
 						</div>
 						<div class="modal-body">
-			        		<p>Once you've submitted your content it will be passed to the Survey of London team for moderation and you won't be able to edit it again. Any images you submit to this site must either be yours, in the public domain, or uploaded with the permission of the copyright holder. See our <a href="#">Code of Conduct</a> for more information.</p>
+			        		<p>Once you've submitted your content it will be passed to the Survey of London team for moderation and you won't be able to edit it again. Any images you submit to this site must either be yours, in the public domain, or uploaded with the permission of the copyright holder. See our <a href="{% url 'page' 'code-conduct' %}">Code of Conduct</a> for more information.</p>
 			        		<p>If you'd like to continue editing, click the close button below. Otherwise, click 'Submit' if you're happy with your contribution.</p>
 			      		</div>
 						<div class="modal-footer">
@@ -54,15 +54,15 @@
 		<div class="row">
 			<div class="col-xs-12 col-md-4">
 				<h4>What We're Looking For</h4>
-				<p>If you've got a photo, drawing, or painting of this building, either from now or as it was in the past, you can contribute it using this page. Please mention the source of your image, and don't submit anything that you don't own the copyright for or isn't in the public domain.</p>
+				<p>If you've got a photo, drawing, or painting of this building, either from now or as it was in the past, you can contribute it using this page.</p>
+			</div>
+			<div class="col-xs-12 col-md-4">	
+				<h4>Sources and Copyright</h4>
+				<p>If you're submitting an historical image, please include your source in the description. Please don't submit anything you don't own the copyright for or which isn't in the public domain. You can read more about copyright in our <a href="{% url 'page' 'code-conduct' %}">Code of Conduct</a>.</p>
 			</div>
 			<div class="col-xs-12 col-md-4">
 				<h4>How to Add an Image</h4>
 				<p>Click the 'Browse' button above to select a file from your computer. Your image should be in .jpg, .png, or .gif format, and should be no larger than 1 megabyte in size.</p>
-			</div>
-			<div class="col-xs-12 col-md-4">
-				<h4>Help People Find Your Image</h4>
-				<p>Give your text a title and add one or two tags. For example, if your image is from a particular time, you could tag it '1960s'.</p>
 			</div>
 		</div>
 	</div>
