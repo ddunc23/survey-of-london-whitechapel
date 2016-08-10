@@ -3,6 +3,9 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):
-    def save_user(self, request, sociallogin, form=None):
-        super(DefaultSocialAccountAdapter, self).save_user(request, sociallogin, form=None)
-        return HttpResponseRedirect(reverse('user_profile'))
+    def get_login_redirect_url(self, request):
+        # do your logic here for different social accounts
+        if hasattr(request.user, 'date_joined') == False:
+        	return HttpResponseRedirect(reverse('user_profile'))
+        else:
+        	return HttpResponseRedirect(reverse('map_home'))
