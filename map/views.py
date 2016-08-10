@@ -106,6 +106,7 @@ def detail(request, feature):
 	histories = documents.filter(document_type='HISTORY').order_by('order')
 	descriptions = documents.filter(document_type='DESCRIPTION').order_by('order')
 	stories = documents.filter(document_type='STORY').order_by('order')
+	notes = documents.filter(document_type='NOTE').order_by('order')
 	categories = Category.objects.filter(feature=feature)
 	all_similar = feature.tags.similar_objects()
 	similar_features = [x for x in all_similar if hasattr(x, 'geom') == True] 
@@ -124,7 +125,7 @@ def detail(request, feature):
 	for tag in feature.tags.all():
 		tags.append(tag)
 
-	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar_features, 'subtitle': subtitle, 'images': images, 'media': media, 'tags': tags, 'site_docs': site_docs, 'other_features': other_features })
+	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar_features, 'subtitle': subtitle, 'images': images, 'media': media, 'tags': tags, 'site_docs': site_docs, 'other_features': other_features, 'notes': notes })
 
 
 def category(request, category):
