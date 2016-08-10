@@ -4,8 +4,7 @@ from django.http import HttpResponseRedirect
 from datetime import datetime
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):
-    def get_login_redirect_url(self, request):
-        # do your logic here for different social accounts
+    def get_connect_redirect_url(self, request):
         threshold = 90
         if (request.user.last_login - request.user.date_joined).seconds < threshold:
         	return HttpResponseRedirect(reverse('user_profile'))
