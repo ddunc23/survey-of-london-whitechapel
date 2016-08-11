@@ -38,6 +38,7 @@ def user_profile(request):
 
 @login_required
 def check_first_login(request):
+	"""Check if a user has logged in before. If they have, punt them to the map, if they haven't, give them an opportunity to check the default settings on their account."""
     threshold = 90
     if (request.user.last_login - request.user.date_joined).seconds < threshold:
     	return HttpResponseRedirect(reverse('user_profile'))
