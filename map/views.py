@@ -292,6 +292,7 @@ def moderate_document(request, document):
 			if published == 'Approve':
 				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
 				message = request.POST.get('email_thanks')
+				# Check to see if the 'send email' box is ticked. If it is, send a confirmation email to the author, copying in the editors.
 				send = request.POST.get('send_email')
 				if send:
 					inform_user_of_content_publication(d.author, d.title, message)
