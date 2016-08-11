@@ -252,7 +252,8 @@ def inform_managers_of_content_submission(request):
 def inform_user_of_content_publication(author, title, message):
 	if author.userprofile.emails == True:
 		recipient_list = [author.email, 'solwhitechapel.bartlett@ucl.ac.uk']
-		email = EmailMessage('Your Content has been Published on Survey of London Whitechapel', message, 'admin@surveyoflondon.org', [author.email], ['solwhitechapel.bartlett@ucl.ac.uk'])
+		subject = 'Your submission about ' + title + ' has been published on Survey of London Whitechapel'
+		email = EmailMessage(subject, message, 'admin@surveyoflondon.org', [author.email], ['solwhitechapel.bartlett@ucl.ac.uk'])
 		email.send()
 	else:
 		pass
@@ -288,7 +289,8 @@ def moderate_document(request, document):
 			if published == 'Approve':
 				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
 				message = request.POST.get('email_thanks')
-				if request.POST['send_email']:
+				send = request.POST.get('send_email')
+				if send:
 					inform_user_of_content_publication(d.author, d.title, message)
 				return dashboard(request)
 			else:
@@ -386,7 +388,8 @@ def moderate_image(request, image):
 			if published == 'Approve':
 				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
 				message = request.POST.get('email_thanks')
-				if request.POST['send_email']:
+				send = request.POST.get('send_email')
+				if send:
 					inform_user_of_content_publication(i.author, i.title, message)
 				return dashboard(request)
 			else:
@@ -485,7 +488,8 @@ def moderate_media(request, media):
 			if published == 'Approve':
 				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
 				message = request.POST.get('email_thanks')
-				if request.POST['send_email']:
+				send = request.POST.get('send_email')
+				if send:
 					inform_user_of_content_publication(m.author, m.title, message)
 				return dashboard(request)
 			else:
