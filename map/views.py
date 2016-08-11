@@ -243,16 +243,19 @@ def dashboard(request):
 
 
 def inform_managers_of_content_submission(request):
-	"""Tell the SoL admins that a new document has been submitted."""
+	"""Tell the SoL admins that a new document has been submitted"""
 	message = 'Hello Survey of London Editors.\nNew content has been submitted by ' + request.user.get_username() + ' and is awaiting moderation.\nThank you.'
 	html_message = '<p>Hello Survey of London Editors.</p><p>New content has been submitted by ' + request.user.get_username() + ' and is awaiting moderation. To review, edit, and approve it, click <a href="https://surveyoflondon.org/map/dashboard/">here</a>.</p><p>Thank you.</p>'
-	mail_managers('New Content Submitted', message=message, html_message=html_message)
+
+	send_mail('New Submission', message=message, html_message=html_message, from_email='admin@surveyoflondon.org', recipient_list=['solwhitechapel.bartlett@ucl.ac.uk'])
+
 
 
 def inform_user_of_content_publication(author, title, message):
+	"""Tell a user that their content has been published"""
+	# Only send an email if a user has opted in to updates
 	if author.userprofile.emails == True:
-		recipient_list = [author.email, 'solwhitechapel.bartlett@ucl.ac.uk']
-		subject = 'Your submission about ' + title + ' has been published on Survey of London Whitechapel'
+		subject = 'Your submission "' + title + '"" has been published on Survey of London Whitechapel'
 		email = EmailMessage(subject, message, 'admin@surveyoflondon.org', [author.email], ['solwhitechapel.bartlett@ucl.ac.uk'])
 		email.send()
 	else:

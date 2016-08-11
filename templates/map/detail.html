@@ -196,6 +196,9 @@
 								{% video embed.url 'large' %}
 							</div>
 							<hr />
+							{% if embed.description %}
+								<p>{{ embed.description }}</p>
+							{% endif %}
 							{% endfor %}
 						</div>
 					</div>
