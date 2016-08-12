@@ -127,12 +127,6 @@ info.update = function(properties) {
 
 function onEachFeature(feature, layer) {
 	if (feature.properties) {
-		/*if (feature.properties.b_name) {
-			layer.bindPopup('<a href="feature/' + feature.id + '/detail/">' + feature.properties.b_name + '</a>');
-		}
-		else if (feature.properties.address) {
-			layer.bindPopup('<a href="feature/' + feature.id + '/detail/">' + feature.properties.address + '</a>');
-		}*/
 		var hl = getUrlVars()['highlight'];
 		if (feature.id == hl) {
 			highlight = layer;
@@ -270,9 +264,9 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				$('.leaflet-control').mouseover(function() {
 					buildings.eachLayer(function(layer) {
-						if (layer._options['color'] != '#1AA9FF') {
-							layer.setStyle(myStyle);
-						}
+						//if (layer._options['color'] != '#1AA9FF') {
+						//	layer.setStyle(myStyle);
+						//}
 					layer.removeEventListener();
 					})
 				});

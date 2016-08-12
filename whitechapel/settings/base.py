@@ -55,6 +55,7 @@ INSTALLED_APPS = (
     # django-allauth login providers
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
+    'honeypot',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -66,6 +67,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'honeypot.middleware.HoneypotMiddleware',
 )
 
 ROOT_URLCONF = 'whitechapel.urls'
@@ -214,7 +216,7 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = 1
 
-LOGIN_REDIRECT_URL = '/map/'
+LOGIN_REDIRECT_URL = 'check_first_login'
 
 ACCOUNT_EMAIL_REQUIRED = True
 
@@ -229,3 +231,10 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 
+ACCOUNT_FORMS = {
+    'signup': 'whitechapel_users.forms.WhitechapelSignupForm',
+}
+
+# django-honeypot 
+
+HONEYPOT_FIELD_NAME = 'phone_number'

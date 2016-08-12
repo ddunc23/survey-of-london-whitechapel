@@ -27,13 +27,14 @@ class DocumentForm(forms.ModelForm):
 			'tags': autocomplete.TaggitSelect2(url='tag-autocomplete')
 		}
 		help_texts = {
-			'tags': '',
+			'tags': 'Tags help people find your content. For example, if you\'ve got a memory of a particular time, you could tag it \'1960s\'.',
 		}
 
 class AdminDocumentForm(DocumentForm):
-	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here.', required=False, widget=forms.Textarea, initial='Hello.\nYour submission has been published on the Survey of London Whitechapel Website.\nThanks for your contribution.')
+	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here. If a contributor has opted out of email updates they won\'t receive this.', required=False, widget=forms.Textarea, initial='Hello.\nYour submission has been published on the Survey of London Whitechapel Website.\nThanks for your contribution.\n\n\nIf you\'d like to stop receiving these emails, log in to your account and uncheck the "Receive emails about your submissions from the Survey of London?" on your profile page.')
+	send_email = forms.BooleanField(label='Send Email?', help_text='If you don\'t want to notify a contributor by email that their contribution has been approved, uncheck this box.', initial=True, required=False)
 	class Meta(DocumentForm.Meta):
-		fields = ('title', 'tags', 'body', 'email_thanks', 'document_type', 'order', 'published', 'aggregate')
+		fields = ('title', 'tags', 'body', 'email_thanks', 'send_email', 'document_type', 'order', 'published', 'aggregate')
 		labels = {
 			'title': 'Edit the title',
 			'tags': 'Add more tags as necessary',
@@ -44,7 +45,8 @@ class AdminDocumentForm(DocumentForm):
 			'aggregate': 'Tick this box to attach this content to all the buildings on this site.'
 		}
 		help_texts = {
-			'order': 'What priority should this have on the building page? 0 is highest, higher numbers determine what order each piece of content appears.'
+			'order': 'What priority should this have on the building page? 0 is highest, higher numbers determine what order each piece of content appears.',
+			'tags': '',
 		}
 
 
@@ -63,19 +65,23 @@ class ImageForm(forms.ModelForm):
 			'tags': autocomplete.TaggitSelect2(url='tag-autocomplete')
 		}
 		help_texts = {
-			'tags': '',
+			'tags': 'Tags help people find your content. For example, if you\'ve got a memory of a particular time, you could tag it \'1960s\'.',
 		}
 
 
 class AdminImageForm(ImageForm):
-	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here.', required=False, widget=forms.Textarea)
+	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here. If a contributor has opted out of email updates they won\'t receive this.', required=False, widget=forms.Textarea, initial='Hello.\nYour submission has been published on the Survey of London Whitechapel Website.\nThanks for your contribution.\n\n\nIf you\'d like to stop receiving these emails, log in to your account and uncheck the "Receive emails about your submissions from the Survey of London?" on your profile page.')
+	send_email = forms.BooleanField(label='Send Email?', help_text='If you don\'t want to notify a contributor by email that their contribution has been approved, uncheck this box.', initial=True, required=False)
 	class Meta(ImageForm.Meta):
-		fields = ('title', 'tags', 'email_thanks', 'published', 'aggregate')
+		fields = ('title', 'tags', 'description', 'email_thanks', 'send_email', 'published', 'aggregate')
 		labels = {
 			'title': 'Edit the title',
 			'tags': 'Add more tags as necessary',
 			'published': 'Tick this box to approve this submission and publish it on the map.',
 			'aggregate': 'Tick this box to attach this content to all the buildings on this site.',
+		}
+		help_texts = {
+			'tags': '',
 		}
 
 
@@ -93,19 +99,23 @@ class MediaForm(forms.ModelForm):
 			'tags': autocomplete.TaggitSelect2(url='tag-autocomplete')
 		}
 		help_texts = {
-			'tags': '',
+			'tags': 'Tags help people find your content. For example, if you\'ve got a memory of a particular time, you could tag it \'1960s\'.',
 		}
 
 class AdminMediaForm(MediaForm):
-	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here.', required=False, widget=forms.Textarea)
+	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here. If a contributor has opted out of email updates they won\'t receive this.', required=False, widget=forms.Textarea, initial='Hello.\nYour submission has been published on the Survey of London Whitechapel Website.\nThanks for your contribution.\n\n\nIf you\'d like to stop receiving these emails, log in to your account and uncheck the "Receive emails about your submissions from the Survey of London?" on your profile page.')
+	send_email = forms.BooleanField(label='Send Email?', help_text='If you don\'t want to notify a contributor by email that their contribution has been approved, uncheck this box.', initial=True, required=False)
 	class Meta(MediaForm.Meta):
-		fields = ('title', 'tags', 'url', 'email_thanks', 'published', 'aggregate')
+		fields = ('title', 'tags', 'url', 'description', 'email_thanks', 'send_email', 'published', 'aggregate')
 		labels = {
 			'title': 'Edit the title',
 			'tags': 'Add more tags as necessary',
 			'url': 'Check to see if the URL is correct',
 			'published': 'Tick this box to approve this submission and publish it on the map.',
 			'aggregate': 'Tick this box to attach this content to all the buildings on this site.',
+		}
+		help_texts = {
+			'tags': '',
 		}
 
 # Admin Action Forms

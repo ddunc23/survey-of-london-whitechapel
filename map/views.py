@@ -14,6 +14,7 @@ from itertools import chain
 import logging
 from taggit.models import Tag
 from django.core.mail import mail_managers, send_mail
+from django.core.mail.message import EmailMessage
 import re
 from django.template import Context
 from datetime import datetime, timedelta
@@ -105,6 +106,7 @@ def detail(request, feature):
 	histories = documents.filter(document_type='HISTORY').order_by('order')
 	descriptions = documents.filter(document_type='DESCRIPTION').order_by('order')
 	stories = documents.filter(document_type='STORY').order_by('order')
+	notes = documents.filter(document_type='NOTE').order_by('order')
 	categories = Category.objects.filter(feature=feature)
 	all_similar = feature.tags.similar_objects()
 	similar_features = [x for x in all_similar if hasattr(x, 'geom') == True] 
@@ -123,7 +125,7 @@ def detail(request, feature):
 	for tag in feature.tags.all():
 		tags.append(tag)
 
-	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar_features, 'subtitle': subtitle, 'images': images, 'media': media, 'tags': tags, 'site_docs': site_docs, 'other_features': other_features })
+	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar_features, 'subtitle': subtitle, 'images': images, 'media': media, 'tags': tags, 'site_docs': site_docs, 'other_features': other_features, 'notes': notes })
 
 
 def category(request, category):
@@ -187,10 +189,6 @@ def ugc_choice(request, feature):
 	feature = Feature.objects.get(id=feature)
 	return render(request, 'map/ugc_choice.html', {'feature': feature})
 
-@login_required
-def ugc_submit_confirmation(request, feature, document):
-	"""Check with the user that they really want to publish a document, because they won't be able to edit it after it's been submitted"""
-	pass
 
 @login_required
 def ugc_thanks(request, feature):
@@ -245,22 +243,23 @@ def dashboard(request):
 
 
 def inform_managers_of_content_submission(request):
-	"""Tell the SoL admins that a new document has been submitted."""
+	"""Tell the SoL admins that a new document has been submitted"""
 	message = 'Hello Survey of London Editors.\nNew content has been submitted by ' + request.user.get_username() + ' and is awaiting moderation.\nThank you.'
 	html_message = '<p>Hello Survey of London Editors.</p><p>New content has been submitted by ' + request.user.get_username() + ' and is awaiting moderation. To review, edit, and approve it, click <a href="https://surveyoflondon.org/map/dashboard/">here</a>.</p><p>Thank you.</p>'
-	mail_managers('New Content Submitted', message=message, html_message=html_message)
+
+	send_mail('New Submission', message=message, html_message=html_message, from_email='admin@surveyoflondon.org', recipient_list=['solwhitechapel.bartlett@ucl.ac.uk'])
 
 
-def inform_user_of_content_publication(author, title, editor, message):
-	"""Tell a contributor that their content has been published and copy in the editor who approved it"""
 
-	# For the moment, just email the editor - we need to get this right before we start sending automated emails willy-nilly
-
-	# recipient_list = [author.email, editor.email]
-
-	recipient_list = [editor.email]
-
-	send_mail(subject='Your Content has been Published', message=message, from_email='admin@surveyoflondon.org', recipient_list=recipient_list)
+def inform_user_of_content_publication(author, title, message):
+	"""Tell a user that their content has been published"""
+	# Only send an email if a user has opted in to updates
+	if author.userprofile.emails == True:
+		subject = 'Your submission "' + title + '"" has been published on Survey of London Whitechapel'
+		email = EmailMessage(subject, message, 'admin@surveyoflondon.org', [author.email], ['solwhitechapel.bartlett@ucl.ac.uk'])
+		email.send()
+	else:
+		pass
 
 
 @login_required
@@ -292,9 +291,11 @@ def moderate_document(request, document):
 
 			if published == 'Approve':
 				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
-				editor = request.user
 				message = request.POST.get('email_thanks')
-				inform_user_of_content_publication(d.author, d.title, editor, message)
+				# Check to see if the 'send email' box is ticked. If it is, send a confirmation email to the author, copying in the editors.
+				send = request.POST.get('send_email')
+				if send:
+					inform_user_of_content_publication(d.author, d.title, message)
 				return dashboard(request)
 			else:
 				return dashboard(request)
@@ -390,9 +391,10 @@ def moderate_image(request, image):
 
 			if published == 'Approve':
 				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
-				editor = request.user
 				message = request.POST.get('email_thanks')
-				inform_user_of_content_publication(i.author, i.title, editor, message)
+				send = request.POST.get('send_email')
+				if send:
+					inform_user_of_content_publication(i.author, i.title, message)
 				return dashboard(request)
 			else:
 				return dashboard(request)
@@ -489,9 +491,10 @@ def moderate_media(request, media):
 
 			if published == 'Approve':
 				"""If the 'published' box is checked, email the contributor to say thanks, otherwise just return the editor to the dashboard"""
-				editor = request.user
 				message = request.POST.get('email_thanks')
-				inform_user_of_content_publication(m.author, m.title, editor, message)
+				send = request.POST.get('send_email')
+				if send:
+					inform_user_of_content_publication(m.author, m.title, message)
 				return dashboard(request)
 			else:
 				return dashboard(request)

@@ -4,12 +4,15 @@
 <div class="container">
 	<div class="row">
 		<div class="col-xs-12 col-md-8 col-md-offset-2">
-			<h2>Moderate {{ image.author }}'s Submission About {% if image.feature.b_name %}{{ image.feature.b_name }}{% else %}{{ image.feature.address }}{% endif %}</h2>
+			<h2>Moderate {{ image.author }}'s Contribution About <a href="{% url 'detail' image.feature.id %}">{{ image.feature }}</a></h2>
 			<hr />
 			<h3>Submission Details</h3>
-			<p>Author Email: {{ image.author.email }}<br />
-			Created on {{ image.created }}<br />
-			Last Edited on {{ image.last_edited }}</p>
+			<p>Submitted on {{ image.created }}<br />
+			Last edited on {{ image.last_edited }}</p>
+			<hr />
+			<h3>Author Details</h3>
+			<p>Submitted by {{ image.author }} ({{ image.author.email }})<br />
+			{% if image.author.userprofile.emails == False %}<strong>{{ image.author }} has opted out of email notifications!{% endif %}</strong></p>
 			<hr />
 		</div>
 	</div>
@@ -49,6 +52,12 @@
 
 {% load staticfiles %}
 <script src="{% static 'js/ugc_functions.js' %}"></script>
+<link href="/static/autocomplete_light/vendor/select2/dist/css/select2.css" type="text/css" media="all" rel="stylesheet" />
+<link href="/static/autocomplete_light/select2.css" type="text/css" media="all" rel="stylesheet" />
+<script type="text/javascript" src="/static/autocomplete_light/jquery.init.js"></script>
+<script type="text/javascript" src="/static/autocomplete_light/autocomplete.init.js"></script>
+<script type="text/javascript" src="/static/autocomplete_light/vendor/select2/dist/js/select2.full.js"></script>
+<script type="text/javascript" src="/static/autocomplete_light/select2.js"></script>
 
 {% endblock %}
 

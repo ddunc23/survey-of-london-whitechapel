@@ -156,6 +156,7 @@ class Document(models.Model):
 		('HISTORY', 'Research'),
 		('DESCRIPTION', 'Description'),
 		('STORY', 'Memory'),
+		('NOTE', 'Note'),
 	)
 	document_type = models.CharField(max_length=16, choices=DOCUMENT_TYPE_CHOICES, default='HISTORY')
 	published = models.BooleanField(default=False)

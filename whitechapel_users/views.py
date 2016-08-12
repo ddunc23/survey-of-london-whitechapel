@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from whitechapel_users.forms import WhitechapelUserProfileForm, WhitechapelUserProfileFormExtra
 from django.contrib.auth.models import User
 from whitechapel_users.models import UserProfile
-from map.views import user_overview
+from map.views import user_overview, map_home
 from allauth.account.views import login
 
 # Create your views here.
@@ -23,7 +25,7 @@ def user_profile(request):
 			if profile_extra.is_valid():
 				profile.save()
 				profile_extra.save()
-				return user_overview(request)
+				return HttpResponseRedirect(reverse('map_home'))
 		else:
 			print form.errors
 			form = WhitechapelUserProfileForm(instance=user)
@@ -33,3 +35,12 @@ def user_profile(request):
 		profile_extra = WhitechapelUserProfileFormExtra(instance=user)
 
 	return render(request, 'whitechapel_users/profile.html', {'form': form, 'profile_extra': profile_extra})
+
+@login_required
+def check_first_login(request):
+	"""Check if a user has logged in before. If they have, punt them to the map, if they haven't, give them an opportunity to check the default settings on their account."""
+	threshold = 90
+	if (request.user.last_login - request.user.date_joined).seconds < threshold:
+		return HttpResponseRedirect(reverse('user_profile'))
+	else:
+		return HttpResponseRedirect(reverse('map_home'))
