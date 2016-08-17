@@ -33,6 +33,7 @@ mbutil==0.2.0
 mod-wsgi==4.5.2
 oauthlib==1.1.1
 psycopg2==2.6.1
+pysolr==3.5.0
 python-dateutil==2.5.0
 python-memcached==1.57
 python-openid==2.2.5
