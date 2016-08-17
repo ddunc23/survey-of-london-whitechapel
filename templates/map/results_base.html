@@ -1,0 +1,43 @@
+{% extends 'map/base.html' %}
+{% block content %}
+
+
+<div class="row results_pane">		
+		<div class="col-xs-12 col-md-4"><!-- Results Side Bar-->
+			<div class="col-xs-12">
+
+			{% block results_title %}
+			{% endblock %}
+			{% if not documents and not images and not contributors %}
+				<h3>No results.</h3>
+			{% else %}
+			<ul class="nav nav-tabs" role="tablist" id="docTabs">
+				{% if documents %}
+				<li role="presentation" class="active"><a href="#documents" aria-controls="documents" role="tab" data-toggle="tab">Documents <span class="badge">{{ documents|length }}</span></a></li>
+				{% endif %}
+				{% if images %}
+				<li role="presentation" class="{% if not documents %}active{% endif %}"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images <span class="badge">{{ images|length }}</span></a></li>
+				{% endif %}
+				{% if media %}
+				<li role="presentation" class="{% if not documents and not images %}active{% endif %}"><a href="#media" aria-controls="media" role="tab" data-toggle="tab">Media <span class="badge">{{ media|length }}</span></a></li>
+				{% endif %}
+				{% if contributors %}
+				<li role="presentation" class="{% if not documents and not media and not  images %}active{% endif %}"><a href="#contributors" aria-controls="contributors" role="tab" data-toggle="tab">Contributors <span class="badge">{{ contributors|length }}</span></a></li>
+				{% endif %}
+			</ul>
+			{% endif %}
+			{% block results %}
+			{% endblock %}
+
+			</div>
+		</div><!-- / Results side bar -->		
+		<div class="col-xs-12 col-md-8 map-results hidden-xs hidden-sm" id="map"></div>
+		
+		{% block results_script %}
+		{% endblock %}
+
+	</div>
+
+{% endblock %}
+{% block footer %}
+{% endblock %}

@@ -395,14 +395,29 @@ p#lightbox_caption, p#lightbox_image_author {
 }
 .results_pane {
 	height: 100%;
+	padding-right: 12px;
 }
 .results_pane .col-xs-12 {
 	height: 100%;
-	overflow: auto;
+	overflow-x: hidden;
+	overflow-y: hidden;
 	padding-right: 0;
 }
 .results_pane .map-results {
 	overflow: hidden;
+}
+.results_pane .nav-tabs {
+	margin-right: 12px;
+}
+
+.results_pane .tab-content {
+	overflow-x: hidden;
+	overflow-y: auto;
+	height: 85%;
+}
+
+.results_pane .tab-pane {
+	margin-right: 12px;
 }
 
 .footer p {
@@ -444,6 +459,17 @@ p.divider {
 	font-size: 14px;
 	font-style: italic;
 	line-height: 22px;
+}
+
+p.results-preview {
+	font-size: 14px;
+	font-style: italic;
+	line-height: 22px;
+	margin-bottom: 10px;
+}
+
+.highlighted {
+	background-color: rgba(51, 122, 183, 0.2);
 }
 
 /* Medium Editor */

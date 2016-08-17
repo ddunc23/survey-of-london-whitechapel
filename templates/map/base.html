@@ -32,6 +32,8 @@
 		<!-- Charts.js for Dashboard -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js"></script>
 		{% analytical_head_bottom %}
+		<!-- Slick (ick) Image Carousel CSS-->
+		<link rel="stylesheet" type="text/css" href="{% static 'slick/slick.css' %}"/>
 	</head>
 	<body data-spy="scroll" data-target="#fixed-nav">
 		{% analytical_body_top %}
@@ -68,7 +70,7 @@
 	    			</ul>
 	    			<form class="navbar-form navbar-right" role="search" action="{% url 'search_map' %}" type="get">
 				        <div class="form-group">
-				    	    <input type="text" class="form-control search-input" placeholder="Search Places" name="q">
+				    	    <input type="text" class="form-control search-input" placeholder="Search" name="q">
 				        </div>
 				        <button type="submit" class="btn btn-default search">Go</button>
 			      	</form>
@@ -118,5 +120,17 @@
 		</footer>
 		{% endblock %}
 		{% analytical_body_bottom %}
+		<!-- Slick JS -->
+		<script type="text/javascript" src="{% static 'slick/slick.min.js' %}"></script>
+		<script>
+
+		$(document).ready(function(){
+			$('.carousel').slick({
+				autoplay: true,
+				autoplaySpeed: 8000,
+				arrows: false,
+			});
+		});
+		</script>
 	</body>
 </html>

@@ -1,12 +1,25 @@
-{{ object.b_name }}
-{{ object.address }}
-{{ object.street }}
+{% if object.b_name %}{{ object.b_name }}{% endif %}
+{% if object.address %}{{ object.address }}{% endif %}
+{% if object.address %}{{ object.street }}{% endif %}
 {{ object.postcode }}
-{{ object.short_description }}
-{% for category in object.categories_set.all %} {{ category.name }} {% endfor %}
-{% for tag in object.tags.all %} {{ tag.name }} {% endfor %}
+{% if object.address %}{{ object.short_description }}{% endif %}
+{% if object.categories_set %}{% for category in object.categories_set.all %} {{ category.name }} {% empty %}{% endfor %}{% endif %}
+{% for tag in object.tags.all %} {{ tag.name }} {% empty %}{% endfor %}
 {% for document in object.document_set.all %} 
-	{{ document.title }} 
-	{{ document.body }} 
-	{% for tag in document.tags.all %} {{ tag.name }} {% endfor %}
+	{% if document.published == True %}
+		{{ document.title }} 
+		{{ document.body }}
+		{{ document.author }}
+		{{ document.author.userprofile.display_name }}
+		{% for tag in document.tags.all %} {{ tag.name }} {% empty %}{% endfor %}
+	{% endif %}
+{% endfor %}
+{% for image in object.image_set.all %}
+	{% if image.published == True %}
+		{{ image.title }}
+		{{ image.description }}
+		{{ image.author }}
+		{{ image.author.userprofile.display_name }}
+	{% endif %}
+{% empty %}
 {% endfor %}

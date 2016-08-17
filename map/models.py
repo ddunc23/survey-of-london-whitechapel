@@ -45,7 +45,7 @@ class Feature(models.Model):
 	"""A building footprint, open space, or other interactable vector object"""
 	id = models.PositiveSmallIntegerField(primary_key=True)
 	geom = models.MultiPolygonField(verbose_name='Footprint Geometry')
-	b_number = models.CharField(max_length=16,null=True, blank=True, verbose_name='Building Number')
+	b_number = models.CharField(max_length=16, null=True, blank=True, verbose_name='Building Number')
 	b_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='Building Name')
 	street = models.CharField(max_length=100, null=True, blank=True)
 	postcode = models.CharField(max_length=8)
@@ -85,6 +85,12 @@ class Feature(models.Model):
 	categories = models.ManyToManyField(Category, blank=True)
 	site = models.ForeignKey(Site, blank=True, null=True)
 	thumbnail = models.ImageField(upload_to=feature_directory_path, null=True, blank=True, verbose_name='Thumbnail Image')
+	THUMBNAIL_POSITION_CHOICES = (
+		('TOP', 'Top'),
+		('CENTRE', 'Centre'),
+		('BOTTOM', 'Bottom'),
+	)
+	thumbnail_position = models.CharField(max_length=6, choices=THUMBNAIL_POSITION_CHOICES, default='CENTRE', verbose_name='Header Image Alignment')
 	tags = TaggableManager(blank=True)
 
 	def __unicode__(self):

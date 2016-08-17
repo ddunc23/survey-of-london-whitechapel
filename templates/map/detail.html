@@ -1,7 +1,7 @@
 {% extends 'map/base.html' %}
 
 {% block content %}
-<div id="" class="map-small" {% if feature.thumbnail %} style="background: url('/media/{{ feature.thumbnail }}'); background-size: cover; background-position: center;" {% endif %} class="hidden-sm hidden-xs"></div>
+<div id="" class="map-small" {% if feature.thumbnail %} style="background: url('/media/{{ feature.thumbnail }}'); background-size: cover; background-position: {% if feature.thumbnail_position == 'TOP' %} top; {% elif feature.thumbnail_position == 'BOTTOM' %} bottom; {% else %} center;" {% endif %} {% endif %} class="hidden-sm hidden-xs"></div>
 <div class="container">
 	<div class="row">
 		<div class="col-md-3">
@@ -199,6 +199,7 @@
 							{% if embed.description %}
 								<p>{{ embed.description }}</p>
 							{% endif %}
+							<p>Contributed by <a href="{% url 'all_content_by_author' embed.author.id %}">{% if embed.author.userprofile.display_name %}{{ embed.author.userprofile.display_name }}{% else %}{{ embed.author }}{% endif %}</a></p>
 							{% endfor %}
 						</div>
 					</div>

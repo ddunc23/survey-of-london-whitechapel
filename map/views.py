@@ -153,17 +153,29 @@ def search_map(request):
 	"""Show search results on map"""
 	if request.GET['q']:
 		query = request.GET['q']
+	else:
+		return HttpResponseRedirect(reverse('site_home'))
 
-	return render(request, 'map/search_map.html', {'query': query})
+	sqs = SearchQuerySet().all().filter(content=query)
+
+	documents = sqs.models(Document).filter(published=True)
+	features = sqs.models(Feature)
+	images = sqs.models(Image).filter(published=True)
+	media = sqs.models(Media).filter(published=True)
+	contributors = sqs.models(User)
+
+	return render(request, 'map/search_map.html', {'query': query, 'documents': documents, 'features': features, 'images': images, 'contributors': contributors, 'media': media })
+
 
 def all_content_by_author(request, user):
-	"""Show all documents, images, and media by a single author. I'll display this as a list for the moment, but should there be a map as well?"""
+	"""Show all documents, images, and media by a single author."""
 	author = User.objects.get(id=user)
-	features = Feature.objects.filter(Q(document__author=user) | Q(image__author=user)).distinct('id')
-	documents = Document.objects.filter(author=user).filter(published=True)
-	images = Image.objects.filter(author=user).filter(published=True)
+	features = Feature.objects.filter(Q(document__author=author) | Q(image__author=user)).distinct('id')
+	documents = Document.objects.filter(author=author).filter(published=True)
+	images = Image.objects.filter(author=author).filter(published=True)
+	media = Media.objects.filter(author=author).filter(published=True)
 
-	return render(request, 'map/content_by_author.html', {'author': author, 'documents': documents, 'images': images, 'features': features})
+	return render(request, 'map/content_by_author.html', {'author': author, 'documents': documents, 'images': images, 'features': features, 'media': media })
 
 
 
@@ -647,7 +659,7 @@ def search_features(request):
 	sqs = SearchQuerySet().all()
 	if request.method == 'GET':
 		if request.GET['q']:
-			results = sqs.filter(content=request.GET['q'])
+			results = sqs.filter(content=request.GET['q']).models(Feature)
 			features = []
 			for result in results:
 				features.append(result.object)

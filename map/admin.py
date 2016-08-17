@@ -46,7 +46,7 @@ class FeatureAdmin(LeafletGeoAdmin):
 			'classes': ('wide',),
 		}),
 		('Catgeories, Site, Tags, and Thumbnail Image', {
-			'fields': ('categories', 'thumbnail', 'tags', 'site'),
+			'fields': ('categories', 'thumbnail', 'thumbnail_position', 'tags', 'site'),
 			'classes': ('wide',),
 		}),
 	)

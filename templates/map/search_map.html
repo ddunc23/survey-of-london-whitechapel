@@ -1,14 +1,81 @@
-{% extends 'map/base.html' %}
-{% block content %}
-		<div id="map" class="map-large"></div>
-		<script>
-			
-			var jsonUrl = '{% url "search_features" %}' + '?q=' + '{{ query }}';
-			
-			var title_box_title = 'Showing results for &ldquo;{{ query }}&rdquo;';
+{% extends 'map/results_base.html' %}
 
-			loadFeatures(jsonUrl, 'main', false);
 
-		</script>
+{% block results_title %}<h2>Search results for "{{ query|escape }}"</h2>{% endblock %}
 
+{% block results %}
+{% load highlight %}
+<div class="tab-content">
+	{% if documents %}
+	<div role="tabpanel" class="tab-pane active" id="documents">
+	{% for document in documents %}
+		<div>
+			<h3><a href="{% url 'detail' document.object.feature.id %}#{{ document.object.document_type }}">{{ document.title }}</a></h3>
+			<h4 class="small"><a href="{% url 'detail' document.object.feature.id %}">{{ document.object.feature }}</a> | <a href="{% url 'all_content_by_author' document.object.author.id %}">{% if document.object.author.userprofile.display_name %}{{ document.object.author.userprofile.display_name }}{% else %}{{ document.object.author }}{% endif %}</a></h4>
+			<p class="results-preview">{% highlight document.body with query %}</p>
+			{% for tag in document.object.tags.all %}
+				{% if query in tag.name or query|capfirst in tag.name %}<a href="{% url 'tag' tag %}" class="btn btn-default btn-xs tag">{{ tag }}</a> {% endif %}
+			{% endfor %}
+		</div>
+	{% endfor %}
+	</div>
+	{% endif %}
+	{% if images %}
+	<div role="tabpanel" class="tab-pane {% if not documents %}active{% endif %}" id="images">
+		{% load thumbnail %}
+		<br />
+		{% for image in images %}
+			<div class="media">
+				<div class="media-left">
+					<a href="{% url 'detail' image.object.id %}#images"><img src="{% thumbnail image.object.file 64x64 crop='0,0' %}" class="img-rounded"></a>
+				</div>
+				<div class="media-body">
+					<h3 class="media-heading"><a href="{% url 'detail' image.object.feature.id %}#images">{{ image.title }}</a></h3>
+					<h4 class="small"><a href="{% url 'detail' image.object.feature.id %}">{{ image.object.feature }}</a> | <a href="{% url 'all_content_by_author' image.object.author.id %}">{% if image.object.author.userprofile.display_name %}{{ image.object.author.userprofile.display_name }}{% else %}{{ image.object.author }}{% endif %}</a></h4>
+					{% if image.description %}
+						<p class="results-preview">{{ image.description|truncatechars:140 }}</p>
+					{% endif %}
+					{% for tag in image.object.tags.all %}
+						{% if query in tag.name or query|capfirst in tag.name %}<a href="{% url 'tag' tag %}" class="btn btn-default btn-xs tag">{{ tag }}</a> {% endif %}
+					{% endfor %}
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+	{% endif %}
+	{% if media %}
+	<div role="tabpanel" class="tab-pane {% if not documents and not images %}active{% endif %}" id="media">
+	<br />
+	{% load embed_video_tags %}
+	{% for item in media %}
+		{% video item.object.url 'small' %}
+		<h3><a href="{% url 'detail' item.object.feature.id %}#media">{{ item.title }}</a></h3>
+		<h4 class="small"><a href="{% url 'detail' item.object.feature.id %}">{{ item.object.feature }}</a> | <a href="{% url 'all_content_by_author' item.object.author.id %}">{% if item.object.author.userprofile.display_name %}{{ item.object.author.userprofile.display_name }}{% else %}{{ item.object.author }}{% endif %}</a></h4>
+		{% if item.description %}<p class="results-preview">{{ item.description|truncatechars:140 }}</p>{% endif %}
+		{% for tag in item.object.tags.all %}
+			{% if query in tag.name or query|capfirst in tag.name %}<a href="{% url 'tag' tag %}" class="btn btn-default btn-xs tag">{{ tag }}</a> {% endif %}
+		{% endfor %}
+		<hr />
+	{% endfor %}
+	</div>
+	{% endif %}
+	{% if contributors %}
+	<div role="tabpanel" class="tab-pane {% if not documents and not media and not images %}active{% endif %}" id="contributors">
+	{% for contributor in contributors %}
+		<h3><a href="{% url 'all_content_by_author' contributor.object.id %}">{% if contributor.object.userprofile.display_name %}{{ contributor.object.userprofile.display_name }}{% else %}{{ contributor.username }}{% endif %}</a></h3>
+		{% if contributor.object.userprofile.bio %}
+			<p class="results-preview">{{ contributor.object.userprofile.bio }}</p>
+		{% endif %}
+	{% endfor %}
+	</div>
+	{% endif %}
+</div><!-- / Tab Content -->
+{% endblock %}
+
+{% block results_script %}
+<script>	
+	var jsonUrl = '{% url "search_features" %}' + '?q=' + '{{ query }}';			
+	var title_box_title = 'Showing results for &ldquo;{{ query }}&rdquo;';
+	loadFeatures(jsonUrl, 'main', false);
+</script>
 {% endblock %}

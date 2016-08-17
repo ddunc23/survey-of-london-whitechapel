@@ -1,0 +1,5 @@
+{{ object.title }}
+{{ object.body }}
+{% if object.author.userprofile.display_name %}{{ object.author.userprofile.display_name }}{% else %}{{ object.author }}{% endif %}
+{% for tag in object.tags.all %} {{ tag.name }} {% endfor %}
+

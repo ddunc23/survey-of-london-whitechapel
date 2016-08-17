@@ -1,0 +1,2 @@
+{{ object.username }}
+{% if object.userprofile.display_name %}{{ object.userprofile.display_name }}{% endif %}

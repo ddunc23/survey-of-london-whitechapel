@@ -2,14 +2,39 @@
 
 {% block content %}
 
-<div class="jumbotron" style="background-image: url('/media/{{ page.banner_image }}');">
-	<div class="container">
+<div class="jumbotron">
+	
+	<style>
+		/*.carousel_image {
+			width: 100%;
+			position: absolute;
+			top: 0;
+		}*/
+		.carousel {
+			height: 600px;
+			width: 100%;
+			position: absolute;
+			top: 0;
+			overflow: hidden;
+			display: block;
+			z-index: 1;
+		}
+	</style>
+	<div class="container" style="position: relative; z-index: 2;">
 		<h1 class="text-center">{{ title }}</h1>
 		<h2 class="text-center">{{ page.title }} | Draft</h2>
 		<br />
 		<div class="text-center">
 			<a href="{% url 'map_home' %}" class="btn btn-primary btn-lg">Explore the Map</a>
 		</div>
+	</div>
+	<div class="carousel">
+		<div style="background-image: url('/media/{{ page.banner_image_1 }}'); background-size: cover; display: block; width: 100%; height: 600px; background-position: center center;'"></div>
+		<div style="background-image: url('/media/{{ page.banner_image_2 }}'); background-size: cover; display: block; width: 100%; height: 600px; background-position: center center;'"></div>
+		<div style="background-image: url('/media/{{ page.banner_image_3 }}'); background-size: cover; display: block; width: 100%; height: 600px; background-position: center center;'"></div>
+		<!--<div><img class="carousel_image" src="/media/{{ page.banner_image_1 }}" /></div>
+		<div><img class="carousel_image" src="/media/{{ page.banner_image_2 }}" /></div>
+		<div><img class="carousel_image" src="/media/{{ page.banner_image_3 }}" /></div>-->
 	</div>
 </div>
 

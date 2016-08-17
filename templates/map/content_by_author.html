@@ -1,56 +1,64 @@
-{% extends 'map/base.html' %}
+{% extends 'map/results_base.html' %}
 
-{% block content %}
-
-	<div class="row results_pane">		
-		<div class="col-xs-12 col-md-4"><!-- Results Side Bar-->
-			<div class="col-xs-12">
-				<h2>All Contributions from {% if author.userprofile.display_name %}{{ author.userprofile.display_name }}{% else %}{{ author }}{% endif %}</h2>
-				{% if author.userprofile.bio %}<p class="text-muted">{{ author.userprofile.bio }}</p>{% endif %}
-				<hr />
-				{% regroup documents by feature as document_list %}
-				<h3>Documents</h3>
-				{% for document in document_list %}
-				<h4>{{ document.grouper }}</h4>
-					<ul class="list-unstyled doc_list">
-					{% for item in document.list %}
-						<li><a href="{% url 'detail' item.feature.id %}#{{ item.document_type }}">{{ item.title }}</a><br /></li>
-					{% endfor %}
-					</ul>
-				{% endfor %}
-				<hr />
-
-				{% regroup images by feature as image_list %}
-				<h3>Images</h3>
-				{% load thumbnail %}
-				{% for image in image_list %}
-					<h4>{{ image.grouper }}</h4>
-					{% for item in image.list %}
-						<div class="media">
-							<div class="media-left">
-								<a href="{% url 'detail' item.feature.id %}#images"><img src="{% thumbnail item.file 64x64 crop='0,0' %}" class="img-rounded"></a>
-							</div>
-							<div class="media-body">
-								<h4 class="media-heading"><a href="{% url 'detail' item.feature.id %}#images">{{ item.title }}</a></h4>
-								<span class="small">{{ item.last_edited }}</span>
-							</div>
-						</div>
-					{% endfor %}
-				<br />
-				{% endfor %}
-				<hr />
-			</div>
-		</div><!-- / Results side bar -->
-		<div class="col-xs-12 col-md-8 map-results" id="map">
-		</div>
-		<script>
-			var jsonUrl = '{% url "features_by_author" author.id %}';
-			var title_box_title = 'Showing places with contributions from {{ author }}';
-			loadFeatures(jsonUrl, 'main', false);
-		</script>
-	</div>
-
-
+{% block results_title %}
+<h2>All Contributions from {% if author.userprofile.display_name %}{{ author.userprofile.display_name }}{% else %}{{ author }}{% endif %}</h2>
+{% if author.userprofile.bio %}<p class="text-muted">{{ author.userprofile.bio }}</p>{% endif %}
 {% endblock %}
-{% block footer %}
-{% endblock %} 
+{% block results %}
+
+
+<div class="tab-content">
+	{% if documents %}
+	<div role="tabpanel" class="tab-pane active" id="documents">
+	{% for document in documents %}
+		<div>
+			<h3><a href="{% url 'detail' document.feature.id %}#{{ document.document_type }}">{{ document.title }}</a></h3>
+			<h4 class="small"><a href="{% url 'detail' document.feature.id %}">{{ document.feature }}</a> | <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a></h4>
+			<p class="results-preview">{{ document.body|truncatechars:140|striptags }}</p>
+		</div>
+	{% endfor %}
+	</div>
+	{% endif %}
+	{% if images %}
+	<div role="tabpanel" class="tab-pane {% if not documents %}active{% endif %}" id="images">
+		{% load thumbnail %}
+		<br />
+		{% for image in images %}
+			<div class="media">
+				<div class="media-left">
+					<a href="{% url 'detail' image.id %}#images"><img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded"></a>
+				</div>
+				<div class="media-body">
+					<h3 class="media-heading"><a href="{% url 'detail' image.feature.id %}#images">{{ image.title }}</a></h3>
+					<h4 class="small"><a href="{% url 'detail' image.feature.id %}">{{ image.feature }}</a> | <a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a></h4>
+					{% if image.description %}
+						<p class="results-preview">{{ image.description|truncatechars:140 }}</p>
+					{% endif %}
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+	{% endif %}
+	{% if media %}
+	<div role="tabpanel" class="tab-pane {% if not documents and not images %}active{% endif %}" id="media">
+	<br />
+	{% load embed_video_tags %}
+	{% for item in media %}
+		{% video item.object.url 'small' %}
+		<h3><a href="{% url 'detail' item.feature.id %}#media">{{ item.title }}</a></h3>
+		<h4 class="small"><a href="{% url 'detail' item.feature.id %}">{{ item.feature }}</a> | <a href="{% url 'all_content_by_author' item.author.id %}">{% if item.author.userprofile.display_name %}{{ item.author.userprofile.display_name }}{% else %}{{ item.author }}{% endif %}</a></h4>
+		{% if item.description %}<p class="results-preview">{{ item.description|truncatechars:140 }}</p>{% endif %}
+		<hr />
+	{% endfor %}
+	</div>
+	{% endif %}
+</div><!-- / Tab Content -->
+{% endblock %}
+
+{% block results_script %}
+<script>
+	var jsonUrl = '/map/api/features/author/{{ author.id }}/';
+	var title_box_title = 'Showing places with contributions from {% if author.userprofile.display_name %}{{ author.userprofile.display_name }}{% else %}{{ author }}{% endif %}';
+	loadFeatures(jsonUrl, 'main', false);
+</script>
+{% endblock %}
