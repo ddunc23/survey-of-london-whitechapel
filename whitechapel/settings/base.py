@@ -53,8 +53,9 @@ INSTALLED_APPS = (
     'allauth.account',
     'allauth.socialaccount',
     # django-allauth login providers
-    'allauth.socialaccount.providers.facebook',
+    #'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
+    # Honey pot app to stop bad spammers that are bad
     'honeypot',
 )
 
