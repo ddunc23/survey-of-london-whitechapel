@@ -7,7 +7,7 @@
 			<a href="{% url 'detail' feature.id %}"><img src="{% thumbnail feature.thumbnail 300x170 crop='0,0' %}"></a>
 		</div>
 		<div class="feature-icons">
-				{% if documents %}<span class="glyphicon glyphicon-file" class="documentIcon" data-toggle="tooltip" data-placement="left" title="Research and Memories ({{ documents|length }})"></span> {% endif %}{% if images %}<span class="glyphicon glyphicon-picture" class="imageIcon" data-toggle="tooltip" data-placement="top" title="Images ({{ images|length }})"></span> {% endif %}{% if media %}<span class="glyphicon glyphicon-play" class="mediaIcon" data-toggle="tooltip" data-placement="bottom" title="Audio and Video ({{ media.length }})"></span> {% endif %}{% if feature.site %}<span class="glyphicon glyphicon-home" class="siteIcon" data-toggle="tooltip" data-placement="right" title="Part of {{ feature.site }}"></span>{% endif %}
+				{% if documents %}<span class="glyphicon glyphicon-file" class="documentIcon" data-toggle="tooltip" data-placement="left" title="Research and Memories ({{ documents|length }})"></span> {% endif %}{% if images %}<span class="glyphicon glyphicon-picture" class="imageIcon" data-toggle="tooltip" data-placement="top" title="Images ({{ images|length }})"></span> {% endif %}{% if media %}<span class="glyphicon glyphicon-play" class="mediaIcon" data-toggle="tooltip" data-placement="bottom" title="Audio and Video ({{ media|length }})"></span> {% endif %}{% if feature.site %}<span class="glyphicon glyphicon-home" class="siteIcon" data-toggle="tooltip" data-placement="right" title="Part of {{ feature.site }}"></span>{% endif %}
 			</div>
 	
 	<div class="feature-overview-footer">

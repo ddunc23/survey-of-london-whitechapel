@@ -138,7 +138,7 @@ def category(request, category):
 def tag(request, tag):
 	"""Feetures by tag"""
 	tag = tag
-	features = Feature.objects.filter(Q(tags__name__in=[tag]) | Q(document__tags__name__in=[tag]) | Q(image__tags__name__in=[tag]) | Q(media__tags__name__in=[tag]))
+	features = Feature.objects.filter(Q(tags__name__in=[tag]) | Q(document__tags__name__in=[tag]) | Q(image__tags__name__in=[tag]) | Q(media__tags__name__in=[tag])).distinct()
 	documents = Document.objects.filter(tags__name__in=[tag])
 	images = Image.objects.filter(tags__name__in=[tag])
 	media = Media.objects.filter(tags__name__in=[tag])
@@ -164,7 +164,7 @@ def search_map(request):
 	sqs = SearchQuerySet().all().filter(content=query)
 
 	documents = sqs.models(Document).filter(published=True)
-	features = sqs.models(Feature).filter(name__exact=query)
+	features = sqs.models(Feature).filter_or(name__exact=query, address__exact=query)
 	images = sqs.models(Image).filter(published=True)
 	media = sqs.models(Media).filter(published=True)
 	contributors = sqs.models(User)
@@ -213,7 +213,7 @@ def ugc_choice(request, feature):
 @login_required
 def ugc_thanks(request, feature):
 	"""Another simple view to let users know that they've done something and we're grateful"""
-	feature = Feature.objects.get(id=feature)
+	feature = get_object_or_404(Feature, id=feature)
 	return render(request, 'map/ugc_thanks.html', {'feature': feature})
 
 

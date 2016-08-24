@@ -10,7 +10,10 @@
 	<div role="tabpanel" class="tab-pane active" id="features">
 		{% for feature in features %}
 			<h3><a href="{% url 'detail' feature.object.id %}">{{ feature.object }}</a></h3>
-			<p class="results-preview">{{ feature.object.short_description }}</p>
+			{% if feature.object.short_description %}<p class="results-preview">{{ feature.object.short_description }}</p>{% endif %}
+			{% for tag in feature.object.tags.all %}
+				{% if query in tag.name or query|capfirst in tag.name %}<a href="{% url 'tag' tag %}" class="btn btn-default btn-xs tag">{{ tag }}</a> {% endif %}
+			{% endfor %}
 		{% endfor %}
 	</div>
 	{% endif %}
@@ -53,17 +56,17 @@
 	{% endif %}
 	{% if media %}
 	<div role="tabpanel" class="tab-pane {% if not features and not documents and not images %}active{% endif %}" id="media">
-	<br />
-	{% load embed_video_tags %}
 	{% for item in media %}
-		{% video item.object.url 'small' %}
-		<h3><a href="{% url 'detail' item.object.feature.id %}#media">{{ item.title }}</a></h3>
-		<h4 class="small"><a href="{% url 'detail' item.object.feature.id %}">{{ item.object.feature }}</a> | <a href="{% url 'all_content_by_author' item.object.author.id %}">{% if item.object.author.userprofile.display_name %}{{ item.object.author.userprofile.display_name }}{% else %}{{ item.object.author }}{% endif %}</a></h4>
-		{% if item.description %}<p class="results-preview">{{ item.description|truncatechars:140 }}</p>{% endif %}
-		{% for tag in item.object.tags.all %}
+		<div>
+			<h3><a href="{% url 'detail' item.object.feature.id %}#{{ item.object.document_type }}">{{ item.title }}</a></h3>
+			<h4 class="small"><a href="{% url 'detail' item.object.feature.id %}">{{ item.object.feature }}</a> | <a href="{% url 'all_content_by_author' item.object.author.id %}">{% if item.object.author.userprofile.display_name %}{{ item.object.author.userprofile.display_name }}{% else %}{{ item.object.author }}{% endif %}</a> | {{ item.object.created }}</h4>
+			{% if item.description %}
+			<p class="results-preview">{{ item.description|truncatewords_html:20|striptags }}</p>
+			{% for tag in item.object.tags.all %}
 			{% if query in tag.name or query|capfirst in tag.name %}<a href="{% url 'tag' tag %}" class="btn btn-default btn-xs tag">{{ tag }}</a> {% endif %}
-		{% endfor %}
-		<hr />
+			{% endfor %}
+			{% endif %}
+		</div>
 	{% endfor %}
 	</div>
 	{% endif %}

@@ -423,7 +423,7 @@ p#lightbox_caption, p#lightbox_image_author {
 .results_pane .tab-content {
 	overflow-x: hidden;
 	overflow-y: auto;
-	height: 85%;
+	height: 80%;
 }
 
 .results_pane .tab-pane {

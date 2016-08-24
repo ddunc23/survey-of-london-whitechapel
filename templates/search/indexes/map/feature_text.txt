@@ -23,3 +23,12 @@
 	{% endif %}
 {% empty %}
 {% endfor %}
+{% for item in object.media_set.all %}
+	{% if item.published == True %}
+		{{ item.title }}
+		{{ item.description }}
+		{{ item.author }}
+		{{ item.author.userprofile.display_name }}
+	{% endif %}
+{% empty %}
+{% endfor %}

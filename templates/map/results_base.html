@@ -8,10 +8,16 @@
 
 			{% block results_title %}
 			{% endblock %}
-			{% if not features and not documents and not images and not contributors %}
-				<h3>No documents or images found.</h3>
+			{% if not features and not documents and not images and not media and not contributors %}
+				<h3>No results found. Search again?</h3>
+				<form class="form-inline" role="search" action="{% url 'search_map' %}" type="get">
+			        
+			    	    <input type="text" class="form-control search-input" placeholder="Search" name="q">
+	
+			        <button type="submit" class="btn btn-default search">Go</button>
+		      	</form>
 			{% else %}
-			<ul class="nav nav-tabs" role="tablist" id="docTabs">
+			<ul class="nav nav-pills" role="tablist" id="docTabs">
 				{% if features %}
 				<li role="presentation" class="active"><a href="#features" aria-controls="documents" role="tab" data-toggle="tab">Places <span class="badge">{{ features|length }}</span></a></li>
 				{% endif %}
