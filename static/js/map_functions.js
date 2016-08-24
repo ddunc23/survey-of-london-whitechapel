@@ -267,9 +267,6 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				$('.leaflet-control').mouseover(function() {
 					buildings.eachLayer(function(layer) {
-						//if (layer._options['color'] != '#1AA9FF') {
-						//	layer.setStyle(myStyle);
-						//}
 					layer.removeEventListener();
 					})
 				});
@@ -299,16 +296,15 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 					})
 				});
 
-				$('.map').mouseover(function() {
+				/* This pair of functions ensures that when someone presses their 'back' button from a 'detail' view, map interaction is enabled */
+				$('.navbar').mouseenter(function() {
+					buildings.eachLayer(function(layer) {
+						layer.removeEventListener();
+					})
+				});
+
+				$('.navbar').mouseleave(function() {
 					buildings.eachLayer(function(layer) {			
-						/*if (layer.feature.properties) {
-							if (layer.feature.properties.b_name) {
-								layer.bindPopup('<a href="feature/' + layer.feature.id + '/detail/">' + layer.feature.properties.b_name + '</a>');
-							}
-							else if (layer.feature.properties.address) {
-								layer.bindPopup('<a href="feature/' + layer.feature.id + '/detail/">' + layer.feature.properties.address + '</a>');
-							}
-						}*/
 						layer.on("mouseover", function(e) {
 							setFootprintColour(layer, e);
 							info.update(layer.feature.properties);

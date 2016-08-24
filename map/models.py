@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Q
+from django.db.models import F, Q
 from django.contrib.auth.models import User
 from djgeojson.fields import PolygonField
 from django.contrib.gis.db import models
@@ -18,6 +18,50 @@ def feature_directory_path(instance, filename):
 		return 'uploads/features/{0}/{1}'.format(feature.id, filename)
 	except:
 		return 'uploads/features/{0}/{1}'.format(instance.id, filename)
+
+
+def update_feature_count(feature):
+	"""Tallies the 'count' variable for features. Run when features, documents, images, or media are saved"""
+	if feature.site != None:
+		# Only update all features in a site if the feature being saved is on a site!
+		site = feature.site
+		site_features = Feature.objects.filter(site=site)
+		aggregated_items = []
+		for s_feature in site_features: 
+			all_docs = Document.objects.filter(published=True, feature=s_feature)
+			all_images = Image.objects.filter(published=True, feature=s_feature)
+			all_media = Media.objects.filter(published=True, feature=s_feature)
+			agg_docs = all_docs.filter(aggregate=True)
+			agg_images = all_images.filter(aggregate=True)
+			agg_media = all_media.filter(aggregate=True)
+
+			if len(agg_docs) > 0:
+				for doc in agg_docs:
+					aggregated_items.append(doc)
+			if len(agg_images) > 0:
+				for image in agg_images:
+					aggregated_items.append(image)
+			if len(agg_media) > 0:
+				for item in agg_media:
+					aggregated_items.append(item)
+
+			# Tally up all the un-aggregated UGC attached to s_feature
+			count = all_docs.filter(aggregate=False).count() + all_images.filter(aggregate=False).count() + all_media.filter(aggregate=False).count()
+			# Update s_feature.count using .update() so as not get stuck in a .save() loop
+			Feature.objects.filter(id=s_feature.id).update(count=count)
+
+		# Now add the total number of aggregated items to each feature on the site, again using .update() rather than .save()
+		print aggregated_items
+		site_features.update(count=F('count') + len(aggregated_items))
+
+	else:
+		# If feature.site is None, just tally the 'count' as normal
+		all_docs = Document.objects.filter(published=True, feature=feature).count()
+		all_images = Image.objects.filter(published=True, feature=feature).count()
+		all_media = Media.objects.filter(published=True, feature=feature).count()
+		feature.count = all_docs + all_images + all_media
+
+
 
 
 class Category(models.Model):
@@ -99,6 +143,10 @@ class Feature(models.Model):
 		else:
 			return self.b_name
 
+	def save(self, *args, **kwargs):
+		update_feature_count(self)
+		super(Feature, self).save(*args, **kwargs)
+
 	class Meta:
 		verbose_name = 'Building'
 
@@ -125,27 +173,6 @@ feature_mapping = {
     'address' : 'Address',
     'geom' : 'MULTIPOLYGON',
 }
-
-
-
-def update_feature_count(ugc_item):
-	"""Update feature.count whenever a new document, image, or media item is added"""
-	if ugc_item.feature.site != None:
-		on_this_site = Feature.objects.filter(site=ugc_item.feature.site)
-		for feature in on_this_site:
-			documents = Document.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True).count()
-			images = Image.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True).count()
-			media = Media.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True).count()
-			count = documents + images + media
-			feature.count = count
-			feature.save()
-
-	else:
-		documents = Document.objects.filter(feature=ugc_item.feature).filter(published=True).count()
-		images = Image.objects.filter(feature=ugc_item.feature).filter(published=True).count()
-		media = Media.objects.filter(feature=ugc_item.feature).filter(published=True).count()
-		ugc_item.feature.count = documents + images + media
-		ugc_item.feature.save()
 
 
 class Document(models.Model):
@@ -192,12 +219,12 @@ class Document(models.Model):
 		body_markdown = h.handle(self.body)
 		self.body_processed = markdown.markdown(body_markdown, extensions=['markdown.extensions.footnotes'])
 		super(Document, self).save(*args, **kwargs)
-		update_feature_count(self)
+		update_feature_count(self.feature)
 
 	def delete(self, *args, **kwargs):
 		"""If a document is deleted, update the feature count to reflect this"""
 		super(Document, self).delete(*args, **kwargs)
-		update_feature_count(self)
+		update_feature_count(self.feature)
 
 
 class Image(models.Model):
@@ -220,7 +247,7 @@ class Image(models.Model):
 	def save(self, *args, **kwargs):
 		"""Update the 'count' attribute of the feature"""
 		super(Image, self).save(*args, **kwargs)
-		update_feature_count(self)
+		update_feature_count(self.feature)
 
 	def delete(self, *args, **kwargs):
 		"""If an image is deleted, update the feature count to reflect this"""
@@ -251,9 +278,9 @@ class Media(models.Model):
 	def save(self, *args, **kwargs):
 		"""Update the 'count' attribute of the feature"""
 		super(Media, self).save(*args, **kwargs)
-		update_feature_count(self)
+		update_feature_count(self.feature)
 
 	def delete(self, *args, **kwargs):
 		"""If an image is deleted, update the feature count to reflect this"""
 		super(Media, self).delete(*args, **kwargs)
-		update_feature_count(self)
+		update_feature_count(self.feature)
