@@ -131,14 +131,19 @@ def detail(request, feature):
 def category(request, category):
 	"""Features by category"""
 	category = Category.objects.get(id=category)
+	features = Feature.objects.filter(categories=category)
 
-	return render(request, 'map/category.html', {'title': 'Survey of London', 'category': category })
+	return render(request, 'map/category.html', {'title': 'Survey of London', 'category': category, 'features': features })
 
 def tag(request, tag):
 	"""Feetures by tag"""
 	tag = tag
+	features = Feature.objects.filter(Q(tags__name__in=[tag]) | Q(document__tags__name__in=[tag]) | Q(image__tags__name__in=[tag]) | Q(media__tags__name__in=[tag]))
+	documents = Document.objects.filter(tags__name__in=[tag])
+	images = Image.objects.filter(tags__name__in=[tag])
+	media = Media.objects.filter(tags__name__in=[tag])
 
-	return render(request, 'map/tag.html', {'title': 'Survey of London', 'tag': tag })
+	return render(request, 'map/tag.html', {'title': 'Survey of London', 'tag': tag, 'features': features })
 
 def date_range(request, build_date):
 	"""Features by date range"""
@@ -159,7 +164,7 @@ def search_map(request):
 	sqs = SearchQuerySet().all().filter(content=query)
 
 	documents = sqs.models(Document).filter(published=True)
-	features = sqs.models(Feature)
+	features = sqs.models(Feature).filter(name__exact=query)
 	images = sqs.models(Image).filter(published=True)
 	media = sqs.models(Media).filter(published=True)
 	contributors = sqs.models(User)
@@ -170,7 +175,7 @@ def search_map(request):
 def all_content_by_author(request, user):
 	"""Show all documents, images, and media by a single author."""
 	author = User.objects.get(id=user)
-	features = Feature.objects.filter(Q(document__author=author) | Q(image__author=user)).distinct('id')
+	# features = Feature.objects.filter(Q(document__author=author) | Q(image__author=user)).distinct('id')
 	documents = Document.objects.filter(author=author).filter(published=True)
 	images = Image.objects.filter(author=author).filter(published=True)
 	media = Media.objects.filter(author=author).filter(published=True)
@@ -192,8 +197,11 @@ def user_overview(request):
 	images = Image.objects.filter(author=user)
 	pending_images = images.filter(pending=True)
 	published_images = images.filter(published=True)
+	media = Media.objects.filter(author=user)
+	pending_media = media.filter(pending=True)
+	published_media = media.filter(published=True)
 
-	return render(request, 'map/user_overview.html', {'user': user, 'documents': documents, 'published_docs': published_docs, 'draft_docs': draft_docs, 'pending_docs': pending_docs, 'images': images, 'pending_images': pending_images})
+	return render(request, 'map/user_overview.html', {'user': user, 'documents': documents, 'published_docs': published_docs, 'draft_docs': draft_docs, 'pending_docs': pending_docs, 'images': images, 'pending_images': pending_images, 'published_images': published_images, 'pending_media': pending_media, 'published_media': published_media})
 
 @login_required
 def ugc_choice(request, feature):

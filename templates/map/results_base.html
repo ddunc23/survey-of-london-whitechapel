@@ -8,21 +8,24 @@
 
 			{% block results_title %}
 			{% endblock %}
-			{% if not documents and not images and not contributors %}
+			{% if not features and not documents and not images and not contributors %}
 				<h3>No documents or images found.</h3>
 			{% else %}
 			<ul class="nav nav-tabs" role="tablist" id="docTabs">
+				{% if features %}
+				<li role="presentation" class="active"><a href="#features" aria-controls="documents" role="tab" data-toggle="tab">Places <span class="badge">{{ features|length }}</span></a></li>
+				{% endif %}
 				{% if documents %}
-				<li role="presentation" class="active"><a href="#documents" aria-controls="documents" role="tab" data-toggle="tab">Documents <span class="badge">{{ documents|length }}</span></a></li>
+				<li role="presentation" class="{% if not features %}active{% endif %}"><a href="#documents" aria-controls="documents" role="tab" data-toggle="tab">Research and Memories <span class="badge">{{ documents|length }}</span></a></li>
 				{% endif %}
 				{% if images %}
-				<li role="presentation" class="{% if not documents %}active{% endif %}"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images <span class="badge">{{ images|length }}</span></a></li>
+				<li role="presentation" class="{% if not features and not documents %}active{% endif %}"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images <span class="badge">{{ images|length }}</span></a></li>
 				{% endif %}
 				{% if media %}
-				<li role="presentation" class="{% if not documents and not images %}active{% endif %}"><a href="#media" aria-controls="media" role="tab" data-toggle="tab">Media <span class="badge">{{ media|length }}</span></a></li>
+				<li role="presentation" class="{% if not features and not documents and not images %}active{% endif %}"><a href="#media" aria-controls="media" role="tab" data-toggle="tab">Media <span class="badge">{{ media|length }}</span></a></li>
 				{% endif %}
 				{% if contributors %}
-				<li role="presentation" class="{% if not documents and not media and not  images %}active{% endif %}"><a href="#contributors" aria-controls="contributors" role="tab" data-toggle="tab">Contributors <span class="badge">{{ contributors|length }}</span></a></li>
+				<li role="presentation" class="{% if not features and not documents and not media and not images %}active{% endif %}"><a href="#contributors" aria-controls="contributors" role="tab" data-toggle="tab">Contributors <span class="badge">{{ contributors|length }}</span></a></li>
 				{% endif %}
 			</ul>
 			{% endif %}

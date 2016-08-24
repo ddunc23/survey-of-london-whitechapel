@@ -6,8 +6,16 @@
 {% block results %}
 {% load highlight %}
 <div class="tab-content">
+	{% if features %}
+	<div role="tabpanel" class="tab-pane active" id="features">
+		{% for feature in features %}
+			<h3><a href="{% url 'detail' feature.object.id %}">{{ feature.object }}</a></h3>
+			<p class="results-preview">{{ feature.object.short_description }}</p>
+		{% endfor %}
+	</div>
+	{% endif %}
 	{% if documents %}
-	<div role="tabpanel" class="tab-pane active" id="documents">
+	<div role="tabpanel" class="tab-pane {% if not features %}active{% endif %}" id="documents">
 	{% for document in documents %}
 		<div>
 			<h3><a href="{% url 'detail' document.object.feature.id %}#{{ document.object.document_type }}">{{ document.title }}</a></h3>
@@ -21,7 +29,7 @@
 	</div>
 	{% endif %}
 	{% if images %}
-	<div role="tabpanel" class="tab-pane {% if not documents %}active{% endif %}" id="images">
+	<div role="tabpanel" class="tab-pane {% if not features and not documents %}active{% endif %}" id="images">
 		{% load thumbnail %}
 		<br />
 		{% for image in images %}
@@ -44,7 +52,7 @@
 	</div>
 	{% endif %}
 	{% if media %}
-	<div role="tabpanel" class="tab-pane {% if not documents and not images %}active{% endif %}" id="media">
+	<div role="tabpanel" class="tab-pane {% if not features and not documents and not images %}active{% endif %}" id="media">
 	<br />
 	{% load embed_video_tags %}
 	{% for item in media %}
@@ -60,7 +68,7 @@
 	</div>
 	{% endif %}
 	{% if contributors %}
-	<div role="tabpanel" class="tab-pane {% if not documents and not media and not images %}active{% endif %}" id="contributors">
+	<div role="tabpanel" class="tab-pane {% if not features and not documents and not media and not images %}active{% endif %}" id="contributors">
 	{% for contributor in contributors %}
 		<h3><a href="{% url 'all_content_by_author' contributor.object.id %}">{% if contributor.object.userprofile.display_name %}{{ contributor.object.userprofile.display_name }}{% else %}{{ contributor.username }}{% endif %}</a></h3>
 		{% if contributor.object.userprofile.bio %}

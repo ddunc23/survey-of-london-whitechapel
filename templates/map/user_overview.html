@@ -4,108 +4,119 @@
 <div class="container">
 	<div class="row">
 		<div class="col-xs-12 col-md-8 col-md-offset-2 content">
-			{% if request.user = user %}
+			{% if request.user == user %}
 				<h1>Your Contributions</h1>
 				<ul class="nav nav-tabs" role="tablist" id="contentTabs">
-					<li role="presentation" class="active"><a href="#drafts" aria-controls="drafts" role="tab" data-toggle="tab">Drafts</a></li>
-					<li role="presentation"><a href="#pending" aria-controls="pending" role="tab" data-toggle="tab">Pending</a></li>
-					<li role="presentation"><a href="#published" aria-controls="published" role="tab" data-toggle="tab">Published</a></li>
+					<li role="presentation" class="active"><a href="#pending" aria-controls="pending" role="tab" data-toggle="tab">In Moderation</a></li>
+					<li role="presentation"><a href="#drafts" aria-controls="drafts" role="tab" data-toggle="tab">Drafts</a></li>
+					<li role="presentation"><a href="#published" aria-controls="published" role="tab" data-toggle="tab">Research and Memories</a></li>
 					<li role="presentation"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images</a></li>
 					<li role="presentation"><a href="#media" aria-controls="media" role="tab" data-toggle="tab">Media</a></li>
 				</ul>
 				<div class="tab-content">
-					<div role="tabpanel" class="tab-pane active" id="drafts">
-						<h2>Drafts</h2>
-						{% if not draft_docs %}
-							<p>You don't have any drafts.</p>
-						{% else %}
-							{% for doc in draft_docs %}
-								<h3><a href="{% url 'edit_document' doc.feature.id doc.id %}">{{ doc.title }}</a><br /><span class="small">{{ doc.feature }} | Last edited {{ doc.last_edited }}</span></h3>
-								{{ doc.body|safe|truncatewords_html:40 }}
-							{% endfor %}
-						{% endif %}
-					</div>
-					<div role="tabpanel" class="tab-pane" id="pending">
-						<h2>Pending</h2>
+					<div role="tabpanel" class="tab-pane active" id="pending">
+						<h3 class="text-muted">You'll be notified by email as soon as these have been published on the site.</h3>
 						{% if not pending_docs and not pending_images %}
 							<p>You don't have any pending submissions.</p>
 						{% else %}
+						<h2>Research and Memories</h2>
 							{% for doc in pending_docs %}
-								<h3>{{ doc.title }}<br /><span class="small"><a href="{% url 'detail' doc.feature.id %}">{{ doc.feature }}</a> | Submitted {{ doc.last_edited }}</span></h3>
-								{{ doc.body|safe|truncatewords_html:40 }}
+								<h3>{{ doc.title }}<br /><span class="small"><a href="{% url 'detail' doc.feature.id %}">{{ doc.feature }}</a> | Submitted {{ doc.created }}</span></h3>
+								<p class="results-preview">{{ doc.body|safe|truncatewords_html:40|striptags }}</p>
+							{% endfor %}
+						{% endif %}
+						<hr />
+						{% load thumbnail %}
+						<h2>Images</h2>
+						{% for image in pending_images %}
+						<div class="media">
+							<div class="media-left">
+								<a href="{% url 'detail' image.feature.id %}"><img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded"></a>
+							</div>
+							<div class="media-body">
+								<h3 class="media-heading"><a href="{% url 'detail' image.feature.id %}">{{ image.title }}</a></h3>
+								<h4 class="small"><a href="{% url 'detail' image.feature.id %}">{{ image.feature }}</a> | Submitted {{ image.created }}
+								{% if image.description %}
+									<p class="results-preview">{{ image.description|truncatechars:140 }}</p>
+								{% endif %}
+							</div>
+						</div>
+						{% endfor %}
+						<hr />
+						{% if pending_media %}
+						<h3>Audio and Video</h3>
+						{% load embed_video_tags %}
+						{% for item in pending_media %}
+							{% video item.object.url 'small' %}
+							<h3><a href="{% url 'detail' item.feature.id %}">{{ item.title }}</a></h3>
+							<h4 class="small"><a href="{% url 'detail' item.feature.id %}">{{ item.feature }}</a> | Submitted {{ item.created }}</h4>
+							{% if item.description %}<p class="results-preview">{{ item.description|truncatechars:140 }}</p>{% endif %}
+							{% for tag in item.object.tags.all %}
+								{% if query in tag.name or query|capfirst in tag.name %}<a href="{% url 'tag' tag %}" class="btn btn-default btn-xs tag">{{ tag }}</a> {% endif %}
+							{% endfor %}
+						{% endfor %}
+						{% endif %}
+					</div>
+					<div role="tabpanel" class="tab-pane" id="drafts">
+						{% if not draft_docs %}
+							<h3 class="text-muted">You don't have any drafts.</h3>
+						{% else %}
+							{% for doc in draft_docs %}
+								<h3><a href="{% url 'edit_document' doc.feature.id doc.id %}">{{ doc.title }}</a><br /><span class="small">{{ doc.feature }} | Last edited {{ doc.last_edited }}</span></h3>
+								<p class="results-preview">{{ doc.body|safe|truncatewords_html:40|striptags }}</p>
 							{% endfor %}
 						{% endif %}
 					</div>
 					<div role="tabpanel" class="tab-pane" id="published">
-						<h2>Published</h2>
 						{% if not published_docs %}
-							<p>You don't have any published documents yet.</p>
+							<h3 class="text-muted">You don't have any published documents yet.</h3>
 						{% else %}
 							{% for doc in published_docs %}
-								<h3><a href="{% url 'detail' doc.feature.id %}#{{ doc.title|slugify }}">{{ doc.title }}</a><br /><span class="small">{{ doc.feature }} | Published {{ doc.last_edited }}</span></h3>
-								{{ doc.body|safe|truncatewords_html:40 }}
+								<h3><a href="{% url 'detail' doc.feature.id %}#{{ doc.title|slugify }}">{{ doc.title }}</a><br /><span class="small"><a href="{% url 'detail' doc.feature.id %}">{{ doc.feature }}</a> | Published {{ doc.last_edited }}</span></h3>
+								<p class="results-preview">{{ doc.body|safe|truncatewords_html:40|striptags }}</p>
 							{% endfor %}
 						{% endif %}
 					</div>
 					<div role="tabpanel" class="tab-pane" id="images">
-						<h2>Images</h2>
-						{% if not images %}
-							<p>You haven't uploaded any images yet</p>
+						{% if not published_images %}
+							<h3 class="text-muted">You haven't had any images published yet</h3>
 						{% else %}
-							<div class="row">
-							{% load thumbnail %}
-							{% for image in images %}
-								<div class="col-md-4">
-									<div class="item-card">
-										<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}">
-										<caption>{% if image.feature.b_name %}{{ image.feature.b_name }}{% else %}{{ image.feature.address }}{% endif %}</caption></a>
-									</div>
-								</div>	
-							{% endfor %}
+						<br />
+						{% for image in published_images %}
+						<div class="media">
+							<div class="media-left">
+								<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded"></a>
 							</div>
+							<div class="media-body">
+								<h3 class="media-heading"><a href="{% url 'detail' image.feature.id %}#images">{{ image.title }}</a></h3>
+								<h4 class="small"><a href="{% url 'detail' image.feature.id %}">{{ image.feature }}</a> | Submitted {{ image.created }}
+								{% if image.description %}
+									<p class="results-preview">{{ image.description|truncatechars:140 }}</p>
+								{% endif %}
+							</div>
+						</div>
+						{% endfor %}
 						{% endif %}
 					</div>
 					<div role="tabpanel" class="tab-pane" id="media">
-						<h2>Media</h2>
+						{% if not published_media %}
+							<h3 class="text-muted">You haven't had any audio or video published yet</h3>
+						{% else %}
+						{% load embed_video_tags %}
+						{% for item in published_media %}
+							{% video item.object.url 'small' %}
+							<h3><a href="{% url 'detail' item.feature.id %}#media">{{ item.title }}</a></h3>
+							<h4 class="small"><a href="{% url 'detail' item.feature.id %}">{{ item.feature }}</a> | Submitted {{ item.created }}</h4>
+							{% if item.description %}<p class="results-preview">{{ item.description|truncatechars:140 }}</p>{% endif %}
+							{% for tag in item.object.tags.all %}
+								{% if query in tag.name or query|capfirst in tag.name %}<a href="{% url 'tag' tag %}" class="btn btn-default btn-xs tag">{{ tag }}</a> {% endif %}
+							{% endfor %}
+							<hr />
+						{% endfor %}
+						{% endif %}
 					</div>
 				</div>
-				
-
-				<!--<h2>Words</h2>
-				{% if documents %}
-						<h3>Drafts</h3>
-						{% if draft_docs %}
-							<ul class="list-unstyled doc_list">
-							{% for document in draft_docs %}
-								{% if document.pending != True %}
-									<li><a href="{% url 'edit_document' document.feature.id document.id %}">{{ document.title }}</a><span class="text-muted"> | <a href="{% url 'detail' document.feature.id %}">{{ document.feature }}</a></span><br /><span class="small text-muted">Last edited {{ document.last_edited }}</span></li>
-								{% endif %}
-							{% endfor %}
-							</ul>
-						{% else %}
-						<p><span class="text-muted">You have no drafts.</span></p>
-						{% endif %}
-						{% if pending_docs %}
-							<h3>Pending</h3>
-							<ul class="list-unstyled doc_list">
-							{% for document in pending_docs %}
-								<li>{{ document.title }}<span class="text-muted"> | <a href="{% url 'detail' document.feature.id %}">{{ document.feature }}</a></span><br /><span class="small text-muted">Submitted on {{ document.last_edited }}</span></li>
-							{% endfor %}
-							</ul>
-						{% endif %}
-						{% if published_docs %}
-							<h3>Published</h3>
-							<ul class="list-unstyled doc_list">
-							{% for document in published_docs %}
-								<li><a href="{% url 'detail' document.feature.id %}#{{ document.title|slugify }}">{{ document.title }}</a><span class="text-muted"> | <a href="{% url 'detail' document.feature.id %}">{{ document.feature }}</a></span><br /><span class="small text-muted">Published on {{ document.last_edited }}</span></li></li>
-							{% endfor %}
-							</ul>
-						{% endif %}
-					</ul>
-				{% else %}
-					<p>You haven't written any stories yet.</p>
-				{% endif %}
-			{% endif %}-->
+			{% endif %}
 		</div>
 	</div>
 </div>

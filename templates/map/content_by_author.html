@@ -6,8 +6,11 @@
 {% endblock %}
 {% block results %}
 
+{{ features }}
 
 <div class="tab-content">
+	{% if features %}
+	{% endif %}
 	{% if documents %}
 	<div role="tabpanel" class="tab-pane active" id="documents">
 	{% for document in documents %}

@@ -5,20 +5,20 @@ var editor = new MediumEditor('#id_body', {
 	}
 });
 
-var hidden = false;
+var hidden = true;
 
 $('.toggle-help').click(function(e) {
 	if (hidden == false) {
 		$('.editor-help').animate({
 			height: '60px',	
 		});
-		$('.toggle-help').html('Show Help');
+		$('.toggle-help').html('Show Guide');
 		hidden = true;
 	} else {
 		$('.editor-help').animate({
 			height: '270px',	
 		});
-		$('.toggle-help').html('Hide Help');
+		$('.toggle-help').html('Hide Guide');
 		hidden = false;
 	}
 });

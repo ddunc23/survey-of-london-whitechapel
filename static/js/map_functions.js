@@ -59,10 +59,10 @@ function setDocNumberStyle(layer) {
 	if (count == 0) {
 		layer.setStyle({fillOpacity: 0});
 	} else if (count >= 1 && count <= 2) {
-		layer.setStyle({fillOpacity: 0.4});
+		layer.setStyle({fillOpacity: 0.2});
 	} else if (count >= 3 && count <= 6) {
 		layer.setStyle({fillOpacity: 0.6});
-	} else if (count >= 7 && count <= 10) {
+	} else if (count >= 7) {
 		layer.setStyle({fillOpacity: 0.8});
 	}
 }
@@ -298,6 +298,33 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 						})
 					})
 				});
+
+				$('.map').mouseover(function() {
+					buildings.eachLayer(function(layer) {			
+						/*if (layer.feature.properties) {
+							if (layer.feature.properties.b_name) {
+								layer.bindPopup('<a href="feature/' + layer.feature.id + '/detail/">' + layer.feature.properties.b_name + '</a>');
+							}
+							else if (layer.feature.properties.address) {
+								layer.bindPopup('<a href="feature/' + layer.feature.id + '/detail/">' + layer.feature.properties.address + '</a>');
+							}
+						}*/
+						layer.on("mouseover", function(e) {
+							setFootprintColour(layer, e);
+							info.update(layer.feature.properties);
+						})
+						layer.on("mouseout", function(e) {
+							setFootprintColour(layer, e);
+							info.update()
+						})
+						layer.on("click", function(e) {
+							layer.openPopup(e.latlng);
+							setFootprintColour(layer, e);
+						})
+					})
+				});
+
+
 			} else {
 				$.getJSON(jsonUrl).done(function(data) {
 					buildings.clearLayers();

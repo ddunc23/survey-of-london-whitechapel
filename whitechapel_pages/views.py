@@ -1,18 +1,22 @@
 from django.shortcuts import render
-from map.models import Feature, Document, Category, Image
+from map.models import Feature, Document, Category, Image, Media
 from whitechapel_pages.models import Page
+from itertools import chain
+from operator import attrgetter
 
 def site_home(request):
 	"""The front page of the website"""
 	page = Page.objects.get(is_front_page=True)
 	features = page.features.all()
 	categories = Category.objects.all()
-	images = Image.objects.filter(published=True).order_by('created')[:5]
+	images = Image.objects.filter(published=True).exclude(created=None).order_by('-created')[:5]
+	documents = Document.objects.filter(published=True).exclude(created=None).order_by('-created')[:5]
+	media = Media.objects.filter(published=True).exclude(created=None).order_by('-created')[:5]
 
-	for feature in features:
-		feature.documents = Document.objects.filter(feature=feature)
+	latest = list(chain(documents, images))
+	latest.sort(key=attrgetter('created'), reverse=True)
 
-	return render(request, 'whitechapel_pages/index.html', {'page': page, 'title': 'Survey of London', 'subhead': 'Whitechapel', 'features': features, 'categories': categories, 'images': images})
+	return render(request, 'whitechapel_pages/index.html', {'page': page, 'title': 'Survey of London', 'subhead': 'Whitechapel', 'categories': categories, 'images': images, 'documents': documents, 'media': media, 'latest': latest[:5] })
 
 def page(request, page_slug):
 	"""Any other page"""

@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 
 class FeatureIndex(indexes.SearchIndex, indexes.Indexable):
 	text = indexes.CharField(document=True, use_template=True)
+	address = indexes.CharField(model_attr='address', null=True)
+	name = indexes.CharField(model_attr='b_name', null=True)
 
 	def get_model(self):
 		return Feature

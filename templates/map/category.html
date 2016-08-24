@@ -1,16 +1,27 @@
-{% extends 'map/base.html' %}
-{% block content %}
-		<div id="map" class="map-large"></div>
+{% extends 'map/results_base.html' %}
+{% block results_title %}<h2>All places in the category "{{ category }}"</h2>{% endblock %}
 
-		{% load geojson_tags %}
-		{% load staticfiles %}
+{% block results %}
 
-		<script>
+<div class="tab-content">
+	{% if features %}
+	<div role="tabpanel" class="tab-pane active" id="features">
+		{% for feature in features %}
+			<h3><a href="{% url 'detail' feature.id %}">{{ feature }}</a></h3>
+			<p class="results-preview">{{ feature.short_description }}</p>
+		{% endfor %}
+	</div>
+	{% endif %}
+</div>
 
-			var title_box_title = 'Showing all places in the category "{{ category.name }}"';
+{% endblock %}
+{% block results_script %}
 
-			var jsonUrl = '{% url "features_by_category" category.id %}';
-			loadFeatures(jsonUrl, 'main', false);
-		</script>
+<script>
 
+	var title_box_title = 'Showing all places in the category "{{ category.name }}"';
+
+	var jsonUrl = '{% url "features_by_category" category.id %}';
+	loadFeatures(jsonUrl, 'main', false);
+</script>
 {% endblock %}
