@@ -1,9 +1,7 @@
 <div class="feature-overview">
-	<button type="button" class="btn btn-default btn-xs close-this"><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-
-	
 		{% load thumbnail %}
 		<div class="feature-overview-thumbnail">
+		<button type="button" class="btn btn-default btn-xs close-this"><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
 			<a href="{% url 'detail' feature.id %}"><img src="{% thumbnail feature.thumbnail 300x170 crop='0,0' %}"></a>
 		</div>
 		<div class="feature-icons">
@@ -27,12 +25,6 @@
 		$('.infobox-control').hide();
 		resetColours(buildings);
 	});
-	
-	$('.category_btn').click(function(e) {
-		e.preventDefault();
-		var jsonUrl = $(this).attr('href');
-		loadFeatures(jsonUrl);
-	})
 
 	$('.feature-overview').ready(function() {
 		$('[data-toggle="tooltip"]').tooltip();
