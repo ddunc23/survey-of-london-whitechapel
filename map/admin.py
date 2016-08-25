@@ -26,8 +26,8 @@ class MediaInline(admin.StackedInline):
 class FeatureAdmin(LeafletGeoAdmin):
 	form = FeatureForm
 	fieldsets = (
-		('Footprint', {
-			'fields': ('id', 'geom',),
+		('Footprint and Feature Type', {
+			'fields': ('id', 'geom', 'feature_type'),
 		}),
 		('Address', {
 			'fields': ('b_number', 'b_name', 'street', 'postcode', 'address'),

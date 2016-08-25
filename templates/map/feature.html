@@ -1,13 +1,31 @@
 <div class="feature-overview">
-		{% load thumbnail %}
-		<div class="feature-overview-thumbnail">
-		<button type="button" class="btn btn-default btn-xs close-this"><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-			<a href="{% url 'detail' feature.id %}"><img src="{% thumbnail feature.thumbnail 300x170 crop='0,0' %}"></a>
-		</div>
-		<div class="feature-icons">
-				{% if documents %}<span class="glyphicon glyphicon-file" class="documentIcon" data-toggle="tooltip" data-placement="left" title="Research and Memories ({{ documents|length }})"></span> {% endif %}{% if images %}<span class="glyphicon glyphicon-picture" class="imageIcon" data-toggle="tooltip" data-placement="top" title="Images ({{ images|length }})"></span> {% endif %}{% if media %}<span class="glyphicon glyphicon-play" class="mediaIcon" data-toggle="tooltip" data-placement="bottom" title="Audio and Video ({{ media|length }})"></span> {% endif %}{% if feature.site %}<span class="glyphicon glyphicon-home" class="siteIcon" data-toggle="tooltip" data-placement="right" title="Part of {{ feature.site }}"></span>{% endif %}
-			</div>
-	
+	{% load thumbnail %}
+	{% load static %}
+	{% if feature.feature_type == 'GREATER_WHITECHAPEL' %}
+	<div class="feature-overview-thumbnail">
+	<button type="button" class="btn btn-default btn-xs close-this"><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+		<a href="{% url 'detail' feature.id %}"><img src="{% static 'img/no_thumbnail.png' %}"></a>
+	</div>
+	<div class="feature-icons">
+		{% if documents %}<span class="glyphicon glyphicon-file" class="documentIcon" data-toggle="tooltip" data-placement="left" title="Research and Memories ({{ documents|length }})"></span> {% endif %}{% if images %}<span class="glyphicon glyphicon-picture" class="imageIcon" data-toggle="tooltip" data-placement="top" title="Images ({{ images|length }})"></span> {% endif %}{% if media %}<span class="glyphicon glyphicon-play" class="mediaIcon" data-toggle="tooltip" data-placement="bottom" title="Audio and Video ({{ media|length }})"></span> {% endif %}{% if feature.site %}<span class="glyphicon glyphicon-home" class="siteIcon" data-toggle="tooltip" data-placement="right" title="Part of {{ feature.site }}"></span>{% endif %}
+	</div>
+	<div class="feature-overview-footer">
+		{% if feature.b_name %}
+			<h2><a href="{% url 'detail' feature.id %}">{{ feature.b_name }}</a></h2>
+			{% else %}
+			<h2><a href="{% url 'detail' feature.id %}">{{ feature.address }}</a></h2>
+		{% endif %}
+		<p class="feature-description">This building is just beyond the Survey of London Whitechapel study area.</p>
+		<div class="btn-group"><a href="{% url 'detail' feature.id %}" class="btn btn-default btn-sm {% if not documents and not images and not media %} disabled{% endif %}">Read More</a> <a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-default btn-sm">Add Content</a> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %}</div>
+	</div>
+	{% else %}
+	<div class="feature-overview-thumbnail">
+	<button type="button" class="btn btn-default btn-xs close-this"><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+		<a href="{% url 'detail' feature.id %}">{% if feature.thumbnail %}<img src="{% thumbnail feature.thumbnail 300x170 crop='0,0' %}">{% else %}<a href="{% url 'detail' feature.id %}"><img src="{% static 'img/no_thumbnail.png' %}">{% endif %}</a>
+	</div>
+	<div class="feature-icons">
+		{% if documents %}<span class="glyphicon glyphicon-file" class="documentIcon" data-toggle="tooltip" data-placement="left" title="Research and Memories ({{ documents|length }})"></span> {% endif %}{% if images %}<span class="glyphicon glyphicon-picture" class="imageIcon" data-toggle="tooltip" data-placement="top" title="Images ({{ images|length }})"></span> {% endif %}{% if media %}<span class="glyphicon glyphicon-play" class="mediaIcon" data-toggle="tooltip" data-placement="bottom" title="Audio and Video ({{ media|length }})"></span> {% endif %}{% if feature.site %}<span class="glyphicon glyphicon-home" class="siteIcon" data-toggle="tooltip" data-placement="right" title="Part of {{ feature.site }}"></span>{% endif %}
+	</div>
 	<div class="feature-overview-footer">
 		{% if feature.b_name %}
 			<h2><a href="{% url 'detail' feature.id %}">{{ feature.b_name }}</a></h2>
@@ -19,15 +37,16 @@
 		{% endif %}
 		<div class="btn-group"><a href="{% url 'detail' feature.id %}" class="btn btn-default btn-sm {% if not documents and not images and not media %} disabled{% endif %}">Read More</a> <a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-default btn-sm">Add Content</a> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %}</div>
 	</div>
+	{% endif %}
 </div>
+
+
 <script>
 	$('.close-this').click(function() {
 		$('.infobox-control').hide();
 		resetColours(buildings);
 	});
-
 	$('.feature-overview').ready(function() {
 		$('[data-toggle="tooltip"]').tooltip();
 	});
-
 </script>

@@ -40,6 +40,28 @@ var myStyle = {
 	"opacity": 0.6
 };
 
+var openSpaceStyle = {
+	"color": "#9CD351",
+	"fillColor": "#9CD351",
+	"weight": 2,
+	"opacity": 0.6
+}
+
+var placeStyle = {
+	"color": "#B750A8",
+	"fillColor": "#B750A8",
+	"weight": 1.5,
+	"opacity": 0.6,
+	"dashArray": "5, 5"
+}
+
+var extraMurosStyle = {
+	"color": "#454545",
+	"fillColor": "#454545",
+	"weight": 1,
+	"opacity": 0.6
+}
+
 var hoverStyle = {
 	"opacity": 1,
 	"weight": 3,
@@ -69,7 +91,15 @@ function setDocNumberStyle(layer) {
 
 function resetColours(vectorlayer) {
 	vectorlayer.eachLayer(function(layer) {
-		layer.setStyle(myStyle);
+		if (layer.feature.properties.feature_type == 'OPEN_SPACE') {
+			layer.setStyle(openSpaceStyle);
+		} else if (layer.feature.properties.feature_type == 'PLACE') {
+			layer.setStyle(placeStyle);
+		} else if (layer.feature.properties.feature_type == 'GREATER_WHITECHAPEL') {
+			layer.setStyle(extraMurosStyle);
+		} else {
+			layer.setStyle(myStyle);
+		}
 	})
 }
 
@@ -90,11 +120,17 @@ function setFootprintColour(layer, e) {
 	if (e.type == 'mouseover') {
 		layer.setStyle(hoverStyle);
 	} else if (e.type == 'mouseout') {
-		for (var prop in layer._layers) {
-			if (layer._layers[prop].options.fillColor != '#1AA9FF') {
-				layer.setStyle(myStyle);
-			}
-			break;
+		var key = Object.keys(layer._layers)[0];
+		if (layer._layers[key].options.fillColor == '#1AA9FF') {
+			layer.setStyle(hoverStyle);
+		} else if (layer.feature.properties.feature_type == 'OPEN_SPACE') {
+			layer.setStyle(openSpaceStyle);
+		} else if (layer.feature.properties.feature_type == 'PLACE') {
+			layer.setStyle(placeStyle);
+		} else if (layer.feature.properties.feature_type == 'GREATER_WHITECHAPEL') {
+			layer.setStyle(extraMurosStyle);
+		} else if (layer.feature.properties.feature_type == 'WHITECHAPEL_BUILDING') {
+			layer.setStyle(myStyle);
 		}
 	} else if (e.type == 'click') {
 		resetColours(buildings);
@@ -132,6 +168,12 @@ function onEachFeature(feature, layer) {
 			highlight = layer;
 			layer.setStyle(highlightStyle);
 			getDocument(feature.id);
+		} else if (feature.properties.feature_type == 'OPEN_SPACE') {
+			layer.setStyle(openSpaceStyle);
+		} else if (feature.properties.feature_type == 'PLACE') {
+			layer.setStyle(placeStyle);
+		} else if (feature.properties.feature_type == 'GREATER_WHITECHAPEL') {
+			layer.setStyle(extraMurosStyle);
 		} else {
 			layer.setStyle(myStyle);
 		}
@@ -234,7 +276,7 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 				};
 				
 				var overlayMaps = {
-					"Places": buildings
+					"Buildings and Places": buildings
 				};
 
 				if (highlight != undefined) {

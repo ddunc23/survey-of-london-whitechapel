@@ -96,6 +96,13 @@ class Feature(models.Model):
 	postcode = models.CharField(max_length=8)
 	address = models.CharField(max_length=100, verbose_name='Formatted Address')
 	b_type = models.CharField(max_length=100, null=True, blank=True, verbose_name='Building Type')
+	FEATURE_CHOICES = (
+		('WHITECHAPEL_BUILDING', 'Building in Whitechapel'),
+		('GREATER_WHITECHAPEL', 'Building in Greater Whitechapel'),
+		('OPEN_SPACE', 'Open Space'),
+		('PLACE', 'Area or Market'),
+	)
+	feature_type = models.CharField(max_length=100, verbose_name='Feature Type', choices=FEATURE_CHOICES, default='WHITECHAPEL_BUILDING')
 	current = models.PositiveSmallIntegerField(null=True, blank=True)
 	previous_1 = models.PositiveSmallIntegerField(null=True, blank=True)
 	previous_2 = models.PositiveSmallIntegerField(null=True, blank=True)
