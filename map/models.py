@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import F, Q
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from djgeojson.fields import PolygonField
 from django.contrib.gis.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -147,6 +148,9 @@ class Feature(models.Model):
 		update_feature_count(self)
 		super(Feature, self).save(*args, **kwargs)
 
+	def get_absolute_url(self):
+		return reverse('map.views.detail', args=[str(self.id)])
+
 	class Meta:
 		verbose_name = 'Building'
 
@@ -242,10 +246,16 @@ class Image(models.Model):
 	tags = TaggableManager(blank=True)
 
 	def __unicode__(self):
-		return self.title
+		try:
+			author_name = self.author.userprofile.display_name
+		except:
+			author_name = self.author.username
+
+		return self.title + ' | ' + author_name
 
 	def save(self, *args, **kwargs):
-		"""Update the 'count' attribute of the feature"""
+		"""Bleach the description, Update the 'count' attribute of the feature"""
+		self.description = bleach.clean(self.description, tags=['strong', 'em', 'a'], attributes={'a': ['href']})
 		super(Image, self).save(*args, **kwargs)
 		update_feature_count(self.feature)
 
@@ -270,13 +280,19 @@ class Media(models.Model):
 	tags = TaggableManager(blank=True)
 
 	def __unicode__(self):
-		return self.title
+		try:
+			author_name = self.author.userprofile.display_name
+		except:
+			author_name = self.author.username
+
+		return self.title + ' | ' + author_name
 
 	class Meta:
 		verbose_name_plural = 'Media'
 
 	def save(self, *args, **kwargs):
 		"""Update the 'count' attribute of the feature"""
+		self.description = bleach.clean(self.description, tags=['strong', 'em', 'a'], attributes={'a': ['href']})
 		super(Media, self).save(*args, **kwargs)
 		update_feature_count(self.feature)
 

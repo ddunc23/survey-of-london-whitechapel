@@ -1,6 +1,7 @@
 {% extends 'map/base.html' %}
 
 {% block content %}
+
 <div id="" class="map-small" {% if feature.thumbnail %} style="background: url('/media/{{ feature.thumbnail }}'); background-size: cover; background-position: {% if feature.thumbnail_position == 'TOP' %} top; {% elif feature.thumbnail_position == 'BOTTOM' %} bottom; {% else %} center;" {% endif %} {% endif %} class="hidden-sm hidden-xs"></div>
 <div class="container">
 	<div class="row">
