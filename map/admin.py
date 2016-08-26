@@ -8,6 +8,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.contrib import messages
+from taggit.models import Tag
 
 # Register your models here.
 
@@ -119,8 +120,6 @@ class FeatureAdmin(LeafletGeoAdmin):
 	set_address_action.short_description = 'Update the addresses of selected Buildings'
 
 
-
-
 class UserProfileInline(admin.StackedInline):
 	model = UserProfile
 	can_delete = False
@@ -129,12 +128,37 @@ class UserProfileInline(admin.StackedInline):
 class UserAdmin(BaseUserAdmin):
 	inlines = (UserProfileInline, )
 
+
+class DocumentAdmin(admin.ModelAdmin):
+	list_display = ('title', 'feature', 'author', 'created', 'document_type', 'published')
+	raw_id_fields=('feature')
+	autocomplete_lookup_fields = {
+		'fk': ['feature'],
+	}
+
+
+class ImageAdmin(admin.ModelAdmin):
+	list_display = ('title', 'feature', 'author', 'description', 'created', 'published')
+	raw_id_fields=('feature')
+	autocomplete_lookup_fields = {
+		'fk': ['feature'],
+	}
+
+class MediaAdmin(admin.ModelAdmin):
+	list_display = ('title', 'feature', 'author', 'description', 'created', 'published')
+	raw_id_fields=('feature')
+	autocomplete_lookup_fields = {
+		'fk': ['feature'],
+	}
+
 admin.site.register(Category)
 admin.site.register(Site)
 admin.site.register(Feature, FeatureAdmin)
-admin.site.register(Document)
+admin.site.register(Document, DocumentAdmin)
+admin.site.register(Image, ImageAdmin)
+admin.site.register(Media, MediaAdmin)
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
-admin.site.register(Image)
-admin.site.register(Media)
+#admin.site.register(Image)
+#admin.site.register(Media)
 
