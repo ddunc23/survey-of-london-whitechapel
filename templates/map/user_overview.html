@@ -31,10 +31,10 @@
 						{% for image in pending_images %}
 						<div class="media">
 							<div class="media-left">
-								<a href="{% url 'detail' image.feature.id %}"><img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded"></a>
+								<img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded">
 							</div>
 							<div class="media-body">
-								<h3 class="media-heading"><a href="{% url 'detail' image.feature.id %}">{{ image.title }}</a></h3>
+								<h3 class="media-heading">{{ image.title }}</h3>
 								<h4 class="small"><a href="{% url 'detail' image.feature.id %}">{{ image.feature }}</a> | Submitted {{ image.created }}
 								{% if image.description %}
 									<p class="results-preview">{{ image.description|truncatechars:140 }}</p>
@@ -48,7 +48,7 @@
 						{% load embed_video_tags %}
 						{% for item in pending_media %}
 							{% video item.object.url 'small' %}
-							<h3><a href="{% url 'detail' item.feature.id %}">{{ item.title }}</a></h3>
+							<h3>{{ item.title }}</h3>
 							<h4 class="small"><a href="{% url 'detail' item.feature.id %}">{{ item.feature }}</a> | Submitted {{ item.created }}</h4>
 							{% if item.description %}<p class="results-preview">{{ item.description|truncatechars:140 }}</p>{% endif %}
 							{% for tag in item.object.tags.all %}

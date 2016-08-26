@@ -3,6 +3,8 @@ from map.models import Feature, Document, Image, Media
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from dal import autocomplete
+from django.template.defaultfilters import filesizeformat
+from django.conf import settings
 
 class FeatureForm(forms.ModelForm):
 	class Meta:
@@ -61,12 +63,23 @@ class ImageForm(forms.ModelForm):
 			'description': 'Tell us a little about this image',
 		}
 		widgets = {
-			'file': forms.ClearableFileInput(attrs={'class':'img-upload'}),
+			'file': forms.ClearableFileInput(attrs={'class':'img-upload', 'data-max-file-size': 2048}),
 			'tags': autocomplete.TaggitSelect2(url='tag-autocomplete')
 		}
 		help_texts = {
 			'tags': 'Tags help people find your content. For example, if you\'ve got a memory of a particular time, you could tag it \'1960s\'.',
 		}
+
+	def clean_file(self):
+		# Limit file upload size for users without access to the admin site
+		file = self.cleaned_data['file']
+		content_type = file.content_type.split('/')[0]
+		if content_type in settings.CONTENT_TYPES:
+			if file._size > settings.MAX_UPLOAD_SIZE:
+				raise forms.ValidationError('Please keep image file size under %s. The image you just uploaded is %s' % (filesizeformat(settings.MAX_UPLOAD_SIZE), filesizeformat(file._size)))
+		else:
+			raise forms.ValidationError('The file you uploaded isn\'t an image')
+		return file
 
 
 class AdminImageForm(ImageForm):

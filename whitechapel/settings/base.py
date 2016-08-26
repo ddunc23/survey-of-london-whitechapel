@@ -158,6 +158,12 @@ LOG_DIR = BASE_DIR.child('logs')
 
 EMAIL_SUBJECT_PREFIX = 'Survey of London Whitechapel | '
 
+# Image file size limits. Restricts uploaded files to images with a maximum size of 2.5MB
+
+CONTENT_TYPES = ['image']
+
+MAX_UPLOAD_SIZE = 2621440
+
 
 ### App-Specific Settings ###
 
