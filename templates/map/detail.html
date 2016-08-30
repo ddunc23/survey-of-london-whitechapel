@@ -2,7 +2,7 @@
 
 {% block content %}
 {% load static %}
-<div id="" class="map-small" style="background: {% if feature.thumbnail %}url('/media/{{ feature.thumbnail }}'){% else %}url('{% static 'img/no_thumbnail_large.png' %}');{% endif %} background-size: cover; background-position: {% if feature.thumbnail_position == 'TOP' %} top; {% elif feature.thumbnail_position == 'BOTTOM' %} bottom; {% else %} center; {% endif %}" class="hidden-sm hidden-xs"></div>
+<div id="" class="map-small" style="background: {% if feature.thumbnail %}url('/media/{{ feature.thumbnail }}');{% else %}url('{% static 'img/no_thumbnail_large.png' %}');{% endif %} background-size: cover; background-position: {% if feature.thumbnail_position == 'TOP' %} top; {% elif feature.thumbnail_position == 'BOTTOM' %} bottom; {% else %} center; {% endif %}" class="hidden-sm hidden-xs"></div>
 <div class="container">
 	<div class="row">
 		<div class="col-md-3">
