@@ -1,8 +1,8 @@
 {% if object.b_name %}{{ object.b_name }}{% endif %}
 {% if object.address %}{{ object.address }}{% endif %}
-{% if object.address %}{{ object.street }}{% endif %}
+{% if object.street %}{{ object.street }}{% endif %}
 {{ object.postcode }}
-{% if object.address %}{{ object.short_description }}{% endif %}
+{% if object.short_description %}{{ object.short_description }}{% endif %}
 {% if object.categories_set %}{% for category in object.categories_set.all %} {{ category.name }} {% empty %}{% endfor %}{% endif %}
 {% for tag in object.tags.all %} {{ tag.name }} {% empty %}{% endfor %}
 {% for document in object.document_set.all %} 
