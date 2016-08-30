@@ -1,0 +1,49 @@
+{% extends 'map/base.html' %}
+{% block content %}
+
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12">
+			<h1>Survey of London Whitechapel Blog</h1>
+			<hr />
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-md-8 content">
+			{% for post in posts %}
+			<div class="post">
+				<h2>{{ post.title }}</h2>
+				<p class="results_preview">{% if post.author.userprofile.display_name %}{{ post.author.userprofile.display_name }}{% else %}{{ post.author }}{% endif %} | {{ post.date_published }}</p>
+				{{ post.body|safe }}
+				{% lorem 3 p %}
+				<hr />
+			</div>
+			{% endfor %}
+		</div>
+		<div class="col-xs-12 col-md-4 sidebar">
+			<h3>Categories</h3>
+			<ul class="list-unstyled">
+				{% for category in blog_category_links %}
+				<li><a href="#">{{ category }}</a></li>
+				{% endfor %}
+			</ul>
+			<h3>Archive</h3>
+				{% regroup posts by date_published|date:'Y' as posts_by_year %}
+				<ul class="list-unstyled">
+				{% for year in posts_by_year %}
+					<li>{{ year.grouper }}</li>
+					{% regroup year.list by date_published|date:'F' as posts_by_month %}
+					<li>
+						<ul>
+						{% for month in posts_by_month %}
+							<li><a href="#">{{ month.grouper }}</a></li>
+						{% endfor %}
+						</ul>
+					</li>
+				{% endfor %}
+				</ul>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
