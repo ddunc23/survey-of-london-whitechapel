@@ -1,0 +1,43 @@
+{% extends 'map/base.html' %}
+{% block content %}
+
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12">
+			{% block title_block %}
+			{% endblock %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-md-8 content">
+
+		{% block posts %}
+		{% endblock %}
+
+		</div>
+		<div class="col-xs-12 col-md-4 sidebar">
+			<h3>Categories</h3>
+			<ul class="list-unstyled">
+				{% for category in blog_category_links %}
+				<li><a href="{% url 'posts_by_category' category.slug %}">{{ category }}</a></li>
+				{% endfor %}
+			</ul>
+			<h3>Archive</h3>
+			{% regroup blog_post_list by date_published|date:'Y' as posts_by_year %}
+			<ul class="list-unstyled">
+			{% for year in posts_by_year %}
+				<li><a href="{% url 'posts_by_year' year.grouper %}">{{ year.grouper }}</a></li>
+			{% endfor %}
+			</ul>
+			<h3>Contributors</h3>
+			{% regroup blog_post_list by author as posts_by_author %}
+			<ul class="list-unstyled">
+			{% for author in posts_by_author %}
+				<li><a href="{% url 'posts_by_author' author.grouper.id %}">{% if author.grouper.userprofile.display_name %}{{ author.grouper.userprofile.display_name }}{% else %}{{ author.grouper }}{% endif %}</a></li>
+			{% endfor %}
+			</ul>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

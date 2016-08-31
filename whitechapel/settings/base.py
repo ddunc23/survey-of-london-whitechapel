@@ -89,6 +89,7 @@ TEMPLATES = [
                 'whitechapel_pages.context_processors.category_links',
                 'map.context_processors.last_feature',
                 'whitechapel_blog.context_processors.blog_category_links',
+                'whitechapel_blog.context_processors.blog_post_list',
             ],
         },
     },

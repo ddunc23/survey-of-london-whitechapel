@@ -16,33 +16,37 @@
 				<div class="tab-content">
 					<div role="tabpanel" class="tab-pane active" id="pending">
 						<h3 class="text-muted">You'll be notified by email as soon as these have been published on the site.</h3>
-						{% if not pending_docs and not pending_images %}
+						{% if not pending_docs and not pending_images and not pending_media %}
 							<p>You don't have any pending submissions.</p>
 						{% else %}
-						<h2>Research and Memories</h2>
-							{% for doc in pending_docs %}
-								<h3>{{ doc.title }}<br /><span class="small"><a href="{% url 'detail' doc.feature.id %}">{{ doc.feature }}</a> | Submitted {{ doc.created }}</span></h3>
-								<p class="results-preview">{{ doc.body|safe|truncatewords_html:40|striptags }}</p>
-							{% endfor %}
+						{% if pending_docs %}
+							<h2>Research and Memories</h2>
+								{% for doc in pending_docs %}
+									<h3>{{ doc.title }}<br /><span class="small"><a href="{% url 'detail' doc.feature.id %}">{{ doc.feature }}</a> | Submitted {{ doc.created }}</span></h3>
+									<p class="results-preview">{{ doc.body|safe|truncatewords_html:40|striptags }}</p>
+								{% endfor %}
+							{% endif %}
+						<hr />
 						{% endif %}
-						<hr />
-						{% load thumbnail %}
-						<h2>Images</h2>
-						{% for image in pending_images %}
-						<div class="media">
-							<div class="media-left">
-								<img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded">
+						{% if pending_images %}
+							{% load thumbnail %}
+							<h2>Images</h2>
+							{% for image in pending_images %}
+							<div class="media">
+								<div class="media-left">
+									<img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded">
+								</div>
+								<div class="media-body">
+									<h3 class="media-heading">{{ image.title }}</h3>
+									<h4 class="small"><a href="{% url 'detail' image.feature.id %}">{{ image.feature }}</a> | Submitted {{ image.created }}
+									{% if image.description %}
+										<p class="results-preview">{{ image.description|truncatechars:140 }}</p>
+									{% endif %}
+								</div>
 							</div>
-							<div class="media-body">
-								<h3 class="media-heading">{{ image.title }}</h3>
-								<h4 class="small"><a href="{% url 'detail' image.feature.id %}">{{ image.feature }}</a> | Submitted {{ image.created }}
-								{% if image.description %}
-									<p class="results-preview">{{ image.description|truncatechars:140 }}</p>
-								{% endif %}
-							</div>
-						</div>
-						{% endfor %}
-						<hr />
+							{% endfor %}
+							<hr />
+						{% endif %}
 						{% if pending_media %}
 						<h3>Audio and Video</h3>
 						{% load embed_video_tags %}

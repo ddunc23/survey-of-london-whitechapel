@@ -44,8 +44,11 @@
 			</div>
 		</div>
 		<div class="col-xs-12 col-md-4"><!-- News -->
-			<h1 class="front-page-heading">News</h1>
-			<p>News Content to go here when the blog function's been activated</p>
+			<h1 class="front-page-heading">News and Events</h1>
+			{% for post in posts %}
+			<h3><a href="{% url 'single_post' year=post.date_published|date:'Y' post=post.slug %}">{{ post.title }}</a></h3>
+			<p class="results-preview">{{ post.body|truncatewords_html:40|striptags }}</p>
+			{% endfor %}
 		</div><!-- / News -->
 	</div>
 

@@ -1,0 +1,12 @@
+{% extends 'whitechapel_blog/blog_base.html' %}
+
+{% block title_block %}
+			<h1>{{ post.title }}</h1>
+			<hr />
+{% endblock %}
+
+{% block posts %}
+			
+			{% include 'whitechapel_blog/post.html' %}
+
+{% endblock %}
