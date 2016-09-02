@@ -232,7 +232,7 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 		function initMap(layers) {
 			map = L.map('map', {
 				zoom: 16,
-				minZoom: 15,
+				minZoom: 14,
 				maxZoom: 20,
 				zoomControl: false,
 				layers: layers
@@ -245,11 +245,11 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				geojson = data;
 
-				sketchylayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/dumps/{z}/{x}/{y}.png', {maxZoom: 20});
+				sketchylayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/whitechapel_september_2016/{z}/{x}/{y}.png', {maxZoom: 20});
 
-				scanlayer = L.tileLayer('https://a.surveyoflondon.org/tileserver.php?/index.json?/test_scan_e6a6f6/{z}/{x}/{y}.png', {maxZoom: 20});
+				scanlayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/test_scan_e6a6f6/{z}/{x}/{y}.png', {maxZoom: 20});
 
-				rocquelayer = L.tileLayer('https://a.surveyoflondon.org/tileserver.php?/index.json?/rocque_fbd9fc/{z}/{x}/{y}.png', {maxZoom: 20});
+				rocquelayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/rocque_fbd9fc/{z}/{x}/{y}.png', {maxZoom: 20});
 				
 				buildings = L.geoJson(geojson, {
 					onEachFeature: onEachFeature,
