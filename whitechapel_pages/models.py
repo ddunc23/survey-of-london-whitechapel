@@ -1,5 +1,4 @@
 from django.db import models
-# from map.models import Feature, Document
 from ckeditor_uploader.fields import RichTextUploadingField
 from filebrowser.fields import FileBrowseField
 
@@ -9,7 +8,7 @@ class Page(models.Model):
 	slug = models.SlugField()
 	body = RichTextUploadingField(blank=True, null=True)
 	documents = models.ManyToManyField('map.Document', blank=True)
-	features = models.ManyToManyField('map.Feature', blank=True)
+	blog_post = models.ForeignKey('whitechapel_blog.Post', blank=True, null=True, verbose_name='Featured Event')
 	images = models.ManyToManyField('map.Image', blank=True)
 	media = models.ManyToManyField('map.Media', blank=True)
 	is_front_page = models.BooleanField(default=False)

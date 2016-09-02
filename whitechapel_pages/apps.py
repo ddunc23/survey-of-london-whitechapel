@@ -1,4 +1,3 @@
-# in yourapp/apps.py
 from django.apps import AppConfig
 
 class WhitechapelPagesAppConfig(AppConfig):

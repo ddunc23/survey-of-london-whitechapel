@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^survey-of-london-whitechapel-admin-site/', include(admin.site.urls)),
     url(r'^map/', include('map.urls')),
     url(r'', include('whitechapel_pages.urls')),
+    url(r'^blog/', include('whitechapel_blog.urls')),
     url(r'^users/', include('whitechapel_users.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/', include(router.urls)),

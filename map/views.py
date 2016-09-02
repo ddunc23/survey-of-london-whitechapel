@@ -270,7 +270,6 @@ def inform_managers_of_content_submission(request):
 	send_mail('New Submission', message=message, html_message=html_message, from_email='admin@surveyoflondon.org', recipient_list=['solwhitechapel.bartlett@ucl.ac.uk'])
 
 
-
 def inform_user_of_content_publication(author, title, message):
 	"""Tell a user that their content has been published"""
 	# Only send an email if a user has opted in to updates

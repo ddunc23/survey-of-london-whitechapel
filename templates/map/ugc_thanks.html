@@ -1,8 +1,8 @@
 {% extends 'map/base.html' %}
 
 {% block content %}
-
-<div class="jumbotron ugc-jumbotron" style="background-image: url('/media/{{ feature.thumbnail }}');">
+{% load static %}
+<div class="jumbotron ugc-jumbotron" style="background-image: url({% static 'img/darken.png' %}), {% if feature.thumbnail %}url('/media/{{ feature.thumbnail }}'){% else %}url('{% static 'img/no_thumbnail_large.png' %}'){% endif %};">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12 col-md-8 col-md-offset-2">

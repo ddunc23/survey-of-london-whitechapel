@@ -1,0 +1,33 @@
+{% extends 'whitechapel_blog/blog_base.html' %}
+
+{% block title_block %}
+			<h1>News and Events {% if subtitle %}| {{ subtitle }}{% endif %}</h1>
+			<hr />
+			{% endblock %}
+
+{% block posts %}
+
+
+			{% for post in posts %}
+			{% include 'whitechapel_blog/post.html' %}
+			<hr />
+			{% endfor %}
+			{% if is_paginated %}
+	        <nav aria-label="page navigation">
+	            <ul class="pager">
+	                {% if page_obj.has_previous %}
+	                    <li class="previous"><a href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+	                {% else %}
+	                	<li class="previous disabled"><a href="#">Previous</a></li>
+	                {% endif %}
+	                	Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+	                {% if page_obj.has_next %}
+	                    <li class="next"><a href="?page={{ page_obj.next_page_number }}">Next</a></li>
+	                {% else %}
+	                	<li class="next disabled"><a href="#">Next</a></li>
+	                {% endif %}
+	            </span>
+	        </nav>
+    		{% endif %}
+
+{% endblock %}

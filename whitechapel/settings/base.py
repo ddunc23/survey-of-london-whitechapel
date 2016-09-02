@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'map',
     'whitechapel_pages',
     'whitechapel_users',
+    'whitechapel_blog',
     'djgeojson',
     'leaflet',
     'ckeditor',
@@ -68,7 +69,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'honeypot.middleware.HoneypotMiddleware',
+    #'honeypot.middleware.HoneypotMiddleware',
 )
 
 ROOT_URLCONF = 'whitechapel.urls'
@@ -87,6 +88,9 @@ TEMPLATES = [
                 'whitechapel_pages.context_processors.menu_links',
                 'whitechapel_pages.context_processors.category_links',
                 'map.context_processors.last_feature',
+                'whitechapel_blog.context_processors.blog_category_links',
+                'whitechapel_blog.context_processors.blog_post_list',
+                'whitechapel_blog.context_processors.latest_contributions',
             ],
         },
     },
