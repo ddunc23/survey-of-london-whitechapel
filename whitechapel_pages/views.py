@@ -13,7 +13,7 @@ def site_home(request):
 	images = Image.objects.filter(published=True).exclude(created=None).order_by('-created')[:5]
 	documents = Document.objects.filter(published=True).exclude(created=None).order_by('-created')[:5]
 	media = Media.objects.filter(published=True).exclude(created=None).order_by('-created')[:5]
-	posts = Post.objects.filter(date_published__lte=datetime.date.today())[:3]
+	posts = Post.objects.filter(date_published__lte=datetime.date.today()).exclude(categories__slug__iexact='events')[:3]
 
 	latest = list(chain(documents, images))
 	latest.sort(key=attrgetter('created'), reverse=True)
