@@ -50,13 +50,15 @@
 			<p class="results-preview">{{ page.blog_post.body|truncatewords_html:25|safe|striptags }}</p>
 		</div>
 		{% endif %}
-		<div class="col-xs-12 col-md-4"><!-- News -->
-			<h1 class="front-page-heading">News</h1>
-			{% for post in posts %}
-			<h3><a href="{% url 'single_post' year=post.date_published|date:'Y' post=post.slug %}">{{ post.title }}</a></h3>
-			<p class="results-preview">{{ post.body|truncatewords_html:25|safe|striptags }}</p>
-			{% endfor %}
-		</div><!-- / News -->
+		{% if posts %}
+			<div class="col-xs-12 col-md-4"><!-- News -->
+				<h1 class="front-page-heading">News</h1>
+				{% for post in posts %}
+				<h3><a href="{% url 'single_post' year=post.date_published|date:'Y' post=post.slug %}">{{ post.title }}</a></h3>
+				<p class="results-preview">{{ post.body|truncatewords_html:25|safe|striptags }}</p>
+				{% endfor %}
+			</div><!-- / News -->
+		{% endif %}
 	</div>
 
 	

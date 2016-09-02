@@ -63,8 +63,6 @@ def update_feature_count(feature):
 		feature.count = all_docs + all_images + all_media
 
 
-
-
 class Category(models.Model):
 	"""Feature categories"""
 	name = models.CharField(max_length=128)
