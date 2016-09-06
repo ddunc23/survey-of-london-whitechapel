@@ -131,7 +131,7 @@ def detail(request, feature):
 def category(request, category):
 	"""Features by category"""
 	category = Category.objects.get(id=category)
-	features = Feature.objects.filter(categories=category)
+	features = Feature.objects.filter(categories=category, count__gte=1)
 
 	return render(request, 'map/category.html', {'title': 'Survey of London', 'category': category, 'features': features })
 
@@ -642,8 +642,8 @@ def features_by_street_name(request, street):
 
 def features_by_category(request, category):
 	if request.method == 'GET':
-		features = Feature.objects.filter(categories__pk=category)
-		serializer = FeatureSerializer(features, many=True)
+		features = Feature.objects.filter(categories__pk=category, count__gte=1)
+		serializer = FeatureSerializer(features, many=True)	
 		return JSONResponse(serializer.data)
 
 def features_by_tag(request, tag):
