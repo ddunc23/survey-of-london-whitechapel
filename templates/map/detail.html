@@ -28,30 +28,16 @@
 			<p>Do you know something about the history of this building or the people who have lived or worked here? {% if user.is_authenticated %}<a href="{% url 'ugc_choice' feature.id %}">Contribute it here.</a>{% else %}<a href="{% url 'account_login' %}?last_feature={{ feature.id }}">Contribute it here.</a>{% endif %}</p>
 
 		{% else %}
-
-
 			<ul class="nav nav-pills" role="tablist" id="docTabs">
-				{% if histories %}
-					<li role="presentation" class="active"><a href="#history" aria-controls="history" role="tab" data-toggle="tab">Research</a></li>
-				{% endif %}
-				{% if descriptions %}
-					<li role="presentation" {% if not histories %}class="active"{% endif %}><a href="#description" aria-controls="description" role="tab" data-toggle="tab">Description</a></li>
-				{% endif %}
-				{% if stories %}
-					<li role="presentation"{% if not histories and not descriptions %}class="active"{% endif %}><a href="#story" aria-controls="stories" role="tab" data-toggle="tab">Memories</a></li>
-				{% endif %}
-				{% if notes %}
-					<li role="presentation"{% if not histories and not descriptions and not stories %}class="active"{% endif %}><a href="#notes" aria-controls="stories" role="tab" data-toggle="tab">Notes</a></li>
-				{% endif %}
+					<li role="presentation" {% if histories %} class="active{% else %} disabled {% endif %}"><a href="#history" aria-controls="history" role="tab" data-toggle="tab">Research</a></li>
+					<li role="presentation" class="{% if descriptions and not histories %} active {% endif %}{% if not descriptions %} disabled {% endif %}"><a href="#description" aria-controls="description" role="tab" data-toggle="tab">Description</a></li>
+					<li role="presentation" class="{% if stories and not histories and not descriptions %} active {% endif %}{% if not stories %} disabled {% endif %}"><a href="#story" aria-controls="stories" role="tab" data-toggle="tab">Memories</a></li>
+					<li role="presentation" class="{% if notes and not histories and not descriptions and not stories %} active {% endif %}{% if not notes %} disabled {% endif %}"><a href="#notes" aria-controls="stories" role="tab" data-toggle="tab">Notes</a></li>
 				{% if feature.site and site_docs %}
 					<li role="presentation"{% if not histories and not descriptions and not stories and not notes %}class="active"{% endif %}><a href="#site" aria-controls="site" role="tab" data-toggle="tab">{{ feature.site }}</a></li>
 				{% endif %}
-				{% if images %}
-					<li role="presentation"{% if not histories and not descriptions and not stories and not notes and not site_docs %}class="active"{% endif %}><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images</a></li>
-				{% endif %}
-				{% if media %}
-					<li role="presentation"{% if not histories and not descriptions and not stories and not notes and not feature.site and not images %}class="active"{% endif %}><a href="#media" aria-controls="media" role="tab" data-toggle="tab">Audio and Video</a></li>
-				{% endif %}
+					<li role="presentation" class="{% if images and not histories and not descriptions and not stories and not notes and not site_docs %}active {% endif %}{% if not images %} disabled {% endif %}"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images</a></li>
+					<li role="presentation" class="{% if media and not histories and not descriptions and not stories and not notes and not feature.site and not images %}active {% endif %}{%if not media %} disabled {% endif %}"><a href="#media" aria-controls="media" role="tab" data-toggle="tab">Audio and Video</a></li>
 			</ul>
 		</div>
 	</div>
@@ -123,7 +109,7 @@
 						{% if document.aggregate == False %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a></span></h2>
+							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a> on {{ document.created }}</span></h2>
 							{{ document.body_processed|safe }}
 						</div>
 						{% endif %}
@@ -135,7 +121,7 @@
 					{% for document in descriptions %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a></span></h2>
+							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a> on {{ document.created }}</span></h2>
 							{{ document.body_processed|safe }}
 						</div>	
 					{% endfor %}
@@ -146,7 +132,7 @@
 					{% for document in stories %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a></span></h2>
+							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a> on {{ document.created }}</span></h2>
 							{{ document.body_processed|safe }}
 						</div>	
 					{% endfor %}
@@ -157,7 +143,7 @@
 					{% for document in notes %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a></span></h2>
+							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a> on {{ document.created }}</span></h2>
 							{{ document.body_processed|safe }}
 						</div>	
 					{% endfor %}
@@ -168,7 +154,7 @@
 					{% for document in site_docs %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a></span></h2>
+							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a> on {{ document.created }}</span></h2>
 							{{ document.body_processed|safe }}
 						</div>
 					{% endfor %}
@@ -196,12 +182,12 @@
 							<div class="embed-responsive embed-responsive-4by3">
 								{% video embed.url 'large' %}
 							</div>
-							<hr />
 							{% if embed.description %}
 								<p>{{ embed.description }}</p>
 							{% endif %}
-							<p>Contributed by <a href="{% url 'all_content_by_author' embed.author.id %}">{% if embed.author.userprofile.display_name %}{{ embed.author.userprofile.display_name }}{% else %}{{ embed.author }}{% endif %}</a></p>
+							<p>Contributed by <a href="{% url 'all_content_by_author' embed.author.id %}">{% if embed.author.userprofile.display_name %}{{ embed.author.userprofile.display_name }}{% else %}{{ embed.author }}{% endif %}</a> on {{ document.created }}</p>
 							{% endfor %}
+							<hr />
 						</div>
 					</div>
 				{% endif %}
@@ -227,7 +213,7 @@
 				</ul>
 			{% endif %}
 			{% if feature.categories.all %}
-				<h4>Categories</h4>
+				<h4>Themes</h4>
 				<ul class="list-unstyled">
 				{% for category in feature.categories.all %}
 					<li><a href="{% url 'category' category.id %}">{{ category }}</a></li>

@@ -434,6 +434,11 @@ p#lightbox_caption, p#lightbox_image_author {
 	font-size: 14px;
 	line-height: 22px;
 }
+
+.footer a {
+	color: #666666;
+}
+
 .feature-overview-footer .btn-group {
 	margin: 0 5px 0 5px;
 }

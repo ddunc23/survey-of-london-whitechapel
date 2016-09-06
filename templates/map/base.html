@@ -37,6 +37,16 @@
 	</head>
 	<body data-spy="scroll" data-target="#fixed-nav">
 		{% analytical_body_top %}
+		<div id="fb-root"></div>
+		<!-- facebook API -->
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.7";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
+
 		<nav class="navbar navbar-default navbar-fixed-top">
 			<div class="container-fluid">
 			    <div class="navbar-header navbar-left">
@@ -115,6 +125,39 @@
 						<img src="{% static 'img/RGB-Portrait.gif' %}" alt="Arts and Humanities Research Council Logo" style="width: 100px;">
 						<hr />
 						<p>Survey of London Whitechapel is supported by the Arts and Humanities Research Council and is based at University College London.</p>
+					</div>
+					<div class="col-xs-12 col-md-4">
+						<h3 class="front-page-heading">Contact</h3>
+						<p>Survey of London, c/o Historic England, 1 Waterhouse Square, 138-142 Holborn, London EC1N 2ST.</p>
+						<p>Tel. +44 (0)20 7973 3643/4<br />
+						Email. <a href="mailto:solwhitechapel.bartlett@ucl.ac.uk">solwhitechapel.bartlett@ucl.ac.uk</a></p>
+						<a href="https://twitter.com/SurveyofLondon" class="twitter-follow-button" data-show-count="false">Follow @SurveyofLondon</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><br />
+						<div class="fb-follow" data-href="https://www.facebook.com/surveyoflondon" data-layout="button" data-size="small" data-show-faces="true"></div>
+					</div>
+					<div class="col-xs-12 col-md-4 row">
+						<div class="col-xs-12">
+							<h3 class="front-page-heading">Site Map</h3>
+						</div>
+						<div class="col-xs-12 col-md-6">
+							<ul class="list-unstyled">
+								<li><h4>Map Themes</h4></li>
+			    				{% for category in category_links %}
+			    				<li><a href="{% url 'category' category.id %}">{{ category }}</a></li>
+			    				{% endfor %}
+		    				</ul>
+						</div>
+						<div class="col-xs-12 col-md-6">
+							<ul class="list-unstyled">
+								<li><h4>Pages</h4></li>
+								<li><a href="{% url 'site_home' %}">Home</a></li>
+			    				<li><a href="{% url 'map_home' %}">Map</a></li>
+			    				<li><a href="{% url 'blog' %}">News</a></li>
+			    				<hr />
+								{% for link in menu_links %}
+			    				<li><a href="{% url 'page' link.slug %}">{{ link }}</a></li>
+			    				{% endfor %}
+		    				</ul>
+						</div>
 					</div>
 				</div>
 			</div>

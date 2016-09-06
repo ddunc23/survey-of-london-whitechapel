@@ -247,7 +247,7 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				sketchylayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/whitechapel_september_2016/{z}/{x}/{y}.png', {maxZoom: 20});
 
-				scanlayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/test_scan_e6a6f6/{z}/{x}/{y}.png', {maxZoom: 20});
+				scanlayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/os_1873/{z}/{x}/{y}.png', {maxZoom: 20});
 
 				rocquelayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/rocque_fbd9fc/{z}/{x}/{y}.png', {maxZoom: 20});
 				

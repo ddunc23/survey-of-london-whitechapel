@@ -43,54 +43,6 @@
 				{{ page.body|safe }}
 			</div>
 		</div>
-		{% if page.blog_post %}
-		<div class="col-xs-12 col-md-4"><!-- News -->
-			<h1 class="front-page-heading">Next Event</h1>
-			<h3><a href="{% url 'single_post' year=page.blog_post.date_published|date:'Y' post=page.blog_post.slug %}">{{ page.blog_post.title }}</a></h3>
-			<p class="results-preview">{{ page.blog_post.body|truncatewords_html:25|safe|striptags }}</p>
-		</div>
-		{% endif %}
-		{% if posts %}
-			<div class="col-xs-12 col-md-4"><!-- News -->
-				<h1 class="front-page-heading">News</h1>
-				{% for post in posts %}
-				<h3><a href="{% url 'single_post' year=post.date_published|date:'Y' post=post.slug %}">{{ post.title }}</a></h3>
-				<p class="results-preview">{{ post.body|truncatewords_html:25|safe|striptags }}</p>
-				{% endfor %}
-			</div><!-- / News -->
-		{% endif %}
-	</div>
-
-	
-	{% if page.images %}
-	<div class="row"><!-- Featured Images -->
-		<div class="col-xs-12"><h1 class="front-page-heading">Featured Images</h1></div>
-	</div>
-	<div class="row">
-		{% for image in page.images.all %}
-		<div class="col-xs-12 col-md-4">
-		<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 400x225 crop='0,0' %}" class="img-rounded" style="width: 100%;"></a>
-		<h3><span class="text-muted"><a href="{% url 'detail' image.feature.id %}#images">{{ image.title }}</a></span><br />
-		<span class="small"><a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a> | <a href="{% url 'detail' image.feature.id %}">{{ image.feature }}</a></h3>
-		</div>
- 		{% endfor %}
-	</div>	
-	{% endif %}
-
-	<div class="row"><!-- Featured Content and Latest Images -->
-		<div class="col-xs-12 col-md-8"><!-- Featured Contributions -->
-			<h1 class="front-page-heading">Featured Contributions</h1>
-			<div class="row">
-				{% for document in page.documents.all %}
-				{% if document.published == True %}
-				<div class="{% cycle 'col-xs-12' 'col-xs-12 col-md-6' 'col-xs-12 col-md-6' %}">
-					<h3><a href="{% url 'detail' document.feature.id %}#{{ document.document_type }}?{{ document.title|slugify }}">{{ document.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{{ document.author.userprofile.display_name }}</a> | {{ document.feature }} | Submitted {{ document.last_edited }}</span></h3>
-					<p>{{ document.body|safe|truncatewords_html:40|striptags }}</p>
-				</div>
-				{% endif %}
-				{% endfor %}
-			</div>
-		</div><!-- / Featured Contributions -->
 		
 		<div class="col-xs-12 col-md-4"><!-- Latest contributions -->
 			<h1 class="front-page-heading">Latest Contributions</h1>
@@ -123,8 +75,55 @@
 			{% endfor %}
 		</div> <!-- / Latest contributions -->
 
+	</div>
+
+	
+	
+
+	<div class="row">
+		<div class="col-xs-12 col-md-4"><!-- Featured Contributions -->
+			<h1 class="front-page-heading">Building of the Week</h1>
+			<div class="row">
+				{% for document in page.documents.all %}
+				{% if document.published == True %}
+				<div class="{% cycle 'col-xs-12' 'col-xs-12 col-md-6' 'col-xs-12 col-md-6' %}">
+					<img src="media/{{ document.feature.thumbnail }}" style="width: 100%;"/>
+					<h3><a href="{% url 'detail' document.feature.id %}#{{ document.document_type }}?{{ document.title|slugify }}">{{ document.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{{ document.author.userprofile.display_name }}</a> | {{ document.feature }}</span></h3>
+					<p>{{ document.body|safe|truncatewords_html:40|striptags }}</p>
+				</div>
+				{% endif %}
+				{% endfor %}
+			</div>
+		</div><!-- / Featured Contributions -->
+		<div class="col-xs-12 col-md-8"><! Help Movie -->
+			<h1 class="front-page-heading">Browsing the Map</h1>
+			<div class="embed-responsive embed-responsive-16by9">
+				<iframe width="560" height="315" src="https://www.youtube.com/embed/EoUhVp5NIQE" frameborder="0" allowfullscreen></iframe>
+			</div>
+			<p class="lead">If you're not sure about how to get started, we've made a short video to give you a quick overview.</p>
+		</div>
+		
+		<!-- 
+		{% if page.blog_post %}
+		<div class="col-xs-12 col-md-4"><!-- Featured blog post / next event--><!--
+			<h1 class="front-page-heading">Next Event</h1>
+			<h3><a href="{% url 'single_post' year=page.blog_post.date_published|date:'Y' post=page.blog_post.slug %}">{{ page.blog_post.title }}</a></h3>
+			<p class="results-preview">{{ page.blog_post.body|truncatewords_html:25|safe|striptags }}</p>
+		</div>
+		{% endif %}
+		{% if posts %}
+			<div class="col-xs-12 col-md-4"><!-- News --><!--
+				<h1 class="front-page-heading">News</h1>
+				{% for post in posts %}
+				<h3><a href="{% url 'single_post' year=post.date_published|date:'Y' post=post.slug %}">{{ post.title }}</a></h3>
+				<p class="results-preview">{{ post.body|truncatewords_html:25|safe|striptags }}</p>
+				{% endfor %}
+			</div><!-- / News --><!-- -->
+		{% endif %}
+
 	</div><!-- / Featured Content and Latest Images -->
 
+	{% if page.media.all %}
 	<div class="row front-page-media"><!-- Featured Media -->
 		<div class="col-xs-12">
 			<h1 class="front-page-heading">Audio and Video</h1>
@@ -146,11 +145,28 @@
 			{% endfor %}
 		</div>
 	</div>
+	{% endif %}
+
+	{% if page.images %}
+	<!--<div class="row"> <!-- Featured images --><!--
+		<div class="col-xs-12"><h1 class="front-page-heading">Images of Whitechapel</h1></div>
+	</div>
+	<div class="row">
+		{% for image in page.images.all %}
+		<div class="col-xs-12 col-md-4">
+		<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 400x225 crop='0,0' %}" class="img-rounded" style="width: 100%;"></a>
+		<h3><span class="text-muted"><a href="{% url 'detail' image.feature.id %}#images">{{ image.title }}</a></span><br />
+		<span class="small"><a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a> | <a href="{% url 'detail' image.feature.id %}">{{ image.feature }}</a></h3>
+		</div>
+ 		{% endfor %}
+	</div>	-->
+	{% endif %}
 
 	{% if categories %}
 	<div class="row"><!-- Themes / Routes / Tours -->
 		<div class="col-xs-12">
 			<h1 class="front-page-heading">Explore Whitechapel</h1>
+			<p class="lead">Don't know where to begin? Click on a theme to start uncovering Whitechapel's past.</p>
 			<br />
 		</div>
 	</div>
