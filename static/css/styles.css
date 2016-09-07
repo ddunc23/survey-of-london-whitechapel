@@ -217,8 +217,9 @@ html, body {
 	width:100%;
 }
 .themed-content .col-xs-12 > div {
-	background-color: #f8f8f8; 
-	box-shadow: 0px 1px 5px #909090;
+	/*background-color: #f8f8f8; 
+	box-shadow: 0px 1px 5px #909090;*/
+	background-color: #f5f5f5;
 }
 .themed-content .col-xs-12 > div img {
 	width:100%;
