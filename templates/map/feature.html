@@ -4,7 +4,7 @@
 	{% if feature.feature_type == 'GREATER_WHITECHAPEL' %}
 	<div class="feature-overview-thumbnail">
 	<button type="button" class="btn btn-default btn-xs close-this"><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-		<a href="{% url 'detail' feature.id %}"><img src="{% static 'img/no_thumbnail.png' %}"></a>
+		<img src="{% static 'img/no_thumbnail.png' %}">
 	</div>
 	<div class="feature-icons">
 		{% if documents %}<span class="glyphicon glyphicon-file" class="documentIcon" data-toggle="tooltip" data-placement="left" title="Research and Memories ({{ documents|length }})"></span> {% endif %}{% if images %}<span class="glyphicon glyphicon-picture" class="imageIcon" data-toggle="tooltip" data-placement="top" title="Images ({{ images|length }})"></span> {% endif %}{% if media %}<span class="glyphicon glyphicon-play" class="mediaIcon" data-toggle="tooltip" data-placement="bottom" title="Audio and Video ({{ media|length }})"></span> {% endif %}{% if feature.site %}<span class="glyphicon glyphicon-home" class="siteIcon" data-toggle="tooltip" data-placement="right" title="Part of {{ feature.site }}"></span>{% endif %}
@@ -21,7 +21,7 @@
 	{% else %}
 	<div class="feature-overview-thumbnail">
 	<button type="button" class="btn btn-default btn-xs close-this"><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-		<a href="{% url 'detail' feature.id %}">{% if feature.thumbnail %}<img src="{% thumbnail feature.thumbnail 300x170 crop='0,0' %}">{% else %}<a href="{% url 'detail' feature.id %}"><img src="{% static 'img/no_thumbnail.png' %}">{% endif %}</a>
+		{% if feature.thumbnail %}<img src="{% thumbnail feature.thumbnail 300x170 crop='0,0' %}">{% else %}<img src="{% static 'img/no_thumbnail.png' %}">{% endif %}
 	</div>
 	<div class="feature-icons">
 		{% if documents %}<span class="glyphicon glyphicon-file" class="documentIcon" data-toggle="tooltip" data-placement="left" title="Research and Memories ({{ documents|length }})"></span> {% endif %}{% if images %}<span class="glyphicon glyphicon-picture" class="imageIcon" data-toggle="tooltip" data-placement="top" title="Images ({{ images|length }})"></span> {% endif %}{% if media %}<span class="glyphicon glyphicon-play" class="mediaIcon" data-toggle="tooltip" data-placement="bottom" title="Audio and Video ({{ media|length }})"></span> {% endif %}{% if feature.site %}<span class="glyphicon glyphicon-home" class="siteIcon" data-toggle="tooltip" data-placement="right" title="Part of {{ feature.site }}"></span>{% endif %}

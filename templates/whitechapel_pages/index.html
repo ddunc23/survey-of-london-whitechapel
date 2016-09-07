@@ -161,24 +161,20 @@
 		</div>
 	</div>
 	
-	<div class="row themed-content">
-		{% for category in categories %}
-		{% if category.feature_set.all %}
+	<div class="row themed-content"><!-- Themes -->
+		{% for category in categories %}	
 		<div class="col-xs-12 col-md-3">
 			<div>
 				<a href="{% url 'map.views.category' category.id %}"><img src="{% thumbnail category.thumbnail 360x204 %}"></a>
 				<p><a href="{% url 'map.views.category' category.id %}">{{ category.name }}</a></p>
 			</div>
-		
+		</div>
 		{% if forloop.counter|divisibleby:4 %}
 		</div>
 		<div class="row themed-content">
 		{% endif %}
-
-		</div>
-		{% endif %}
 		{% endfor %}
-	</div><!-- / Themed Content -->
+	</div><!-- / Themes -->
 	{% endif %}
 </div><!-- / Container -->
 

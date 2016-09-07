@@ -9,7 +9,7 @@ import datetime
 def site_home(request):
 	"""The front page of the website"""
 	page = Page.objects.get(is_front_page=True)
-	categories = Category.objects.all()
+	categories = Category.objects.all().order_by('name')
 	images = Image.objects.filter(published=True).exclude(created=None).order_by('-created')[:5]
 	documents = Document.objects.filter(published=True).exclude(created=None).order_by('-created')[:5]
 	media = Media.objects.filter(published=True).exclude(created=None).order_by('-created')[:5]

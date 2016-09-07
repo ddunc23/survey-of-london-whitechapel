@@ -269,7 +269,7 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 					title_box_title = 'No results for "' + q + '"';
 				}
 
-				map.attributionControl.addAttribution("Contains OS data &copy; Crown copyright and OpenMap Local 2016 | Addresses &copy; OpenStreetMap Contributors");
+				map.attributionControl.addAttribution("Contains OS data &copy; Crown copyright and OpenMap Local 2016, &copy; Environment Agency copyright and/or database right 2015");
 
 				var baseMaps = {
 					"Base Map": sketchylayer,
@@ -387,7 +387,7 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 			map.scrollWheelZoom.disable();
 			map.keyboard.disable();
 			map.fitBounds(buildings);
-			map.attributionControl.addAttribution("Contains OS data &copy; Crown copyright and OpenMap Local 2016 | Addresses &copy; OpenStreetMap Contributors");
+			map.attributionControl.addAttribution("Contains OS data &copy; Crown copyright and OpenMap Local 2016");
 		}
 
 		$.getJSON(jsonUrl).done(function(data) {

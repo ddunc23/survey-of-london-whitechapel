@@ -3,9 +3,9 @@ from map.models import Category
 from django.db.models import Count
 
 def menu_links(request):
-	menu_links = Page.objects.all().exclude(is_front_page=True)
+	menu_links = Page.objects.all().exclude(is_front_page=True).order_by('title')
 	return {'menu_links': menu_links}
 
 def category_links(request):
-	category_links = Category.objects.annotate(feature_count=Count('feature')).filter(feature_count__gte=1)
+	category_links = Category.objects.annotate(feature_count=Count('feature')).filter(feature_count__gte=1).order_by('name')
 	return {'category_links': category_links}
