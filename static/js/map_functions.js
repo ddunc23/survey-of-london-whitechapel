@@ -249,7 +249,7 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				scanlayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/os_1873/{z}/{x}/{y}.png', {maxZoom: 20});
 
-				rocquelayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/rocque_fbd9fc/{z}/{x}/{y}.png', {maxZoom: 20});
+				rocquelayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/rocque/{z}/{x}/{y}.png', {maxZoom: 20});
 				
 				buildings = L.geoJson(geojson, {
 					onEachFeature: onEachFeature,
