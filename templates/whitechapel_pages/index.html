@@ -25,7 +25,7 @@
 		<h2 class="text-center">{{ page.title }} | Draft</h2>
 		<br />
 		<div class="text-center">
-			<a href="{% url 'map_home' %}" class="btn btn-primary btn-lg">Explore the Map</a>
+			<a href="{% url 'map_home' %}" class="btn btn-lg explore">Explore the Map</a>
 		</div>
 	</div>
 	<div class="carousel">
@@ -44,6 +44,14 @@
 			</div>
 		</div>
 		
+		<!--{% if page.blog_post %}
+		<div class="col-xs-12 col-md-4 well"><!-- Featured blog post / next event--><!--
+			<h1 class="front-page-heading">Next Event</h1>
+			<h3><a href="{% url 'single_post' year=page.blog_post.date_published|date:'Y' post=page.blog_post.slug %}">{{ page.blog_post.title }}</a></h3>
+			<p class="results-preview">{{ page.blog_post.body|truncatewords_html:25|safe|striptags }}</p>
+		</div>
+		{% endif %}-->
+
 		<div class="col-xs-12 col-md-4"><!-- Latest contributions -->
 			<h1 class="front-page-heading">Latest Contributions</h1>
 			{% for item in latest|slice:":4" %}
@@ -102,24 +110,6 @@
 			</div>
 			<p class="lead">If you're not sure about how to get started, we've made a short video to give you a quick overview.</p>
 		</div>
-		
-		<!-- 
-		{% if page.blog_post %}
-		<div class="col-xs-12 col-md-4"><!-- Featured blog post / next event--><!--
-			<h1 class="front-page-heading">Next Event</h1>
-			<h3><a href="{% url 'single_post' year=page.blog_post.date_published|date:'Y' post=page.blog_post.slug %}">{{ page.blog_post.title }}</a></h3>
-			<p class="results-preview">{{ page.blog_post.body|truncatewords_html:25|safe|striptags }}</p>
-		</div>
-		{% endif %}
-		{% if posts %}
-			<div class="col-xs-12 col-md-4"><!-- News --><!--
-				<h1 class="front-page-heading">News</h1>
-				{% for post in posts %}
-				<h3><a href="{% url 'single_post' year=post.date_published|date:'Y' post=post.slug %}">{{ post.title }}</a></h3>
-				<p class="results-preview">{{ post.body|truncatewords_html:25|safe|striptags }}</p>
-				{% endfor %}
-			</div><!-- / News --><!-- -->
-		{% endif %}
 
 	</div><!-- / Featured Content and Latest Images -->
 

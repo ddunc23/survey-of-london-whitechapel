@@ -10,9 +10,15 @@
 		<div class="col-xs-12 col-md-7">
 			{% if feature.b_name %}
 				<h1>{{ feature.b_name }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Back to Map</a>{% if not histories and not descriptions and not stories and not images and not media %}{% else %}<a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a>{% endif %}</div></h1>
+				{% if feature.site %}
+				<h2>Part of {{ feature.site }}</h2>
+				{% endif %}
 				<h2><small>{% if feature.short_description %}{{ feature.short_description }} {% endif %}{% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a></small> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
 			{% else %}
 				<h1>{{ feature.address }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Back to Map</a><a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a></div></h1>
+				{% if feature.site %}
+				<h2>Part of {{ feature.site }}</h2>
+				{% endif %}
 				<h2><small>{% if feature.short_description %}{{ feature.short_description }} {% endif %}{% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a></small> {% if request.user.is_authenticated and request.user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
 			{% endif %}
 		</div>
@@ -29,7 +35,7 @@
 
 		{% else %}
 			<ul class="nav nav-pills" role="tablist" id="docTabs">
-					<li role="presentation" {% if histories %} class="active{% else %} disabled {% endif %}"><a href="#history" aria-controls="history" role="tab" data-toggle="tab">Research</a></li>
+					<li role="presentation" class="{% if histories %} active {% else %} disabled {% endif %}"><a href="#history" aria-controls="history" role="tab" data-toggle="tab">Research</a></li>
 					<li role="presentation" class="{% if descriptions and not histories %} active {% endif %}{% if not descriptions %} disabled {% endif %}"><a href="#description" aria-controls="description" role="tab" data-toggle="tab">Description</a></li>
 					<li role="presentation" class="{% if stories and not histories and not descriptions %} active {% endif %}{% if not stories %} disabled {% endif %}"><a href="#story" aria-controls="stories" role="tab" data-toggle="tab">Memories</a></li>
 					<li role="presentation" class="{% if notes and not histories and not descriptions and not stories %} active {% endif %}{% if not notes %} disabled {% endif %}"><a href="#notes" aria-controls="stories" role="tab" data-toggle="tab">Notes</a></li>
@@ -104,7 +110,7 @@
 		<div class="col-xs-12 col-md-7 feature-detail">
 			<div class="tab-content">
 				{% if histories %}
-					<div role="tabpanel" class="tab-pane active" id="history">
+					<div role="tabpanel" class="tab-pane {% if histories %}active{% endif %}" id="history">
 					{% for document in histories %}
 						{% if document.aggregate == False %}
 						<div class="document">
@@ -196,14 +202,14 @@
 		{% endif %} 
 		</div>
 		<div class="col-xs-12 col-md-2">
-			{% if other_features %}
+			<!--{% if other_features %}
 				<h4>Other Places on this Site</h4>
 				<ul class="list-unstyled">
 				{% for feature in other_features %}
 					<li><a href="{% url 'detail' feature.id %}">{{ feature }}</a></li>
 				{% endfor %}
 				</ul>
-			{% endif %}
+			{% endif %}-->
 			{% if similar %}
 				<h4>Similar Places</h4>
 				<ul class="list-unstyled">

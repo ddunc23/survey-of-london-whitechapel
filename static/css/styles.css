@@ -503,6 +503,19 @@ p.results-preview {
 	padding-top: 100px;
 }
 
+.explore {
+	background-image: url("/static/img/explore.jpg");
+	color: black;
+	font-size: 28px;
+	border: none;
+	background-position: center;
+}
+
+.explore:active {
+	background-image: url("/static/img/explore.jpg");
+	background-position: center;
+}
+
 /* Medium Editor */
 
 #div_id_body .controls {
