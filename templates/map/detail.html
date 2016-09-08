@@ -2,36 +2,78 @@
 
 
 {% block json-ld %}
-
-{
-	"@context": {
-	    "name": "http://schema.org/name",
-	    "description": "http://schema.org/description",
-	    "image": {
-	      	"@id": "http://schema.org/image",
-	      	"@type": "@id"
-    	},
-	    "geo": "http://schema.org/geo",
-	    "latitude": {
-		    "@id": "http://schema.org/latitude",
-		    "@type": "xsd:float"
-	    },
-	    "longitude": {
-		    "@id": "http://schema.org/longitude",
-		    "@type": "xsd:float"
-	    },
-    	"xsd": "http://www.w3.org/2001/XMLSchema#"
-	  		},
-	    "name": "{% if feature.b_name %}{{ feature.b_name }}{% else %}{{ feature.address }}{% endif %}",
-	    "description": "{% if feature.short_description %}{{ feature.short_description }}{% endif %}",
-	    "image": "{% if feature.thumbnail %}https://surveyoflondon.org/media/{{ feature.thumbnail }}{% endif %}",
-	    "geo": {
-	    	"latitude": "{{ feature.geom.centroid.y }}",
-	    	"longitude": "{{ feature.geom.centroid.x }}"
-	    }
-}
-
-{% endblock %}
+		,{
+			"@context": "http://schema.org",
+			"@type": "ItemPage",
+			"about": {
+				"@context": "http://schema.org",
+				"@type": "Place",
+			    "name": "{% if feature.b_name %}{{ feature.b_name }}{% else %}{{ feature.address }}{% endif %}",
+			    "description": "{% if feature.short_description %}{{ feature.short_description }}{% endif %}",
+			    "image": "{% if feature.thumbnail %}https://surveyoflondon.org/media/{{ feature.thumbnail }}{% endif %}",
+			    "geo": {
+			    	"@type": "GeoCoordinates",
+			    	"latitude": "{{ feature.geom.centroid.y }}",
+			    	"longitude": "{{ feature.geom.centroid.x }}"
+			    }
+		    }
+		}{% if histories %}{% for document in histories %}
+		,{
+			"@context": "http://schema.org",
+			"@type": "DigitalDocument",
+			"name": "{{ document.title }}",
+			"author": "{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}",
+			"about": {
+				"@context": "http://schema.org",
+				"@type": "Place",
+			    "name": "{% if feature.b_name %}{{ feature.b_name }}{% else %}{{ feature.address }}{% endif %}",
+			    "description": "{% if feature.short_description %}{{ feature.short_description }}{% endif %}",
+			    "image": "{% if feature.thumbnail %}https://surveyoflondon.org/media/{{ feature.thumbnail }}{% endif %}",
+			    "geo": {
+			    	"@type": "GeoCoordinates",
+			    	"latitude": "{{ feature.geom.centroid.y }}",
+			    	"longitude": "{{ feature.geom.centroid.x }}"
+			    }
+			}
+		}{% endfor %}{% endif %}{% if descriptions %}{% for document in descriptions %}
+		,{
+			"@context": "http://schema.org",
+			"@type": "DigitalDocument",
+			"name": "{{ document.title }}",
+			"author": "{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}",
+			"about": {
+				"@context": "http://schema.org",
+				"@type": "Place",
+			    "name": "{% if feature.b_name %}{{ feature.b_name }}{% else %}{{ feature.address }}{% endif %}",
+			    "description": "{% if feature.short_description %}{{ feature.short_description }}{% endif %}",
+			    "image": "{% if feature.thumbnail %}https://surveyoflondon.org/media/{{ feature.thumbnail }}{% endif %}",
+			    "geo": {
+			    	"@type": "GeoCoordinates",
+			    	"latitude": "{{ feature.geom.centroid.y }}",
+			    	"longitude": "{{ feature.geom.centroid.x }}"
+			    }
+			}
+		}
+		{% endfor %}{% endif %}{% if stories %}{% for document in stories %}
+		,{
+			"@context": "http://schema.org",
+			"@type": "DigitalDocument",
+			"name": "{{ document.title }}",
+			"author": "{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}",
+			"about": {
+				"@context": "http://schema.org",
+				"@type": "Place",
+			    "name": "{% if feature.b_name %}{{ feature.b_name }}{% else %}{{ feature.address }}{% endif %}",
+			    "description": "{% if feature.short_description %}{{ feature.short_description }}{% endif %}",
+			    "image": "{% if feature.thumbnail %}https://surveyoflondon.org/media/{{ feature.thumbnail }}{% endif %}",
+			    "geo": {
+			    	"@type": "GeoCoordinates",
+			    	"latitude": "{{ feature.geom.centroid.y }}",
+			    	"longitude": "{{ feature.geom.centroid.x }}"
+			    }
+			}
+		}{% endfor %}{% endif %}
+		{% endblock %}
 
 
 {% block content %}

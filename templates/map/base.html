@@ -36,8 +36,30 @@
 		<link rel="stylesheet" type="text/css" href="{% static 'slick/slick.css' %}"/>
 		<!-- Schema Metadata -->
 		<script type="application/ld+json">
-		{% block json-ld %}
-		{% endblock %}
+		[{
+			"@context": "http://schema.org",
+			"@type": "WebSite",
+			"url": "https://surveyoflondon.org/",
+			"author": {
+				"@context": "http://schema.org",
+				"@type": "EducationalOrganization",
+				"name": "Survey of London",
+				"address": {
+					"@context": "http://schema.org",
+					"@type": "PostalAddress",
+					"addressCountry": "United Kingdom",
+					"addressLocality": "London",
+					"postalCode": "EC1N 2ST",
+					"streetAddress": "Survey of London, c/o Historic England, 1 Waterhouse Square, 138-142 Holborn"
+				}
+			},
+			"about": {
+				"@context": "http://schema.org",
+				"@type": "Place",
+				"name": "Whitechapel"
+			}
+		}{% block json-ld %}{% endblock %}
+		]
 		</script>
 	</head>
 	<body data-spy="scroll" data-target="#fixed-nav">
