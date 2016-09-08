@@ -3,11 +3,17 @@ Markdown==2.6.5
 Pillow==3.1.1
 Unipath==1.1
 Whoosh==2.7.2
+amqp==1.4.9
+anyjson==0.3.3
 argparse==1.2.1
+billiard==3.3.0.23
 bleach==1.4.2
+celery==3.1.23
 django-allauth==0.25.2
 django-analytical==2.2.1
+django-appconf==1.0.2
 django-autocomplete-light==3.1.6
+django-celery-email==1.1.5
 django-ckeditor==5.0.3
 django-crispy-forms==1.6.0
 django-dbbackup==2.5.0
@@ -29,6 +35,7 @@ easy-thumbnails==2.3
 html2text==2016.4.2
 html5lib==0.9999999
 jsonfield==1.0.3
+kombu==3.0.35
 mbutil==0.2.0
 mod-wsgi==4.5.2
 oauthlib==1.1.1

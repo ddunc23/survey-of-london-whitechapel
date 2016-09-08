@@ -64,7 +64,6 @@ def posts_by_author(request, author):
 	paginator = Paginator(posts, 10)
 
 	page = request.GET.get('page')
-	subtitle = 'All posts by '
 	
 	try:
 		posts = paginator.page(page)
@@ -73,4 +72,4 @@ def posts_by_author(request, author):
 	except EmptyPage:
 		posts = paginator.page(paginator.num_pages)
 
-	return render(request, 'whitechapel_blog/author_archive.html', {'posts': posts, 'subtitle': subtitle, 'author': author})
+	return render(request, 'whitechapel_blog/author_archive.html', {'posts': posts, 'author': author})

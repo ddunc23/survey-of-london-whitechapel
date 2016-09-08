@@ -58,6 +58,8 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.google',
     # Honey pot app to stop bad spammers that are bad
     'honeypot',
+    # Celery email message queue
+    'djcelery_email',
 )
 
 MIDDLEWARE_CLASSES = (
