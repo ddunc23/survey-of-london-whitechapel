@@ -1,5 +1,39 @@
 {% extends 'map/base.html' %}
 
+
+{% block json-ld %}
+
+{
+	"@context": {
+	    "name": "http://schema.org/name",
+	    "description": "http://schema.org/description",
+	    "image": {
+	      	"@id": "http://schema.org/image",
+	      	"@type": "@id"
+    	},
+	    "geo": "http://schema.org/geo",
+	    "latitude": {
+		    "@id": "http://schema.org/latitude",
+		    "@type": "xsd:float"
+	    },
+	    "longitude": {
+		    "@id": "http://schema.org/longitude",
+		    "@type": "xsd:float"
+	    },
+    	"xsd": "http://www.w3.org/2001/XMLSchema#"
+	  		},
+	    "name": "{% if feature.b_name %}{{ feature.b_name }}{% else %}{{ feature.address }}{% endif %}",
+	    "description": "{% if feature.short_description %}{{ feature.short_description }}{% endif %}",
+	    "image": "{% if feature.thumbnail %}https://surveyoflondon.org/media/{{ feature.thumbnail }}{% endif %}",
+	    "geo": {
+	    	"latitude": "{{ feature.geom.centroid.y }}",
+	    	"longitude": "{{ feature.geom.centroid.x }}"
+	    }
+}
+
+{% endblock %}
+
+
 {% block content %}
 {% load static %}
 <div id="" class="map-small" style="background: {% if feature.thumbnail %}url('/media/{{ feature.thumbnail }}');{% else %}url('{% static 'img/no_thumbnail_large.png' %}');{% endif %} background-size: cover; background-position: {% if feature.thumbnail_position == 'TOP' %} top; {% elif feature.thumbnail_position == 'BOTTOM' %} bottom; {% else %} center; {% endif %}" class="hidden-sm hidden-xs"></div>

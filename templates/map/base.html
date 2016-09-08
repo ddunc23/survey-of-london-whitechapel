@@ -34,6 +34,11 @@
 		{% analytical_head_bottom %}
 		<!-- Slick (ick) Image Carousel CSS-->
 		<link rel="stylesheet" type="text/css" href="{% static 'slick/slick.css' %}"/>
+		<!-- Schema Metadata -->
+		<script type="application/ld+json">
+		{% block json-ld %}
+		{% endblock %}
+		</script>
 	</head>
 	<body data-spy="scroll" data-target="#fixed-nav">
 		{% analytical_body_top %}
@@ -149,10 +154,7 @@
 						<div class="col-xs-12 col-md-6">
 							<ul class="list-unstyled">
 								<li><h4>Pages</h4></li>
-								<li><a href="{% url 'site_home' %}">Home</a></li>
-			    				<li><a href="{% url 'map_home' %}">Map</a></li>
 			    				<li><a href="{% url 'blog' %}">News</a></li>
-			    				<hr />
 								{% for link in menu_links %}
 			    				<li><a href="{% url 'page' link.slug %}">{{ link }}</a></li>
 			    				{% endfor %}
