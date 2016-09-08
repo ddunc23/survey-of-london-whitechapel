@@ -1,0 +1,27 @@
+{% extends 'map/results_base.html' %}
+{% block results_title %}<h2>All places on {{ site }}</h2>{% endblock %}
+
+{% block results %}
+
+<div class="tab-content">
+	{% if features %}
+	<div role="tabpanel" class="tab-pane active" id="features">
+		{% for feature in features %}
+			<h3><a href="{% url 'detail' feature.id %}">{{ feature }}</a></h3>
+			<p class="results-preview">{{ feature.short_description }}</p>
+		{% endfor %}
+	</div>
+	{% endif %}
+</div>
+
+{% endblock %}
+{% block results_script %}
+
+<script>
+
+	var title_box_title = 'All places on {{ site }}';
+
+	var jsonUrl = '{% url "features_by_site" site.id %}';
+	loadFeatures(jsonUrl, 'main', false);
+</script>
+{% endblock %}

@@ -154,6 +154,13 @@ def date_range(request, build_date):
 
 	return render(request, 'map/date_range.html', {'title': 'Survey of London', 'build_range': build_range }) 
 
+def site(request, site):
+	site = get_object_or_404(Site, id=site)
+	features = Feature.objects.filter(site=site)
+
+	return render(request, 'map/site.html', {'site': site, 'features': features})
+
+
 def search_map(request):
 	"""Show search results on map"""
 	if request.GET['q']:
@@ -660,6 +667,12 @@ def features_by_author(request, author):
 		media = Feature.objects.filter(media__author=author, media__published=True)
 		features = list(chain(documents, images, media))
 		serializer = FeatureSerializer(features, many=True)
+		return JSONResponse(serializer.data)
+
+def features_by_site(request, site):
+	if request.method == 'GET':
+		features = Feature.objects.filter(site=site)
+		serializer = FeatureSerializer(features, many=True)	
 		return JSONResponse(serializer.data)
 
 def search_features(request):

@@ -25,7 +25,6 @@ def posts_by_year(request, year):
 	paginator = Paginator(posts, 10)
 
 	page = request.GET.get('page')
-	subtitle = 'All posts from ' + year
 	
 	try:
 		posts = paginator.page(page)
@@ -34,7 +33,7 @@ def posts_by_year(request, year):
 	except EmptyPage:
 		posts = paginator.page(paginator.num_pages)
 
-	return render(request, 'whitechapel_blog/year_archive.html', {'posts': posts, 'subtitle': subtitle})
+	return render(request, 'whitechapel_blog/year_archive.html', {'posts': posts, 'year': year})
 
 
 def posts_by_category(request, category):
@@ -46,7 +45,6 @@ def posts_by_category(request, category):
 	paginator = Paginator(posts, 10)
 	
 	page = request.GET.get('page')
-	subtitle = category.title
 	
 	try:
 		posts = paginator.page(page)
@@ -55,7 +53,7 @@ def posts_by_category(request, category):
 	except EmptyPage:
 		posts = paginator.page(paginator.num_pages)
 
-	return render(request, 'whitechapel_blog/category_archive.html', {'posts': posts, 'subtitle': subtitle})
+	return render(request, 'whitechapel_blog/category_archive.html', {'posts': posts, 'category': category})
 
 
 def posts_by_author(request, author):

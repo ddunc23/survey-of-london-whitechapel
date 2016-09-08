@@ -10,16 +10,10 @@
 		<div class="col-xs-12 col-md-7">
 			{% if feature.b_name %}
 				<h1>{{ feature.b_name }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Back to Map</a>{% if not histories and not descriptions and not stories and not images and not media %}{% else %}<a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a>{% endif %}</div></h1>
-				{% if feature.site %}
-				<h2>Part of {{ feature.site }}</h2>
-				{% endif %}
-				<h2><small>{% if feature.short_description %}{{ feature.short_description }} {% endif %}{% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a></small> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
+				<h2><small>{% if feature.short_description %}{{ feature.short_description }} {% endif %}{% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a>{% if feature.site %} | Part of <a href="{% url 'site' feature.site.id %}">{{ feature.site }}</a>{% endif %}</small> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
 			{% else %}
 				<h1>{{ feature.address }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Back to Map</a><a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a></div></h1>
-				{% if feature.site %}
-				<h2>Part of {{ feature.site }}</h2>
-				{% endif %}
-				<h2><small>{% if feature.short_description %}{{ feature.short_description }} {% endif %}{% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a></small> {% if request.user.is_authenticated and request.user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
+				<h2><small>{% if feature.short_description %}{{ feature.short_description }} {% endif %}{% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a>{% if feature.site %} | Part of <a href="{% url 'site' feature.site.id %}">{{ feature.site }}</a>{% endif %}</small> {% if request.user.is_authenticated and request.user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
 			{% endif %}
 		</div>
 		<div class="col-xs-2">
@@ -169,14 +163,20 @@
 				{% if images %}
 					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories and not notes and not site_docs %} active{% endif %} row" id="images">
 						{% load thumbnail %}
-						{% for image in images %}
-						<div class="col-xs-12 col-sm-4 col-md-4">
-							<div class="item-card">
-								<a href="#" class="gallery_item" data-image="/media/{{ image.file }}" data-caption="{{ image.title }}" data-author="{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}" data-description="{% if image.description %}{{ image.description }}{% endif %}"><img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}"></a>
-								<p>{{ image.title }}<br />Contributed by <a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a></p>
+						<div class="row">
+							{% for image in images %}
+							<div class="col-xs-12 col-sm-4 col-md-4">
+								<div class="item-card">
+									<a href="#" class="gallery_item" data-image="/media/{{ image.file }}" data-caption="{{ image.title }}" data-author="{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}" data-description="{% if image.description %}{{ image.description }}{% endif %}"><img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}"></a>
+									<p>{{ image.title }}<br />Contributed by <a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a></p>
+								</div>
+							</div>	
+							{% if forloop.counter|divisibleby:3 %}
 							</div>
-						</div>	
-						{% endfor %}
+							<div class="row">
+							{% endif %}
+							{% endfor %}
+						</div>
 					</div>
 				{% endif %}
 				{% if media %}
@@ -202,18 +202,10 @@
 		{% endif %} 
 		</div>
 		<div class="col-xs-12 col-md-2">
-			<!--{% if other_features %}
-				<h4>Other Places on this Site</h4>
-				<ul class="list-unstyled">
-				{% for feature in other_features %}
-					<li><a href="{% url 'detail' feature.id %}">{{ feature }}</a></li>
-				{% endfor %}
-				</ul>
-			{% endif %}-->
 			{% if similar %}
 				<h4>Similar Places</h4>
 				<ul class="list-unstyled">
-				{% for feature in similar %}
+				{% for feature in similar|slice:":5" %}
 					<li><a href="{% url 'detail' feature.id %}">{{ feature }}</a></li>
 				{% endfor %}
 				</ul>

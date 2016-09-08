@@ -1,9 +1,6 @@
 {% extends 'whitechapel_blog/blog_base.html' %}
 
-{% block title_block %}
-			<h1>News and Events {% if subtitle %}| {{ subtitle }} {% if author.userprofile.display_name %}{{ author.userprofile.display_name }} {% else %} {{ author }}{% endif %}{% endif %}</h1>
-			<hr />
-{% endblock %}
+{% block title_block %} | All Posts by {% if author.userprofile.display_name %}{{ author.userprofile.display_name }} {% else %} {{ author }}{% endif %}{% endblock %}
 
 {% block posts %}
 
