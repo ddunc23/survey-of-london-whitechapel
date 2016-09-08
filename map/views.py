@@ -171,7 +171,7 @@ def search_map(request):
 	sqs = SearchQuerySet().all().filter(content=query)
 
 	documents = sqs.models(Document).filter(published=True)
-	features = sqs.models(Feature).filter_or(name__exact=query, address__exact=query)
+	features = sqs.models(Feature).filter_or(name__exact=query, address__exact=query).exclude(address='Greater Whitechapel')
 	images = sqs.models(Image).filter(published=True)
 	media = sqs.models(Media).filter(published=True)
 	contributors = sqs.models(User)
@@ -679,7 +679,7 @@ def search_features(request):
 	sqs = SearchQuerySet().all()
 	if request.method == 'GET':
 		if request.GET['q']:
-			results = sqs.filter(content=request.GET['q']).models(Feature)
+			results = sqs.filter(content=request.GET['q']).models(Feature).exclude(address='Greater Whitechapel')
 			features = []
 			for result in results:
 				features.append(result.object)
