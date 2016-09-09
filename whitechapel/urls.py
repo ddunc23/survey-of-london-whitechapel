@@ -7,6 +7,10 @@ from rest_framework import routers, serializers, viewsets
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 from map.serializers import FeatureSerializer
 from filebrowser.sites import site
+from django.contrib.sitemaps.views import sitemap
+from map.views import MapSitemap
+from whitechapel_pages.views import PageSitemap, FrontPageSitemap
+from whitechapel_blog.views import BlogPostSitemap
 
 # Django REST Framework Viewsets
 class FeatureViewSet(viewsets.ReadOnlyModelViewSet):
@@ -16,6 +20,14 @@ class FeatureViewSet(viewsets.ReadOnlyModelViewSet):
 # Django REST Framework Routers
 router = routers.DefaultRouter()
 router.register(r'features', FeatureViewSet)
+
+#Sitemaps
+sitemaps = {
+    'features': MapSitemap,
+    'pages': PageSitemap,
+    'front_page': FrontPageSitemap,
+    'posts': BlogPostSitemap,
+}
 
 urlpatterns = [
     url(r'^survey-of-london-whitechapel-admin-site/', include(admin.site.urls)),
@@ -37,6 +49,8 @@ urlpatterns = [
      {'next_page': '/'}),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^accounts/profile/$', 'whitechapel_users.views.user_profile', name='user_profile'),
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
+    name='django.contrib.sitemaps.views.sitemap'),
 ]
 
 if settings.DEBUG:

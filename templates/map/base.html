@@ -36,7 +36,8 @@
 		<link rel="stylesheet" type="text/css" href="{% static 'slick/slick.css' %}"/>
 		<!-- Schema Metadata -->
 		<script type="application/ld+json">
-		[{
+		{% block json-ld %}
+		{
 			"@context": "http://schema.org",
 			"@type": "WebSite",
 			"url": "https://surveyoflondon.org/",
@@ -57,9 +58,11 @@
 				"@context": "http://schema.org",
 				"@type": "Place",
 				"name": "Whitechapel"
-			}
-		}{% block json-ld %}{% endblock %}
-		]
+			},
+			"description": "The Survey of London’s Whitechapel project, where you can share and explore the many histories of Whitechapel’s buildings and places."
+		}
+		{% endblock %}
+		
 		</script>
 	</head>
 	<body data-spy="scroll" data-target="#fixed-nav">

@@ -5,6 +5,7 @@ from whitechapel_pages.models import Page
 from itertools import chain
 from operator import attrgetter
 import datetime
+from django.contrib.sitemaps import Sitemap
 
 def site_home(request):
 	"""The front page of the website"""
@@ -25,3 +26,20 @@ def page(request, page_slug):
 	page = Page.objects.get(slug=page_slug)
 
 	return render(request, 'whitechapel_pages/page.html', {'page': page})
+
+# Sitemap
+
+class PageSitemap(Sitemap):
+	priority = 0.6
+	protocol = 'https'
+
+	def items(self):
+		return Page.objects.all().exclude(is_front_page=True)
+
+class FrontPageSitemap(Sitemap):
+	priority = 1
+	protocol = 'https'
+	location = '/'
+
+	def items(self):
+		return Page.objects.filter(is_front_page=True)

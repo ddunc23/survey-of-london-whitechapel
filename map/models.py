@@ -52,15 +52,17 @@ def update_feature_count(feature):
 			Feature.objects.filter(id=s_feature.id).update(count=count)
 
 		# Now add the total number of aggregated items to each feature on the site, again using .update() rather than .save()
-		print aggregated_items
 		site_features.update(count=F('count') + len(aggregated_items))
 
 	else:
 		# If feature.site is None, just tally the 'count' as normal
-		all_docs = Document.objects.filter(published=True, feature=feature).count()
-		all_images = Image.objects.filter(published=True, feature=feature).count()
-		all_media = Media.objects.filter(published=True, feature=feature).count()
-		feature.count = all_docs + all_images + all_media
+		all_docs = feature.document_set.filter(published=True).count()
+		all_images = feature.image_set.filter(published=True).count()
+		all_media = feature.media_set.filter(published=True).count()
+		count = all_docs + all_images + all_media
+		# Turn single Feature object into a queryset so you can run update on it. We'e using .update() rather than .save() so we don't get stuck in a loop
+		feature_set = Feature.objects.filter(id=feature.id)
+		feature_set.update(count=count)
 
 
 class Category(models.Model):
@@ -150,8 +152,9 @@ class Feature(models.Model):
 			return self.b_name
 
 	def save(self, *args, **kwargs):
-		update_feature_count(self)
 		super(Feature, self).save(*args, **kwargs)
+		update_feature_count(self)
+		
 
 	def get_absolute_url(self):
 		return reverse('map.views.detail', args=[str(self.id)])

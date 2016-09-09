@@ -4,6 +4,7 @@ from django.views.generic import ListView, DetailView
 from whitechapel_blog.models import Post, Category
 from django.contrib.auth.models import User
 import datetime
+from django.contrib.sitemaps import Sitemap
 
 class PostList(ListView):
 	queryset = Post.objects.filter(date_published__lte=datetime.date.today())
@@ -73,3 +74,15 @@ def posts_by_author(request, author):
 		posts = paginator.page(paginator.num_pages)
 
 	return render(request, 'whitechapel_blog/author_archive.html', {'posts': posts, 'author': author})
+
+
+# Sitemap
+
+class BlogPostSitemap(Sitemap):
+	priority = 0.7
+
+	def lastmod(self, obj):
+		return obj.date_published
+
+	def items(self):
+		return Post.objects.filter(date_published__lte=datetime.date.today())

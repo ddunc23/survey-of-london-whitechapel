@@ -1,6 +1,7 @@
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 from filebrowser.fields import FileBrowseField
+from django.core.urlresolvers import reverse
 
 class Page(models.Model):
 	"""An HTML page, with the capacity for adding featured content if it's the front page."""
@@ -18,3 +19,6 @@ class Page(models.Model):
 
 	def __unicode__(self):
 		return self.title
+
+	def get_absolute_url(self):
+		return reverse('page', args=[self.slug])

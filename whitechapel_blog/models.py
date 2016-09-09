@@ -1,7 +1,7 @@
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import User
-
+from django.core.urlresolvers import reverse
 
 class Category(models.Model):
 	"""A category that blog posts can be categorised in"""
@@ -30,3 +30,6 @@ class Post(models.Model):
 
 	def __unicode__(self):
 		return self.title
+
+	def get_absolute_url(self):
+		return reverse('single_post', args=[self.date_published.year, self.slug])

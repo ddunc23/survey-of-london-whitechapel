@@ -20,6 +20,7 @@ from django.template import Context
 from datetime import datetime, timedelta
 from dateutil.relativedelta import *
 from dal import autocomplete
+from django.contrib.sitemaps import Sitemap
 
 logger = logging.getLogger(__name__)
 
@@ -685,3 +686,13 @@ def search_features(request):
 				features.append(result.object)
 			serializer = FeatureSerializer(features, many=True)
 			return JSONResponse(serializer.data)
+
+# Sitemap
+
+class MapSitemap(Sitemap):
+	priority = 0.8
+	protocol = 'https'
+
+	def items(self):
+		return Feature.objects.all()
+
