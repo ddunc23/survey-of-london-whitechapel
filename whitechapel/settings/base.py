@@ -207,6 +207,8 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
 # Grapelli
 
 TEMPLATE_CONTEXT_PROCESSORS = (
