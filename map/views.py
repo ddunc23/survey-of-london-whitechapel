@@ -112,19 +112,21 @@ def detail(request, feature):
 	all_similar = feature.tags.similar_objects()
 	similar_features = [x for x in all_similar if hasattr(x, 'geom') == True] 
 	subtitle = '| ' + str(feature)
-	tags = []
-	
+	# tags = []
+
+	tags = set()
+
 	for document in documents:
 		for tag in document.tags.all():
-			tags.append(tag)
+			tags.update([tag])
 	for image in images:
 		for tag in image.tags.all():
-			tags.append(tag)
+			tags.update([tag])
 	for item in media:
 		for tag in item.tags.all():
-			tags.append(tag)
+			tags.update([tag])
 	for tag in feature.tags.all():
-		tags.append(tag)
+		tags.update([tag])
 
 	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar_features, 'subtitle': subtitle, 'images': images, 'media': media, 'tags': tags, 'site_docs': site_docs, 'other_features': other_features, 'notes': notes, 'documents': documents })
 
