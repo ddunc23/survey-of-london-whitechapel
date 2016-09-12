@@ -16,8 +16,8 @@
 	    	"latitude": "{{ feature.geom.centroid.y }}",
 	    	"longitude": "{{ feature.geom.centroid.x }}"
 	    }
-    }{% if histories or descriptions or stories or notes %},
-    "hasPart": [{% if histories %}{% for document in histories %}
+    }{% if documents or site_docs %},
+    "hasPart": [{% if documents %}{% for document in documents %}
 	    {
 			"@type": "WebPageElement",
 			"headline": "{{ document.title }}",
@@ -25,14 +25,8 @@
 				{% if document.author.userprofile.display_name == 'Survey of London' %}"@type": "EducationalOrganization",{% else %}"@type": "Person",{% endif %}
 				"name": "{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}"
 			}
-		}{% if forloop.last %}{% else %},{% endif %}{% endfor %}{% endif %}{% if descriptions %}{% for document in descriptions %}, {
-			"@type": "WebPageElement",
-			"headline": "{{ document.title }}",
-			"author": {
-				{% if document.author.userprofile.display_name == 'Survey of London' %}"@type": "EducationalOrganization",{% else %}"@type": "Person",{% endif %}
-				"name": "{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}"
-			}
-		}{% if forloop.last %}{% else %},{% endif %}{% endfor %}{% endif %}{% if stories %}{% for document in stories %}, {
+		}{% if forloop.last %}{% else %},{% endif %}{% endfor %}{% endif %}{% if documents and site_docs %},{% else %}{% endif %}{% if site_docs %}{% for document in site_docs %}
+	    {
 			"@type": "WebPageElement",
 			"headline": "{{ document.title }}",
 			"author": {
