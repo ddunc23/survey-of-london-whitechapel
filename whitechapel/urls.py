@@ -21,7 +21,7 @@ class FeatureViewSet(viewsets.ReadOnlyModelViewSet):
 router = routers.DefaultRouter()
 router.register(r'features', FeatureViewSet)
 
-#Sitemaps
+# Sitemaps
 sitemaps = {
     'features': MapSitemap,
     'pages': PageSitemap,

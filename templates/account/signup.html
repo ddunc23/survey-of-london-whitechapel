@@ -14,7 +14,7 @@
 					  {% csrf_token %}
 					  {% load crispy_forms_tags %}
 					  {{ form|crispy }}
-					  <input type="hidden" name="{{ redirect_field_name }}" value="{% url 'user_profile' %}" />
+					  <input type="hidden" name="{{ redirect_field_name }}" value="{% url 'map_home' %}" />
 					  <button type="submit" class="btn btn-primary">{% trans "Sign Up" %}</button>
 				</form>
 				<p class="login-dialogue-text">{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>

@@ -5,11 +5,6 @@
 <div class="jumbotron whitechapel_front_page">
 	
 	<style>
-		/*.carousel_image {
-			width: 100%;
-			position: absolute;
-			top: 0;
-		}*/
 		.carousel {
 			height: 500px;
 			width: 100%;
@@ -45,7 +40,7 @@
 		</div>
 		<div class="col-xs-12 col-md-4"><!-- Latest contributions -->
 			<h1 class="front-page-heading">Latest Contributions</h1>
-			{% for item in latest|slice:":3" %}
+			{% for item in latest|slice:":4" %}
 			{% if item.created != None %}
 				{% if item.file %}
 				<div class="media">

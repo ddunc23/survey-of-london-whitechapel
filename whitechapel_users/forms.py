@@ -15,7 +15,7 @@ class WhitechapelLoginForm(LoginForm):
 class WhitechapelSignupForm(SignupForm):
 	def __init__(self, *args, **kwargs):
 		super(WhitechapelSignupForm, self).__init__(*args, **kwargs)
-		self.fields['username'].help_text = 'By default, your contributions will appear under your username. You can change this once you\'ve made an account. It\'s best not to use your email address as a username.'
+		self.fields['username'].help_text = 'By default, your contributions will appear under your user name. If you\'d rather use a different name, you can change this on the \'Edit Profile\' page once you\'ve signed up. It\'s best not to use your email address as a username.'
 		self.fields['email'].help_text = 'We won\'t share your email address with anyone. You can opt out of email communications with the Survey of London at any time.'
 
 class WhitechapelUserProfileForm(forms.ModelForm):
