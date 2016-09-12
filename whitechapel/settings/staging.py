@@ -35,3 +35,5 @@ LOGGING = {
         },
     },
 }
+
+ALLOW_INDEXING = False

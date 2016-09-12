@@ -90,6 +90,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'whitechapel_pages.context_processors.menu_links',
                 'whitechapel_pages.context_processors.category_links',
+                'whitechapel_pages.context_processors.allow_indexing',
                 'map.context_processors.last_feature',
                 'whitechapel_blog.context_processors.blog_category_links',
                 'whitechapel_blog.context_processors.blog_post_list',
@@ -200,8 +201,6 @@ REST_FRAMEWORK = {
 
 HAYSTACK_CONNECTIONS = {
     'default': {
-        #'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        #'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
         'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
         'URL': 'http://127.0.0.1:8080/solr',
     },
