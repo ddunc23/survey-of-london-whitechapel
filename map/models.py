@@ -270,7 +270,7 @@ class Image(models.Model):
 	def delete(self, *args, **kwargs):
 		"""If an image is deleted, update the feature count to reflect this"""
 		super(Image, self).delete(*args, **kwargs)
-		update_feature_count(self)
+		update_feature_count(self.feature)
 
 
 class Media(models.Model):

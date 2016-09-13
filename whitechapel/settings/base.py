@@ -72,7 +72,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    #'honeypot.middleware.HoneypotMiddleware',
+    'honeypot.middleware.HoneypotMiddleware',
 )
 
 ROOT_URLCONF = 'whitechapel.urls'
