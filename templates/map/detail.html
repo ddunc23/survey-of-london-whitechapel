@@ -86,7 +86,7 @@
 			{% if histories %}
 					{% for document in histories %}
 						{% if document.aggregate == False %}
-							{% if document.start_year %}
+							{% if document.start_year and document.end_year %}
 								<li><a href="#{{ document.title|slugify }}">{{ document.title }}<br /><span class="small">{{ document.start_year }} - {{ document.end_year }}</span></a></li>
 							{% else %}
 								<li><a href="#{{ document.title|slugify }}">{{ document.title }}</span></a></li>
@@ -97,7 +97,7 @@
 			{% if descriptions %}
 				{% if not histories %}
 					{% for document in descriptions %}
-						{% if document.start_year %}
+						{% if document.start_year and document.end_year %}
 							<li><a href="#{{ document.title|slugify }}">{{ document.title }}<br /><span class="small">{{ document.start_year }} - {{ document.end_year }}</span></a></li>
 						{% else %}
 							<li><a href="#{{ document.title|slugify }}">{{ document.title }}</span></a></li>
@@ -108,7 +108,7 @@
 			{% if stories %}
 				{% if not histories and not descriptions %}
 					{% for document in stories %}
-						{% if document.start_year %}
+						{% if document.start_year and document.end_year %}
 							<li><a href="#{{ document.title|slugify }}">{{ document.title }}<br /><span class="small">{{ document.start_year }} - {{ document.end_year }}</span></a></li>
 						{% else %}
 							<li><a href="#{{ document.title|slugify }}">{{ document.title }}</span></a></li>
@@ -119,7 +119,7 @@
 			{% if notes %}
 				{% if not histories and not descriptions and not stories %}
 					{% for document in notes %}
-						{% if document.start_year %}
+						{% if document.start_year and document.end_year %}
 							<li><a href="#{{ document.title|slugify }}">{{ document.title }}<br /><span class="small">{{ document.start_year }} - {{ document.end_year }}</span></a></li>
 						{% else %}
 							<li><a href="#{{ document.title|slugify }}">{{ document.title }}</span></a></li>
@@ -130,7 +130,7 @@
 			{% if site_docs %}
 				{% if not histories and not descriptions and not stories and not notes %}
 					{% for document in site_docs %}
-						{% if document.start_year %}
+						{% if document.start_year and document.end_year %}
 							<li><a href="#{{ document.title|slugify }}">{{ document.title }}<br /><span class="small">{{ document.start_year }} - {{ document.end_year }}</span></a></li>
 						{% else %}
 							<li><a href="#{{ document.title|slugify }}">{{ document.title }}</span></a></li>
@@ -148,7 +148,7 @@
 						{% if document.aggregate == False %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a> on {{ document.created }}</span></h2>
+							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a>{% if document.created %} on {{ document.created }}{% endif %}</span></h2>
 							{{ document.body_processed|safe }}
 						</div>
 						{% endif %}
@@ -160,7 +160,7 @@
 					{% for document in descriptions %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a> on {{ document.created }}</span></h2>
+							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a>{% if document.created %} on {{ document.created }}{% endif %}</span></h2>
 							{{ document.body_processed|safe }}
 						</div>	
 					{% endfor %}
@@ -171,7 +171,7 @@
 					{% for document in stories %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a> on {{ document.created }}</span></h2>
+							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a>{% if document.created %} on {{ document.created }}{% endif %}</span></h2>
 							{{ document.body_processed|safe }}
 						</div>	
 					{% endfor %}
@@ -182,7 +182,7 @@
 					{% for document in notes %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a> on {{ document.created }}</span></h2>
+							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a>{% if document.created %} on {{ document.created }}{% endif %}</span></h2>
 							{{ document.body_processed|safe }}
 						</div>	
 					{% endfor %}
@@ -193,7 +193,7 @@
 					{% for document in site_docs %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
-							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a> on {{ document.created }}</span></h2>
+							<h2>{{ document.title }}<br /><span class="small">Contributed by <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a>{% if document.created %} on {{ document.created }}{% endif %}</span></h2>
 							{{ document.body_processed|safe }}
 						</div>
 					{% endfor %}
@@ -230,7 +230,7 @@
 							{% if embed.description %}
 								<p>{{ embed.description }}</p>
 							{% endif %}
-							<p>Contributed by <a href="{% url 'all_content_by_author' embed.author.id %}">{% if embed.author.userprofile.display_name %}{{ embed.author.userprofile.display_name }}{% else %}{{ embed.author }}{% endif %}</a> on {{ document.created }}</p>
+							<p>Contributed by <a href="{% url 'all_content_by_author' embed.author.id %}">{% if embed.author.userprofile.display_name %}{{ embed.author.userprofile.display_name }}{% else %}{{ embed.author }}{% endif %}</a>{% if embed.created %} on {{ embed.created }}{% endif %}</p>
 							{% endfor %}
 							<hr />
 						</div>

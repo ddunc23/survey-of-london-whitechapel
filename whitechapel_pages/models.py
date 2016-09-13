@@ -16,6 +16,7 @@ class Page(models.Model):
 	banner_image_1 = models.ImageField(blank=True, null=True)
 	banner_image_2 = models.ImageField(blank=True, null=True)
 	banner_image_3 = models.ImageField(blank=True, null=True)
+	banner_image_4 = models.ImageField(blank=True, null=True)
 
 	def __unicode__(self):
 		return self.title
