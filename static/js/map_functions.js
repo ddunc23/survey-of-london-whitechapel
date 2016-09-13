@@ -288,11 +288,11 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 				}
 
 				L.control.zoom({
-					"position": "bottomleft",
+					"position": "bottomright",
 				}).addTo(map);
 
 				L.control.layers(baseMaps, overlayMaps, {
-					"position": "bottomleft"
+					"position": "bottomright"
 				}).addTo(map);
 				
 				map.addControl(new infobox());
