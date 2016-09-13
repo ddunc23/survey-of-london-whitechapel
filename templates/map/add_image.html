@@ -17,8 +17,8 @@
 				{{ form|crispy }}
 			</div>
 			<div class="col-xs-12 col-md-8 col-md-offset-2">
-				<input type="submit" name="submit" value="Save" class="btn btn-default"/>
-				<button class="btn btn-primary are_you_sure">Submit</button>
+				<input type="submit" name="submit" value="Save to Edit Later" class="btn btn-default"/>
+				<button class="btn btn-primary are_you_sure">Submit to the Editors</button>
 			</div>
 
 			<div class="modal fade" id="submit_confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -28,12 +28,12 @@
 							<h1>Have you finished editing?</h1>
 						</div>
 						<div class="modal-body">
-			        		<p>Once you've submitted your content it will be passed to the Survey of London team for moderation and you won't be able to edit it again. Any images you submit to this site must either be yours, in the public domain, or uploaded with the permission of the copyright holder. See our <a href="{% url 'page' 'code-conduct' %}">Code of Conduct</a> for more information.</p>
-			        		<p>If you'd like to continue editing, click the close button below. Otherwise, click 'Submit' if you're happy with your contribution.</p>
+			        		<p>Once you've submitted your content it will be passed to the Survey of London team for moderation and you won't be able to edit it again. Any images you submit must either be yours, in the public domain, or uploaded with the permission of the copyright holder. See our <a href="{% url 'page' 'code-conduct' %}">Code of Conduct</a> for more information.</p>
+			        		<p>If you'd like to continue editing or save your submission to edit later, click the close button below. Otherwise, click 'Submit to the Editors' if you'd like to submit your contribution for moderation.</p>
 			      		</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							<input type="submit" name="publish" value="Submit" class="btn btn-primary"/>
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close and Continue Editing</button>
+							<input type="submit" name="publish" value="Submit to the Editors" class="btn btn-primary"/>
 			    		</div>
 			    	</div>
 				</div>
