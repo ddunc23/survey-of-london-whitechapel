@@ -37,11 +37,10 @@
           {% csrf_token %}
           {% load crispy_forms_tags %}
           {{ form|crispy }}
-          {% if redirect_field_value %}
-          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-          {% endif %}
           {% if last_feature %}
           <input type="hidden" name="next" value="/map/?last_feature={{ last_feature }}" />
+          {% else %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{% url 'map_home' %}" />
           {% endif %}
           <a class="btn btn-default" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
           <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>

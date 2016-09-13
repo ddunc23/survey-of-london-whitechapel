@@ -26,7 +26,6 @@ def user_profile(request):
 				profile_extra.save()
 				return HttpResponseRedirect(reverse('map_home'))
 		else:
-			print form.errors
 			form = WhitechapelUserProfileForm(instance=user)
 			profile_extra = WhitechapelUserProfileFormExtra(instance=user)
 	else:
