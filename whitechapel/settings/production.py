@@ -11,9 +11,9 @@ SESSION_COOKIE_SECURE = True
 
 CSRF_COOKIE_SECURE = True
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
+# EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
 
 MANAGERS = (
         ('Duncan Hay', 'd.hay@ucl.ac.uk'),
