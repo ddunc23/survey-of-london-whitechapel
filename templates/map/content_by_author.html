@@ -15,7 +15,7 @@
 	<div role="tabpanel" class="tab-pane active" id="documents">
 	{% for document in documents %}
 		<div>
-			<h3><a href="{% url 'detail' document.feature.id %}#{{ document.document_type }}">{{ document.title }}</a></h3>
+			<h3><a href="{% url 'detail' document.feature.id %}#{{ document.document_type }}?{{ document.title|slugify }}">{{ document.title }}</a></h3>
 			<h4 class="small"><a href="{% url 'detail' document.feature.id %}">{{ document.feature }}</a> | <a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a></h4>
 			<p class="results-preview">{{ document.body|truncatechars:140|striptags }}</p>
 		</div>

@@ -21,7 +21,7 @@
 	<div role="tabpanel" class="tab-pane {% if not features %}active{% endif %}" id="documents">
 	{% for document in documents %}
 		<div>
-			<h3><a href="{% url 'detail' document.object.feature.id %}#{{ document.object.document_type }}">{{ document.title }}</a></h3>
+			<h3><a href="{% url 'detail' document.object.feature.id %}#{{ document.object.document_type }}?{{ document.object.title|slugify }}">{{ document.title }}</a></h3>
 			<h4 class="small"><a href="{% url 'detail' document.object.feature.id %}">{{ document.object.feature }}</a> | <a href="{% url 'all_content_by_author' document.object.author.id %}">{% if document.object.author.userprofile.display_name %}{{ document.object.author.userprofile.display_name }}{% else %}{{ document.object.author }}{% endif %}</a></h4>
 			<p class="results-preview">{% highlight document.body with query %}</p>
 			{% for tag in document.object.tags.all %}
@@ -58,7 +58,7 @@
 	<div role="tabpanel" class="tab-pane {% if not features and not documents and not images %}active{% endif %}" id="media">
 	{% for item in media %}
 		<div>
-			<h3><a href="{% url 'detail' item.object.feature.id %}#{{ item.object.document_type }}">{{ item.title }}</a></h3>
+			<h3><a href="{% url 'detail' item.object.feature.id %}#media">{{ item.title }}</a></h3>
 			<h4 class="small"><a href="{% url 'detail' item.object.feature.id %}">{{ item.object.feature }}</a> | <a href="{% url 'all_content_by_author' item.object.author.id %}">{% if item.object.author.userprofile.display_name %}{{ item.object.author.userprofile.display_name }}{% else %}{{ item.object.author }}{% endif %}</a> | {{ item.object.created }}</h4>
 			{% if item.description %}
 			<p class="results-preview">{{ item.description|truncatewords_html:20|striptags }}</p>
