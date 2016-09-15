@@ -57,14 +57,14 @@
 						<a href="{% url 'detail' item.feature.id %}#images"><img src="{% thumbnail item.file 64x64 crop='0,0' %}" class="img-rounded"></a>
 					</div>
 					<div class="media-body">
-						<h3 class="media-heading"><a href="{% url 'detail' item.feature.id %}#{{ item.document_type }}">{{ item.title }}</a></h3>
+						<h3 class="media-heading"><a href="{% url 'detail' item.feature.id %}#images">{{ item.title }}</a></h3>
 						<h4 class="small"><a href="{% url 'detail' item.feature.id %}">{{ item.feature }}</a> | <a href="{% url 'all_content_by_author' item.author.id %}">{% if item.author.userprofile.display_name %}{{ item.author.userprofile.display_name }}{% else %}{{ item.author }}{% endif %}</a> | {{ item.created }}</h4>
 						<p class="results-preview">{{ item.description|truncatewords_html:20|striptags }}</p>
 					</div>
 				</div>
 				{% else %}
 				<div>
-					<h3><a href="{% url 'detail' item.feature.id %}#{{ item.document_type }}">{{ item.title }}</a></h3>
+					<h3><a href="{% url 'detail' item.feature.id %}#{{ item.document_type }}?{{ item.title|slugify }}">{{ item.title }}</a></h3>
 					<h4 class="small"><a href="{% url 'detail' item.feature.id %}">{{ item.feature }}</a> | <a href="{% url 'all_content_by_author' item.author.id %}">{% if item.author.userprofile.display_name %}{{ item.author.userprofile.display_name }}{% else %}{{ item.author }}{% endif %}</a> | {{ item.created }}</h4>
 					{% if item.body_processed %}
 					<p class="results-preview">{{ item.body_processed|truncatewords_html:20|striptags }}</p>

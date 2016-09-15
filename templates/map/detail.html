@@ -71,7 +71,7 @@
 					<li role="presentation" class="{% if histories %} active {% else %} disabled {% endif %}"><a href="#history" aria-controls="history" role="tab" data-toggle="tab">Research</a></li>
 					<li role="presentation" class="{% if descriptions and not histories %} active {% endif %}{% if not descriptions %} disabled {% endif %}"><a href="#description" aria-controls="description" role="tab" data-toggle="tab">Description</a></li>
 					<li role="presentation" class="{% if stories and not histories and not descriptions %} active {% endif %}{% if not stories %} disabled {% endif %}"><a href="#story" aria-controls="stories" role="tab" data-toggle="tab">Memories</a></li>
-					<li role="presentation" class="{% if notes and not histories and not descriptions and not stories %} active {% endif %}{% if not notes %} disabled {% endif %}"><a href="#notes" aria-controls="stories" role="tab" data-toggle="tab">Notes</a></li>
+					<li role="presentation" class="{% if notes and not histories and not descriptions and not stories %} active {% endif %}{% if not notes %} disabled {% endif %}"><a href="#note" aria-controls="stories" role="tab" data-toggle="tab">Notes</a></li>
 				{% if feature.site and site_docs %}
 					<li role="presentation"{% if not histories and not descriptions and not stories and not notes %}class="active"{% endif %}><a href="#site" aria-controls="site" role="tab" data-toggle="tab">{{ feature.site }}</a></li>
 				{% endif %}
@@ -178,7 +178,7 @@
 					</div>
 				{% endif %}
 				{% if notes %}
-					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories %} active{% endif %}" id="notes">
+					<div role="tabpanel" class="tab-pane{% if not histories and not descriptions and not stories %} active{% endif %}" id="note">
 					{% for document in notes %}
 						<div class="document">
 							<span id="{{ document.title|slugify }}" class="detail_anchor"></span>
@@ -400,7 +400,9 @@
 		} else if (tabAnchor == 'story') {
 			$('#fixed-nav ul').html(storyNav);
 		} else if (tabAnchor == 'site') {
-			$('#fixed-nav ul').html(storyNav);
+			$('#fixed-nav ul').html(siteNav);
+		} else if (tabAnchor == 'note') {
+			$('#fixed-nav ul').html(noteNav);
 		} else {
 			$('#fixed-nav ul').html('');
 		}
