@@ -30,14 +30,14 @@
 				<li><a href="{% url 'posts_by_year' year.grouper %}">{{ year.grouper }}</a></li>
 			{% endfor %}
 			</ul>
-			<h3>Contributors</h3>
+			<!--<h3>Contributors</h3>
 			{% regroup blog_post_list by author as posts_by_author %}
 			<ul class="list-unstyled">
 			{% for author in posts_by_author %}
 				<li><a href="{% url 'posts_by_author' author.grouper.id %}">{% if author.grouper.userprofile.display_name %}{{ author.grouper.userprofile.display_name }}{% else %}{{ author.grouper }}{% endif %}</a></li>
 			{% endfor %}
 			</ul>
-			<hr />
+			<hr />-->
 			<h3>Latest Map Contributions</h3>
 			{% for item in latest_map_contributions|slice:":4" %}
 			{% if item.created != None %}
