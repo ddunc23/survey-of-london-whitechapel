@@ -120,8 +120,19 @@ function setFootprintColour(layer, e) {
 	if (e.type == 'mouseover') {
 		layer.setStyle(hoverStyle);
 	} else if (e.type == 'mouseout') {
-		var key = Object.keys(layer._layers)[0];
+		/*var key = Object.keys(layer._layers)[0];
 		if (layer._layers[key].options.fillColor == '#1AA9FF') {
+			layer.setStyle(hoverStyle);
+		} else if (layer.feature.properties.feature_type == 'OPEN_SPACE') {
+			layer.setStyle(openSpaceStyle);
+		} else if (layer.feature.properties.feature_type == 'PLACE') {
+			layer.setStyle(placeStyle);
+		} else if (layer.feature.properties.feature_type == 'GREATER_WHITECHAPEL') {
+			layer.setStyle(extraMurosStyle);
+		} else if (layer.feature.properties.feature_type == 'WHITECHAPEL_BUILDING') {
+			layer.setStyle(myStyle);
+		}*/
+		if (layer.options.fillColor == '#1AA9FF') {
 			layer.setStyle(hoverStyle);
 		} else if (layer.feature.properties.feature_type == 'OPEN_SPACE') {
 			layer.setStyle(openSpaceStyle);
@@ -260,7 +271,7 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 				if (geojson.features.length > 0) {
 					layers = [sketchylayer, /*scanlayer,*/ buildings];
 					initMap(layers);
-					map.fitBounds(buildings);
+					map.fitBounds(buildings.getBounds());
 				} else {
 					layers = [sketchylayer,]
 					initMap(layers);
