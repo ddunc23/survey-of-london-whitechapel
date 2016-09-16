@@ -11,6 +11,8 @@ from django.contrib.sitemaps.views import sitemap
 from map.views import MapSitemap
 from whitechapel_pages.views import PageSitemap, FrontPageSitemap
 from whitechapel_blog.views import BlogPostSitemap
+from honeypot.decorators import check_honeypot
+from allauth import account
 
 # Django REST Framework Viewsets
 class FeatureViewSet(viewsets.ReadOnlyModelViewSet):
@@ -47,6 +49,7 @@ urlpatterns = [
     # django-allauth
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
      {'next_page': '/'}),
+    url(r'^accounts/login/$', check_honeypot(account.views.login)),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^accounts/profile/$', 'whitechapel_users.views.user_profile', name='user_profile'),
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},

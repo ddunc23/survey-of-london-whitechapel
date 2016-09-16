@@ -21,6 +21,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import *
 from dal import autocomplete
 from django.contrib.sitemaps import Sitemap
+from honeypot.decorators import check_honeypot
 
 logger = logging.getLogger(__name__)
 
@@ -336,7 +337,7 @@ def moderate_document(request, document):
 	return render(request, 'map/moderate_document.html', {'form': form, 'document': document })
 
 
-
+@check_honeypot
 @login_required
 def edit_document(request, feature, document=None):
 	"""View to allow users to add or edit documents."""
@@ -435,6 +436,7 @@ def moderate_image(request, image):
 	return render(request, 'map/moderate_image.html', {'form': form, 'image': image })
 
 
+@check_honeypot
 @login_required
 def edit_image(request, feature, image=None):
 	"""View to enable users to upload or edit images"""
@@ -491,7 +493,6 @@ def edit_image(request, feature, image=None):
 	return render(request, 'map/add_image.html', {'feature': feature, 'form': form, 'image': image, 'tags': tags })
 
 
-
 @login_required
 def moderate_media(request, media):
 	"""View to allow administrators to moderate media"""
@@ -535,7 +536,7 @@ def moderate_media(request, media):
 	return render(request, 'map/moderate_media.html', {'form': form, 'media': media })
 
 
-
+@check_honeypot
 @login_required
 def edit_media(request, feature, media=None):
 	"""View to enable users to upload or edit media (or rather, media embeds)"""

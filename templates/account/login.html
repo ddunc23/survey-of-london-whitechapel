@@ -36,6 +36,8 @@
         <form class="login" method="POST" action="{% url 'account_login' %}">
           {% csrf_token %}
           {% load crispy_forms_tags %}
+          {% load honeypot %}
+          {% render_honeypot_field "phone_number" %}
           {{ form|crispy }}
           {% if last_feature %}
           <input type="hidden" name="next" value="/map/?last_feature={{ last_feature }}" />
