@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # A python script for creating daily, weekly, monthly, and annual backups and cleaning it up. This should be run daily from root CRON, making sure you activate the correct virtualenv first (otherwise it won't work)
 import sys
 import os
@@ -6,9 +6,8 @@ from datetime import datetime, timedelta
 import calendar
 from whitechapel.settings import production
 
-# Set up script backup variables - working directory to the script's path, the day, what media directory, database & database user
+# Set up script backup variables - today, what media directory, database name
 
-os.chdir(os.path.dirname(sys.argv[0]))
 db_name = production.DATABASES['default']['NAME']
 today = datetime.now().date()
 media_dir = 'media/'
