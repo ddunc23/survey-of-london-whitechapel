@@ -1,7 +1,8 @@
 {% extends 'map/base.html' %}
 
-
 {% block json-ld %}
+<!-- Schema Metadata -->
+<script type="application/ld+json">	
 {
 	"@context": "http://schema.org",
 	"@type": "ItemPage",
@@ -36,6 +37,7 @@
 		}{% if forloop.last %}{% else %},{% endif %}{% endfor %}{% endif %}
 	]{% endif %}
 }
+</script>
 {% endblock %}
 
 

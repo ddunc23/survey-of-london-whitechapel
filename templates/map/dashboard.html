@@ -8,6 +8,7 @@
 			<ul class="nav nav-tabs" role="tablist">
 				<li role="presentation" class="active"><a href="#statistics" aria-controls="statistics" role="tab" data-toggle="tab">Statistics</a></li>
 				<li role="presentation"><a href="#moderation" aria-controls="moderation" role="tab" data-toggle="tab">Moderation <span class="badge">{{ all_pending }}</span></a></li>
+				<li role="presentation"><a href="#new_users" aria-controls="new users" role="tab" data-toggle="tab">New Users</a></li>
 			</ul>
 		</div>
 	</div>
@@ -131,6 +132,21 @@
 				</div>
 			</div><!-- / Unsubmitted drafts -->
 		</div><!-- / Moderation panel -->
+		<div role="tabpanel" class="tab-pane" id="new_users"><!-- New Users -->
+			<br />
+			<table class="table table-responsive">
+				<thead>
+					<tr>
+						<td><strong>Username</strong></td><td><strong>Display Name</strong></td><td><strong>Email</strong></td><td><strong>Date Signed Up</strong></td>
+					</tr>
+				</thead>
+				{% for user in new_users %}
+				<tr>
+					<td>{{ user }}</td><td>{{ user.userprofile.display_name }}</td><td>{{ user.email }}</td><td>{{ user.date_joined }}</td>
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
 	</div><!-- / Tab Panels -->
 </div>
 

@@ -1,5 +1,35 @@
 {% extends 'map/base.html' %}
 
+{% block json-ld %}
+<!-- Schema Metadata -->
+<script type="application/ld+json">	
+{
+	"@context": "http://schema.org",
+	"@type": "WebSite",
+	"url": "https://surveyoflondon.org/",
+	"author": {
+		"@context": "http://schema.org",
+		"@type": "EducationalOrganization",
+		"name": "Survey of London",
+		"address": {
+			"@context": "http://schema.org",
+			"@type": "PostalAddress",
+			"addressCountry": "United Kingdom",
+			"addressLocality": "London",
+			"postalCode": "EC1N 2ST",
+			"streetAddress": "Survey of London, c/o Historic England, 1 Waterhouse Square, 138-142 Holborn"
+		}
+	},
+	"about": {
+		"@context": "http://schema.org",
+		"@type": "Place",
+		"name": "Whitechapel"
+	},
+	"description": "The Survey of London’s Whitechapel project, where you can share and explore the many histories of Whitechapel’s buildings and places."
+}
+</script>
+{% endblock %}
+
 {% block content %}
 
 <div class="jumbotron whitechapel_front_page">
