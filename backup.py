@@ -1,19 +1,20 @@
 #!/usr/bin/python
-# A python script for creating daily, weekly, monthly, and annual backups and cleaning it up
-
+# A python script for creating daily, weekly, monthly, and annual backups and cleaning it up. This should be run daily from root CRON, making sure you activate the correct virtualenv first (otherwise it won't work)
 import sys
 import os
 from datetime import datetime, timedelta
 import calendar
+from whitechapel.settings import production
 
 # Set up script backup variables - the day, what media directory, database & database user
 
+db_name = production.DATABASES['default']['NAME']
 today = datetime.now().date()
 media_dir = 'media/'
 
 def backup_website(date):
 	"""Back up the database"""
-	# Construct the backup path depending on what day it is
+	# Construct the backup path depending on what day it is. Sunday = weekly backup, last day of month = monthly backup, 31st January = annual backup, otherwise daily backup
 	if date.isoweekday() == 7:
 		path = 'backups/weekly/' + date.isoformat()
 	elif date.day == calendar.monthrange(date.year, date.month)[1]:
@@ -32,7 +33,7 @@ def backup_website(date):
 	media_filename = today.isoformat() + '_whitechapel_media.tar.gz'
 
 	# Ackshully do the backup
-	os.system('sudo -u postgres pg_dump --no-acl --no-owner whitechapel_prod_2016_09_02 > ' + path + '/' + sql_filename)
+	os.system('sudo -u postgres pg_dump --no-acl --no-owner ' + db_name + ' > ' + path + '/' + sql_filename)
 	os.system('tar -cvzf ' + path + '/' + media_filename + ' ' + media_dir)
 
 
@@ -56,11 +57,12 @@ def clean_backup_directory(date, clean_type):
 			abspath = os.path.join(path, directory)
 			max_age = date - timedelta(days=delta)
 			if os.path.isdir(abspath) == True:
+				# Empty the directories, should each file be older than the delta
 				for file in os.listdir(abspath):
 					filepath = os.path.join(abspath, file)
-					print filepath
 					if datetime.fromtimestamp(os.stat(filepath).st_mtime).date() <= max_age:
 						os.remove(filepath)
+				# If the directories are older than the delta, then delete them as well
 				if datetime.fromtimestamp(os.stat(abspath).st_mtime).date() <= max_age:
 						os.rmdir(abspath)
 
