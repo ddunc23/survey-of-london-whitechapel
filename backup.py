@@ -1,4 +1,4 @@
-#!/usr/duncan/venv/survey-of-london-whitechapel-env/python
+#!/home/duncan/venv/survey-of-london-whitechapel-env/python
 # A python script for creating daily, weekly, monthly, and annual backups and cleaning it up. This should be run daily from root CRON, making sure you activate the correct virtualenv first (otherwise it won't work)
 import sys
 import os
