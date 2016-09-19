@@ -13,6 +13,8 @@ db_name = production.DATABASES['default']['NAME']
 today = datetime.now().date()
 media_dir = 'media/'
 
+print(os.chdir(os.path.dirname(sys.argv[0])))
+
 def backup_website(date):
 	"""Back up the database"""
 	# Construct the backup path depending on what day it is. Sunday = weekly backup, last day of month = monthly backup, 31st January = annual backup, otherwise daily backup
