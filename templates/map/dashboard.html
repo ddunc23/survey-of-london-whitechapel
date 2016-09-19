@@ -142,7 +142,7 @@
 				</thead>
 				{% for user in new_users %}
 				<tr>
-					<td>{{ user }}</td><td>{{ user.userprofile.display_name }}</td><td>{{ user.email }}</td><td>{{ user.date_joined }}</td><td>{{ user.last_login }}</td>
+					<td><a href="{% url 'all_content_by_author' user.id %}">{{ user }}</a></td><td>{{ user.userprofile.display_name }}</td><td>{{ user.email }}</td><td>{{ user.date_joined }}</td><td>{{ user.last_login }}</td>
 				</tr>
 				{% endfor %}
 			</table>
