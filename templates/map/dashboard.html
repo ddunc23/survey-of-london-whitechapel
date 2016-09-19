@@ -137,12 +137,12 @@
 			<table class="table table-responsive">
 				<thead>
 					<tr>
-						<td><strong>Username</strong></td><td><strong>Display Name</strong></td><td><strong>Email</strong></td><td><strong>Date Signed Up</strong></td>
+						<td><strong>Username</strong></td><td><strong>Display Name</strong></td><td><strong>Email</strong></td><td><strong>Date Signed Up</strong></td><td><strong>Last Log In</strong>
 					</tr>
 				</thead>
 				{% for user in new_users %}
 				<tr>
-					<td>{{ user }}</td><td>{{ user.userprofile.display_name }}</td><td>{{ user.email }}</td><td>{{ user.date_joined }}</td>
+					<td>{{ user }}</td><td>{{ user.userprofile.display_name }}</td><td>{{ user.email }}</td><td>{{ user.date_joined }}</td><td>{{ user.last_login }}</td>
 				</tr>
 				{% endfor %}
 			</table>
