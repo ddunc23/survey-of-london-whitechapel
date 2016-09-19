@@ -6,14 +6,14 @@ from datetime import datetime, timedelta
 import calendar
 from whitechapel.settings import production
 
+print('working')
+
 # Set up script backup variables - working directory to the script's path, the day, what media directory, database & database user
 
 os.chdir(os.path.dirname(sys.argv[0]))
 db_name = production.DATABASES['default']['NAME']
 today = datetime.now().date()
 media_dir = 'media/'
-
-print(os.chdir(os.path.dirname(sys.argv[0])))
 
 def backup_website(date):
 	"""Back up the database"""
