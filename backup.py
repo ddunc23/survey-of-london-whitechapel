@@ -1,7 +1,5 @@
 #!/usr/bin/python
 # A python script for creating daily, weekly, monthly, and annual backups and cleaning it up. This should be run daily from root CRON, making sure you activate the correct virtualenv first (otherwise it won't work)
-print('working')
-
 import sys
 import os
 from datetime import datetime, timedelta
