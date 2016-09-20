@@ -56,6 +56,11 @@
 				<h1>{{ feature.address }} <div class="btn-group"><a href="{% url 'map_home' %}?highlight={{ feature.id }}" class="btn btn-default">Back to Map</a><a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-primary">Add Content</a></div></h1>
 				<h2><small>{% if feature.short_description %}{{ feature.short_description }} {% endif %}{% if feature.original %}| Constructed <a href="{% url 'date_range' feature.original %}">{{ feature.original }}{% endif %}</a>{% if feature.site %} | Part of <a href="{% url 'site' feature.site.id %}">{{ feature.site }}</a>{% endif %}</small> {% if request.user.is_authenticated and request.user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %} </h2>
 			{% endif %}
+			<div class="social_share">
+				<a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=">Tweet</a>
+	  			<div class="fb-share-button" data-href="https://surveyoflondon.org{{ feature.get_absolute_url }}" data-layout="button_count"></div>
+	  			<hr />
+  			</div>
 		</div>
 		<div class="col-xs-2">
 		</div>

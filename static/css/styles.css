@@ -516,6 +516,11 @@ p.results-preview {
 	background-position: center;
 }
 
+.social_share {
+	line-height: 9px;
+	margin-bottom: 1em;
+}
+
 /* Medium Editor */
 
 #div_id_body .controls {

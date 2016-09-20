@@ -172,12 +172,24 @@ CONTENT_TYPES = ['image']
 
 MAX_UPLOAD_SIZE = 2621440
 
-
 ### App-Specific Settings ###
 
 # Django-ckeditor Settings
 
 CKEDITOR_UPLOAD_PATH = 'uploads/'
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Format', 'Bold', 'Italic', 'Underline'],
+            ['BulletedList', 'Blockquote'],
+            ['Link', 'Unlink', 'Anchor'],
+            ['Image', 'Flash', 'Table', 'HorizontalRule', 'SpecialChar'],
+            ['RemoveFormat', 'Source']
+        ]
+    },
+}
 
 # Django-leaflet Settings
 

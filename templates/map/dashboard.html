@@ -8,6 +8,7 @@
 			<ul class="nav nav-tabs" role="tablist">
 				<li role="presentation" class="active"><a href="#statistics" aria-controls="statistics" role="tab" data-toggle="tab">Statistics</a></li>
 				<li role="presentation"><a href="#moderation" aria-controls="moderation" role="tab" data-toggle="tab">Moderation <span class="badge">{{ all_pending }}</span></a></li>
+				<li role="presentation"><a href="#approved" aria-controls="approved" role="tab" data-toggle="tab">Recently Approved Submissions</a></li>
 				<li role="presentation"><a href="#new_users" aria-controls="new users" role="tab" data-toggle="tab">New Users</a></li>
 			</ul>
 		</div>
@@ -132,6 +133,48 @@
 				</div>
 			</div><!-- / Unsubmitted drafts -->
 		</div><!-- / Moderation panel -->
+		<div role="tabpanel" class="tab-pane" id="approved"><!-- Recently Approved Submissions -->
+			<div class="row">
+				<div class="col-xs-12">
+					<h2>Recently Approved Submissions</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-md-4">
+					<h3>Documents</h3>
+					{% for document in new_documents %}
+						{% if document.published == True %}
+							<h3><a href="{% url 'moderate_document' document.id %}">{{ document.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{% if document.author.userprofile.display_name %}{{ document.author.userprofile.display_name }}{% else %}{{ document.author }}{% endif %}</a> | {{ document.feature }}<br />Submitted {{ document.last_edited }}</span></h3>
+						{% endif %}
+					{% endfor %}
+				</div>
+				<div class="col-xs-12 col-md-4">
+					<h3>Images</h3>
+					{% for image in new_images %}
+						{% if image.pending == False and image.published == False %}
+						<div class="media">
+							<div class="media-left">
+								<a href="{% url 'detail' image.feature.id %}#images"><img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded"></a>
+							</div>
+							<div class="media-body">
+								<h4 class="media-heading"><a href="{% url 'moderate_image' image.id %}">{{ image.feature }}</a><br /><span class="text-muted">{{ image.title }}</span></h4>
+								<span class="small"><a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a> | {{ image.last_edited }}</span>
+							</div>
+						</div>
+						{% endif %}
+					{% endfor %}
+				</div>
+				<div class="col-xs-12 col-md-4">
+					<h3>Media</h3>
+					{% for item in new_media %}
+						{% if item.pending == False and item.published == False %}
+							<h3><a href="{% url 'moderate_media' item.id %}">{{ item.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' item.author.id %}">{% if item.author.userprofile.display_name %}{{ item.author.userprofile.display_name }}{% else %}{{ item.author }}{% endif %}</a> | {{ item.feature }}<br />Submitted {{ item.last_edited }}</span></h3>
+						{% endif %}
+					{% endfor %}
+				</div>
+			</div>		
+
+		</div><!-- / Recently Approved Submissions -->
 		<div role="tabpanel" class="tab-pane" id="new_users"><!-- New Users -->
 			<br />
 			<table class="table table-responsive">
