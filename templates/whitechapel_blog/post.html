@@ -1,11 +1,11 @@
 <div class="post">
 	<h2><a href="{% url 'single_post' year=post.date_published|date:'Y' post=post.slug %}">{{ post.title }}</a></h2>
-	<p><a href="{% url 'posts_by_author' post.author.id %}">{% if post.author.userprofile.display_name %}{{ post.author.userprofile.display_name }}{% else %}{{ post.author }}{% endif %}</a> | {{ post.date_published }}{% if request.user.is_staff and request.user.is_authenticated %} <a href="{% url 'admin:whitechapel_blog_post_change' post.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %}</p>
-	<div class="social_share">
+	<div class="social_share_inline">
 		<a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=" data-url="https://surveyoflondon.org{{ post.get_absolute_url }}">Tweet</a>
 		<div class="fb-share-button" data-href="https://surveyoflondon.org{{ post.get_absolute_url }}" data-layout="button_count"></div>
-		<hr />
 	</div>
+	<p><a href="{% url 'posts_by_author' post.author.id %}">{% if post.author.userprofile.display_name %}{{ post.author.userprofile.display_name }}{% else %}{{ post.author }}{% endif %}</a> | {{ post.date_published }}{% if request.user.is_staff and request.user.is_authenticated %} <a href="{% url 'admin:whitechapel_blog_post_change' post.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %}</p>
+	
 	{{ post.body|safe }}
 	{% if post.categories.all %}<p class="results-preview">Posted in {% for category in post.categories.all %}<a href="{% url 'posts_by_category' category.slug %}">{{ category }}</a> {% endfor %}</p>{% endif %}
 

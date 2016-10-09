@@ -516,10 +516,16 @@ p.results-preview {
 	background-position: center;
 }
 
-.social_share {
+.social_share, .social_share_inline {
 	line-height: 9px;
 	margin-bottom: 1em;
 }
+
+.social_share_inline {
+	display: inline-block;
+	float: right;
+}
+
 
 /* Medium Editor */
 
