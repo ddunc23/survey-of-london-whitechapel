@@ -16,7 +16,7 @@
 			<h2><a href="{% url 'detail' feature.id %}">{{ feature.address }}</a></h2>
 		{% endif %}
 		<p class="feature-description">This building is just beyond the Survey of London Whitechapel study area.</p>
-		<div class="btn-group"><a href="{% url 'detail' feature.id %}" class="btn btn-default btn-sm {% if not documents and not images and not media %} disabled{% endif %}">Read More</a> <a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-default btn-sm">Add Content</a> {% if request.user.is_authenticated and request.user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %}</div>
+		<div class="btn-group"><a href="{% url 'detail' feature.id %}" class="btn btn-default btn-sm {% if not documents and not images and not media %} disabled{% endif %}">Read More</a> <a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-default btn-sm">Contribute</a> {% if request.user.is_authenticated and request.user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %}</div>
 	</div>
 	{% else %}
 	<div class="feature-overview-thumbnail">
@@ -35,7 +35,7 @@
 		{% if feature.short_description %}
 			<p class="feature-description">{{ feature.short_description }}</p>
 		{% endif %}
-		<div class="btn-group"><a href="{% url 'detail' feature.id %}" class="btn btn-default btn-sm {% if not documents and not images and not media %} disabled{% endif %}">Read More</a> <a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-default btn-sm">Add Content</a> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %}</div>
+		<div class="btn-group"><a href="{% url 'detail' feature.id %}" class="btn btn-default btn-sm {% if not documents and not images and not media %} disabled{% endif %}">Read More</a> <a href="{% if user.is_authenticated %}{% url 'ugc_choice' feature.id %}{% else %}{% url 'account_login' %}?last_feature={{ feature.id }}{% endif %}" class="btn btn-default btn-sm">Contribute</a> {% if user.is_authenticated and user.is_staff %} <a href="{% url 'admin:map_feature_change' feature.id %}" class="btn btn-default btn-sm">Edit</a>{% endif %}</div>
 	</div>
 	{% endif %}
 </div>
