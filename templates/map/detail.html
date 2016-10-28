@@ -427,6 +427,50 @@
 	    window.location.hash = e.target.hash;
 	})
 
+	// Gather social links and insert as embeds
+
+	$(document).ready(function() {
+		var links = []
+		var tweets = []
+		// If the link is contains a link to twitter, add it to the array of links
+		$('.document a').each(function() {
+			if (~this.href.indexOf('https://twitter.com')) {
+				links.push($(this));
+			} 
+		})
+		// Create an array of ajax calls for each link and then run them
+		var ajax_caller = function(data) {
+			return $.ajax({
+				url: data.url,
+				dataType: data.dataType,
+				success: function(data) {
+					tweets.push(data.html);
+				},
+				error: function() {
+					tweets.push('error');
+				}
+			});
+		};
+		var ajax_calls = [];
+		for (var i=0; i < links.length; i++) {
+			if (~links[i][0].href.indexOf('https://twitter.com')) {
+				ajax_calls.push(ajax_caller({
+					url: "https://publish.twitter.com/oembed?url=" + links[i][0].href + '&align=center',
+					dataType: 'jsonp'
+				}));
+			}
+		}
+		// Once all the data's been collected, replace the links with the embeds
+		$.when.apply(this, ajax_calls).done(function() {
+			console.log(tweets);
+			for (var i=0; i < links.length; i++) {
+				if (tweets[i] != 'error') {
+					links[i].html(tweets[i]);
+				}
+			}
+		});
+	});
+
 </script>
 
 {% endblock %}

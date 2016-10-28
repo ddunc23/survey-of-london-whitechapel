@@ -226,6 +226,17 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 		}
 	});
 
+	var wheresMyStuff = L.Control.extend({
+		options: {
+			position: 'bottomleft',
+		},
+		onAdd: function(map) {
+			var container = L.DomUtil.create('div', 'wheresMyStuff');
+			container.innerHTML = '<a href="https://surveyoflondon.org/page/frequently-asked-questions/">Where should I put my contribution?</a>';
+			return container;
+		}
+	});
+
 	if (mapType == 'main') {
 
 		function initMap(layers) {
@@ -295,6 +306,8 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 				}).addTo(map);
 				
 				map.addControl(new infobox());
+
+				map.addControl(new wheresMyStuff());
 				
 				/*if (allFeatures == false) {
 					map.addControl(new show_all_buildings());

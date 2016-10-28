@@ -157,7 +157,7 @@ info.update = function(properties) {
     		snippet = properties.address;
     	}
     }
-    this._div.innerHTML =  (properties ? '<b>' + snippet + '</b>' : '');
+    this._div.innerHTML = (properties ? '<b>' + snippet + '</b>' : '');
 };
 
 
@@ -226,6 +226,18 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 			return container;
 		}
 	});
+
+	var wheresMyStuff = L.control.extend({
+		options: {
+			position: 'bottomleft',
+		},
+		onAdd: function(map) {
+			var container = L.DomUtil.create('div', 'wheresMyStuff');
+			container.innerHTML = '<a href="#">Where should I put my contribution?</a>';
+			return container;
+		}
+	});
+
 
 	if (mapType == 'main') {
 
@@ -297,6 +309,8 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 				
 				map.addControl(new infobox());
 				
+				map.addControl(new wheresMyStuff());
+
 				/*if (allFeatures == false) {
 					map.addControl(new show_all_buildings());
 				}*/

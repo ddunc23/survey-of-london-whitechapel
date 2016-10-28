@@ -112,20 +112,17 @@
 	
 
 	<div class="row">
-		<div class="col-xs-12 col-md-4"><!-- Featured Contributions -->
+		<div class="col-xs-12 col-md-4"><!-- Building of the Week -->
 			<h1 class="front-page-heading">Building of the Week</h1>
 			<div class="row">
-				{% for document in page.documents.all %}
-				{% if document.published == True %}
-				<div class="{% cycle 'col-xs-12' 'col-xs-12 col-md-6' 'col-xs-12 col-md-6' %}">
-					<a href="{% url 'detail' document.feature.id %}#images"><img src="{% thumbnail document.feature.thumbnail 400x225 crop='0,0' %}" class="img-rounded" style="width: 100%;"></a>
-					<h3><a href="{% url 'detail' document.feature.id %}#{{ document.document_type }}?{{ document.title|slugify }}">{{ document.title }}</a><br /><span class="small"><a href="{% url 'all_content_by_author' document.author.id %}">{{ document.author.userprofile.display_name }}</a> | {{ document.feature }}</span></h3>
-					<p>{{ document.body|safe|truncatewords_html:40|striptags }}</p>
+				<div class="col-xs-12">
+					<a href="{% url 'detail' page.building_of_the_week.id %}#images"><img src="{% thumbnail page.building_of_the_week.thumbnail 400x225 crop='0,0' %}" class="img-rounded" style="width: 100%;"></a>
+					<h3><a href="{% url 'detail' page.building_of_the_week.id %}">{{ page.building_of_the_week }}</a></h3>
+					<p class="lead">We don't know much about this building yet. Can you tell us something about it's history?</p>
+					<p class="lead"><a href="{% url 'ugc_choice' page.building_of_the_week.id %}">Contribute it here</a></p>
 				</div>
-				{% endif %}
-				{% endfor %}
 			</div>
-		</div><!-- / Featured Contribution -->
+		</div><!-- / Building of the Week -->
 		<div class="col-xs-12 col-md-8"><!-- Help Movie -->
 			<h1 class="front-page-heading">Browsing the Map</h1>
 			<div class="embed-responsive embed-responsive-16by9">

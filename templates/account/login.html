@@ -39,8 +39,11 @@
           {% load honeypot %}
           {% render_honeypot_field "phone_number" %}
           {{ form|crispy }}
+          {{ next_edit }}
           {% if last_feature %}
           <input type="hidden" name="next" value="/map/?last_feature={{ last_feature }}" />
+          {% elif next_edit %}
+          <input type="hidden" name="next" value="{{ next_edit }}" />
           {% else %}
           <input type="hidden" name="{{ redirect_field_name }}" value="{% url 'map_home' %}" />
           {% endif %}

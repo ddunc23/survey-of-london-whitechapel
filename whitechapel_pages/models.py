@@ -9,6 +9,7 @@ class Page(models.Model):
 	slug = models.SlugField()
 	body = RichTextUploadingField(blank=True, null=True)
 	documents = models.ManyToManyField('map.Document', blank=True)
+	building_of_the_week = models.ForeignKey('map.Feature', blank=True, null=True, verbose_name='Building of the Week')
 	blog_post = models.ForeignKey('whitechapel_blog.Post', blank=True, null=True, verbose_name='Featured Event')
 	images = models.ManyToManyField('map.Image', blank=True)
 	media = models.ManyToManyField('map.Media', blank=True)

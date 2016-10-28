@@ -92,6 +92,7 @@ TEMPLATES = [
                 'whitechapel_pages.context_processors.category_links',
                 'whitechapel_pages.context_processors.allow_indexing',
                 'map.context_processors.last_feature',
+                'map.context_processors.next_edit',
                 'whitechapel_blog.context_processors.blog_category_links',
                 'whitechapel_blog.context_processors.blog_post_list',
                 'whitechapel_blog.context_processors.latest_contributions',
