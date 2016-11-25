@@ -2,10 +2,10 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from map.models import Feature
+from map.models import Feature, Document, Image, Media
 from rest_framework import routers, serializers, viewsets
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
-from map.serializers import FeatureSerializer
+from map.serializers import FeatureSerializer, FeatureDetailSerializer, DocumentSerializer, ImageSerializer
 from filebrowser.sites import site
 from django.contrib.sitemaps.views import sitemap
 from map.views import MapSitemap
@@ -19,9 +19,24 @@ class FeatureViewSet(viewsets.ReadOnlyModelViewSet):
 	queryset = Feature.objects.all()
 	serializer_class = FeatureSerializer
 
+class FeatureDetailViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Feature.objects.all()
+    serializer_class = FeatureDetailSerializer
+
+class DocumentViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Document.objects.all()
+    serializer_class = DocumentSerializer
+
+class ImageViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+
 # Django REST Framework Routers
 router = routers.DefaultRouter()
 router.register(r'features', FeatureViewSet)
+router.register(r'detail', FeatureDetailViewSet)
+router.register(r'document', DocumentViewSet)
+router.register(r'image', ImageViewSet)
 
 # Sitemaps
 sitemaps = {

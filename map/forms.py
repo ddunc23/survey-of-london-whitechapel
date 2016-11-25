@@ -86,12 +86,13 @@ class AdminImageForm(ImageForm):
 	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here. If a contributor has opted out of email updates they won\'t receive this.', required=False, widget=forms.Textarea, initial='Hello.\nYour submission has been published on the Survey of London Whitechapel Website.\nThanks for your contribution.\n\n\nIf you\'d like to stop receiving these emails, log in to your account and uncheck the "Receive emails about your submissions from the Survey of London?" on your profile page.')
 	send_email = forms.BooleanField(label='Send Email?', help_text='If you don\'t want to notify a contributor by email that their contribution has been approved, uncheck this box.', initial=True, required=False)
 	class Meta(ImageForm.Meta):
-		fields = ('title', 'tags', 'description', 'email_thanks', 'send_email', 'published', 'aggregate')
+		fields = ('title', 'tags', 'description', 'email_thanks', 'send_email', 'published', 'aggregate', 'copyright')
 		labels = {
 			'title': 'Edit the title',
 			'tags': 'Add more tags as necessary',
 			'published': 'Tick this box to approve this submission and publish it on the map.',
 			'aggregate': 'Tick this box to attach this content to all the buildings on this site.',
+			'copyright': 'Tick this box to indicate that this image is copyright of the contributor.'
 		}
 		help_texts = {
 			'tags': '',

@@ -213,7 +213,7 @@
 							{% for image in images %}
 							<div class="col-xs-12 col-sm-4 col-md-4">
 								<div class="item-card">
-									<a href="#" class="gallery_item" data-image="/media/{{ image.file }}" data-caption="{{ image.title }}" data-author="{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}" data-description="{% if image.description %}{{ image.description }}{% endif %}"><img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}"></a>
+									<a href="#" class="gallery_item" data-image="/media/{{ image.file }}" data-caption="{{ image.title }}" data-author="{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}" data-description="{% if image.description %}{{ image.description }}{% endif %}" data-copyright="{% if image.copyright == False %}<a href='https://creativecommons.org/licenses/by-nc/2.0/uk/'><img src='{% static 'img/by-nc.png' %}' style='width: 80px;' alt='Creative Commons Attribution-NonCommercial 2.0 UK: England & Wales'/></a>{% else %}&copy {% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }} {{ datetime.now|date:'Y' }}{% endif %}{% endif %}"><img src="{% thumbnail image.file 265x175 crop='0,0' %}" alt="{{ image.caption }}"></a>
 									<p>{{ image.title }}<br />Contributed by <a href="{% url 'all_content_by_author' image.author.id %}">{% if image.author.userprofile.display_name %}{{ image.author.userprofile.display_name }}{% else %}{{ image.author }}{% endif %}</a></p>
 								</div>
 							</div>	
@@ -284,7 +284,7 @@
 	        		<button type="button" class="btn btn-default lightbox_prev">Previous</button>
 	        		<button type="button" class="btn btn-default lightbox_next">Next</button>
       			</div>
-        		<h4><em><span id="lightbox_caption"></span></em><br /><span class="small" id="lightbox_image_author"></span></h4>
+        		<h4><em><span id="lightbox_caption"></span></em><br /><span class="small" id="lightbox_image_author"></span><br /><span class="small" id="lightbox_copyright"></span></h4>
         		<p id="lightbox_description"></p>
       		</div>
 			<div class="modal-footer">
@@ -307,6 +307,7 @@
 			}
 			$('#lightbox_image').attr('src', $(images[index]).data('image'));
 			$('#lightbox_image').attr('alt', $(images[index]).data('caption'));
+			$('#lightbox_copyright').html($(images[index]).data('copyright'));
 			$('#lightbox_caption').html($(images[index]).data('caption'));
 			$('#lightbox_description').html($(images[index]).data('description'));
 			$('#lightbox_image_author').html('Submitted by ' + $(images[index]).data('author'));
@@ -320,6 +321,7 @@
 			}
 				$('#lightbox_image').attr('src', $(images[index]).data('image'));
 				$('#lightbox_image').attr('alt', $(images[index]).data('caption'));
+				$('#lightbox_copyright').html($(images[index]).data('copyright'));
 				$('#lightbox_caption').html($(images[index]).data('caption'));
 				$('#lightbox_description').html($(images[index]).data('description'));
 				$('#lightbox_image_author').html('Submitted by ' + $(images[index]).data('author'));
@@ -351,9 +353,11 @@
 		var image = $(this).data('image');
 		var caption = $(this).data('caption');
 		var author = $(this).data('author');
+		var copyright = $(this).data('copyright');
 		var description = $(this).data('description');
 		$('#lightbox_image').attr('src', image);
 		$('#lightbox_image').attr('alt', caption);
+		$('#lightbox_copyright').html(copyright);
 		$('#lightbox_caption').html(caption);
 		$('#lightbox_description').html(description);
 		$('#lightbox_image_author').html('Submitted by ' + author);

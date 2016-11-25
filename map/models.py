@@ -189,8 +189,8 @@ feature_mapping = {
 
 class Document(models.Model):
 	"""A user-submitted or Survey of London text document attached to a feature."""
-	feature = models.ForeignKey(Feature)
-	author = models.ForeignKey(User)
+	feature = models.ForeignKey(Feature, related_name='documents')
+	author = models.ForeignKey(User, related_name='documents')
 	title = models.CharField(max_length=128)
 	body = RichTextUploadingField(blank=False)
 	body_processed = models.TextField(null=True, blank=True)
@@ -241,8 +241,8 @@ class Document(models.Model):
 
 class Image(models.Model):
 	"""A user-submitted image"""
-	feature = models.ForeignKey(Feature)
-	author = models.ForeignKey(User)
+	feature = models.ForeignKey(Feature, related_name='images')
+	author = models.ForeignKey(User, related_name='images')
 	title = models.CharField(max_length=128)
 	description = models.TextField(null=True, blank=True)
 	file = models.ImageField(upload_to=feature_directory_path, null=True, blank=False, verbose_name='Image')
@@ -252,6 +252,7 @@ class Image(models.Model):
 	created = models.DateField(auto_now_add=True, null=True, blank=True)
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
 	tags = TaggableManager(blank=True)
+	copyright = models.BooleanField(default=False)
 
 	def __unicode__(self):
 		try:
@@ -275,8 +276,8 @@ class Image(models.Model):
 
 class Media(models.Model):
 	"""A user-submitted video or audio"""
-	feature = models.ForeignKey(Feature)
-	author = models.ForeignKey(User)
+	feature = models.ForeignKey(Feature, related_name='media')
+	author = models.ForeignKey(User, related_name='media')
 	title = models.CharField(max_length=128)
 	description = models.TextField(null=True, blank=True)
 	url = EmbedVideoField()
