@@ -142,7 +142,7 @@ def category(request, category):
 def tag(request, tag):
 	"""Feetures by tag"""
 	tag = tag
-	features = Feature.objects.filter(Q(tags__name__in=[tag]) | Q(document__tags__name__in=[tag]) | Q(image__tags__name__in=[tag]) | Q(media__tags__name__in=[tag])).distinct()
+	features = Feature.objects.filter(Q(tags__name__in=[tag]) | Q(documents__tags__name__in=[tag]) | Q(images__tags__name__in=[tag]) | Q(media__tags__name__in=[tag])).distinct()
 	documents = Document.objects.filter(tags__name__in=[tag])
 	images = Image.objects.filter(tags__name__in=[tag])
 	media = Media.objects.filter(tags__name__in=[tag])
@@ -660,7 +660,7 @@ def features_by_category(request, category):
 def features_by_tag(request, tag):
 	if request.method == 'GET':
 		"""Gather all features by a particular tag, ensuring that you include tags attached to media, images, and documents"""
-		features = Feature.objects.filter(Q(tags__name__in=[tag]) | Q(document__tags__name__in=[tag]) | Q(image__tags__name__in=[tag]) | Q(media__tags__name__in=[tag]))
+		features = Feature.objects.filter(Q(tags__name__in=[tag]) | Q(documents__tags__name__in=[tag]) | Q(images__tags__name__in=[tag]) | Q(media__tags__name__in=[tag]))
 		serializer = FeatureSerializer(features, many=True)
 		return JSONResponse(serializer.data)
 

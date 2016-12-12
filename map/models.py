@@ -56,9 +56,9 @@ def update_feature_count(feature):
 
 	else:
 		# If feature.site is None, just tally the 'count' as normal
-		all_docs = feature.document_set.filter(published=True).count()
-		all_images = feature.image_set.filter(published=True).count()
-		all_media = feature.media_set.filter(published=True).count()
+		all_docs = feature.document.filter(published=True).count()
+		all_images = feature.images.filter(published=True).count()
+		all_media = feature.media.filter(published=True).count()
 		count = all_docs + all_images + all_media
 		# Turn single Feature object into a queryset so you can run update on it. We'e using .update() rather than .save() so we don't get stuck in a loop
 		feature_set = Feature.objects.filter(id=feature.id)
