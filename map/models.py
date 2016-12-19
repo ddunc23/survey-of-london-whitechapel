@@ -212,9 +212,9 @@ class Document(models.Model):
 	tags = TaggableManager(blank=True)
 
 	def __unicode__(self):
-		try:
+		if self.author.userprofile.display_name != None:
 			author_name = self.author.userprofile.display_name
-		except:
+		else:
 			author_name = self.author.username
 		if self.feature.b_name:
 			return author_name + ' | ' + self.feature.b_name + ' | ' + self.title
