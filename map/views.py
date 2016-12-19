@@ -22,6 +22,7 @@ from dateutil.relativedelta import *
 from dal import autocomplete
 from django.contrib.sitemaps import Sitemap
 from honeypot.decorators import check_honeypot
+from whitechapel_users.models import UserProfile
 
 logger = logging.getLogger(__name__)
 
@@ -283,8 +284,10 @@ def inform_managers_of_content_submission(request):
 
 def inform_user_of_content_publication(author, title, message):
 	"""Tell a user that their content has been published"""
-	# Only send an email if a user has opted in to updates
-	if author.userprofile.emails == True:
+	# If for some reason a userprofile for a given author wasn't created on signup, make one now
+	profile = UserProfile.objects.get_or_create(user=author)
+	# Only send an email if a user hasn't opted out of updates
+	if profile.emails == True:
 		subject = 'Your submission "' + title + '"" has been published on Survey of London Whitechapel'
 		email = EmailMessage(subject, message, 'admin@surveyoflondon.org', [author.email], ['solwhitechapel.bartlett@ucl.ac.uk'])
 		email.send()

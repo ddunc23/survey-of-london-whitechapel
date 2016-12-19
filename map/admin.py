@@ -130,23 +130,23 @@ class UserAdmin(BaseUserAdmin):
 
 
 class DocumentAdmin(admin.ModelAdmin):
-	list_display = ('title', 'feature', 'author', 'created', 'document_type', 'published')
-	raw_id_fields=('feature')
+	list_display = ('title', 'feature', 'author', 'created', 'document_type', 'published',)
+	raw_id_fields=('feature',)
 	autocomplete_lookup_fields = {
 		'fk': ['feature'],
 	}
 
 
 class ImageAdmin(admin.ModelAdmin):
-	list_display = ('title', 'feature', 'author', 'description', 'created', 'published')
-	raw_id_fields=('feature')
+	list_display = ('title', 'feature', 'author', 'description', 'created', 'published',)
+	raw_id_fields=('feature',)
 	autocomplete_lookup_fields = {
 		'fk': ['feature'],
 	}
 
 class MediaAdmin(admin.ModelAdmin):
-	list_display = ('title', 'feature', 'author', 'description', 'created', 'published')
-	raw_id_fields=('feature')
+	list_display = ('title', 'feature', 'author', 'description', 'created', 'published',)
+	raw_id_fields=('feature',)
 	autocomplete_lookup_fields = {
 		'fk': ['feature'],
 	}
