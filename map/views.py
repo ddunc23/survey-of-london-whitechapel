@@ -286,6 +286,7 @@ def inform_user_of_content_publication(author, title, message):
 	"""Tell a user that their content has been published"""
 	# If for some reason a userprofile for a given author wasn't created on signup, make one now
 	profile = UserProfile.objects.get_or_create(user=author)
+	profile = UserProfile.objects.get(user=author)
 	# Only send an email if a user hasn't opted out of updates
 	if profile.emails == True:
 		subject = 'Your submission "' + title + '"" has been published on Survey of London Whitechapel'
