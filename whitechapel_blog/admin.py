@@ -3,7 +3,7 @@ from whitechapel_blog.models import Post, Category
 
 class PostAdmin(admin.ModelAdmin):
 	prepopulated_fields = {'slug': ('title',)}
-	exclude = ('author',)
+	# exclude = ('author',)
 	list_display = ('title', 'author', 'date_published')
 
 	def save_model(self, request, obj, form, change):

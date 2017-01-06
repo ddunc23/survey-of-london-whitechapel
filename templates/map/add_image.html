@@ -10,7 +10,7 @@
 		</div>
 	</div>
 	<div class="row ugc-content-form-container">
-		<form id="document_form" method="post" {% if image.id %} action="{% url 'edit_document' feature.id image.id %}" {% else %}  action="{% url 'add_image' feature.id %}" {% endif %} enctype="multipart/form-data">
+		<form id="document_form" method="post" {% if image.id %} action="{% url 'edit_image' feature.id image.id %}" {% else %}  action="{% url 'add_image' feature.id %}" {% endif %} enctype="multipart/form-data">
 			<div class="col-xs-12 col-md-8 col-md-offset-2">
 				{% load crispy_forms_tags %}
 				{% csrf_token %}

@@ -62,12 +62,26 @@
 						{% endif %}
 					</div>
 					<div role="tabpanel" class="tab-pane" id="drafts">
-						{% if not draft_docs %}
+						{% if not draft_docs and not draft_images %}
 							<h3 class="text-muted">You don't have any drafts.</h3>
 						{% else %}
 							{% for doc in draft_docs %}
 								<h3><a href="{% url 'edit_document' doc.feature.id doc.id %}">{{ doc.title }}</a><br /><span class="small">{{ doc.feature }} | Last edited {{ doc.last_edited }}</span></h3>
 								<p class="results-preview">{{ doc.body|safe|truncatewords_html:40|striptags }}</p>
+							{% endfor %}
+							{% for image in draft_images %}
+								<div class="media">
+								<div class="media-left">
+									<img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded">
+								</div>
+								<div class="media-body">
+									<h3 class="media-heading">{{ image.title }}</h3>
+									<h4 class="small"><a href="{% url 'edit_image' image.feature.id image.id %}">{{ image.feature }}</a> | Last edited {{ image.last_edited }}
+									{% if image.description %}
+										<p class="results-preview">{{ image.description|truncatechars:140 }}</p>
+									{% endif %}
+								</div>
+							</div>
 							{% endfor %}
 						{% endif %}
 					</div>

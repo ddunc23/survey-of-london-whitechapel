@@ -73,13 +73,18 @@ class ImageForm(forms.ModelForm):
 	def clean_file(self):
 		# Limit file upload size for users without access to the admin site
 		file = self.cleaned_data['file']
-		content_type = file.content_type.split('/')[0]
-		if content_type in settings.CONTENT_TYPES:
-			if file._size > settings.MAX_UPLOAD_SIZE:
-				raise forms.ValidationError('Please keep image file size under %s. The image you just uploaded is %s' % (filesizeformat(settings.MAX_UPLOAD_SIZE), filesizeformat(file._size)))
-		else:
-			raise forms.ValidationError('The file you uploaded isn\'t an image')
-		return file
+		try:
+			content_type = file.content_type.split('/')[0]
+			if content_type in settings.CONTENT_TYPES:
+				if file._size > settings.MAX_UPLOAD_SIZE:
+					raise forms.ValidationError('Please keep image file size under %s. The image you just uploaded is %s' % (filesizeformat(settings.MAX_UPLOAD_SIZE), filesizeformat(file._size)))
+			else:
+				raise forms.ValidationError('The file you uploaded isn\'t an image')
+			return file
+		except:
+			return file
+		
+
 
 
 class AdminImageForm(ImageForm):

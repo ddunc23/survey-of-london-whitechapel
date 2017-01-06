@@ -207,13 +207,14 @@ def user_overview(request):
 	pending_docs = documents.filter(pending=True)
 	draft_docs = documents.filter(published=False).filter(pending=False)
 	images = Image.objects.filter(author=user)
+	draft_images = images.filter(published=False, pending=False)
 	pending_images = images.filter(pending=True)
 	published_images = images.filter(published=True)
 	media = Media.objects.filter(author=user)
 	pending_media = media.filter(pending=True)
 	published_media = media.filter(published=True)
 
-	return render(request, 'map/user_overview.html', {'user': user, 'documents': documents, 'published_docs': published_docs, 'draft_docs': draft_docs, 'pending_docs': pending_docs, 'images': images, 'pending_images': pending_images, 'published_images': published_images, 'pending_media': pending_media, 'published_media': published_media})
+	return render(request, 'map/user_overview.html', {'user': user, 'documents': documents, 'published_docs': published_docs, 'draft_docs': draft_docs, 'pending_docs': pending_docs, 'images': images, 'draft_images': draft_images, 'pending_images': pending_images, 'published_images': published_images, 'pending_media': pending_media, 'published_media': published_media})
 
 @login_required
 def ugc_choice(request, feature):
@@ -465,13 +466,14 @@ def edit_image(request, feature, image=None):
 			i.author = request.user
 			if image != None:
 				i.id = i.id
+				i.file = i.file
+			else:
+				i.file = request.FILES['file']
 
 			published = request.POST.get('publish')
 
 			if published != None:
 				i.pending = True
-
-			i.file = request.FILES['file']
 
 			i.save()
 			form.save_m2m()
