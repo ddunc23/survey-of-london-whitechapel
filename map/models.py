@@ -255,9 +255,9 @@ class Image(models.Model):
 	copyright = models.BooleanField(default=False)
 
 	def __unicode__(self):
-		try:
+		if self.author.userprofile.display_name != None:
 			author_name = self.author.userprofile.display_name
-		except:
+		else:
 			author_name = self.author.username
 
 		return self.title + ' | ' + author_name
