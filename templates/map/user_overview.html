@@ -72,10 +72,10 @@
 							{% for image in draft_images %}
 								<div class="media">
 								<div class="media-left">
-									<img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded">
+									<a href="{% url 'edit_image' image.feature.id image.id %}"><img src="{% thumbnail image.file 64x64 crop='0,0' %}" class="img-rounded"></a>
 								</div>
 								<div class="media-body">
-									<h3 class="media-heading">{{ image.title }}</h3>
+									<h3 class="media-heading"><a href="{% url 'edit_image' image.feature.id image.id %}">{{ image.title }}</a></h3>
 									<h4 class="small"><a href="{% url 'edit_image' image.feature.id image.id %}">{{ image.feature }}</a> | Last edited {{ image.last_edited }}
 									{% if image.description %}
 										<p class="results-preview">{{ image.description|truncatechars:140 }}</p>
