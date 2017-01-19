@@ -1,40 +1,57 @@
+# Django Core
+from django.contrib.sitemaps.views import sitemap
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
+
+# Whitechapel
+from map.views import MapSitemap, QueryFeatures
 from map.models import Feature, Document, Image, Media
-from rest_framework import routers, serializers, viewsets
-from rest_framework_gis.serializers import GeoFeatureModelSerializer
-from map.serializers import FeatureSerializer, FeatureDetailSerializer, DocumentSerializer, ImageSerializer
-from filebrowser.sites import site
-from django.contrib.sitemaps.views import sitemap
-from map.views import MapSitemap
 from whitechapel_pages.views import PageSitemap, FrontPageSitemap
 from whitechapel_blog.views import BlogPostSitemap
+from map.serializers import FeatureSerializer, DocumentSerializer, ImageSerializer, MediaSerializer
+
+# 3rd Party
+from filebrowser.sites import site
 from honeypot.decorators import check_honeypot
 from allauth import account
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework import routers, serializers, viewsets
+from rest_framework_gis.serializers import GeoFeatureModelSerializer
+from rest_framework.pagination import PageNumberPagination
+
+# Django REST Framework Pagination
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
 # Django REST Framework Viewsets
 class FeatureViewSet(viewsets.ReadOnlyModelViewSet):
-	queryset = Feature.objects.all()
-	serializer_class = FeatureSerializer
-
-class FeatureDetailViewSet(viewsets.ReadOnlyModelViewSet):
+    #authentication_classes = (SessionAuthentication, BasicAuthentication)
     queryset = Feature.objects.all()
-    serializer_class = FeatureDetailSerializer
+    serializer_class = FeatureSerializer
+    pagination_class = StandardResultsSetPagination
 
 class DocumentViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Document.objects.all()
+    queryset = Document.objects.filter(published=True)
     serializer_class = DocumentSerializer
+    pagination_class = StandardResultsSetPagination
 
 class ImageViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Image.objects.all()
+    queryset = Image.objects.filter(published=True)
     serializer_class = ImageSerializer
+    pagination_class = StandardResultsSetPagination
+
+class MediaViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Media.objects.filter(published=True)
+    serializer_class = MediaSerializer
+    pagination_class = StandardResultsSetPagination
 
 # Django REST Framework Routers
 router = routers.DefaultRouter()
 router.register(r'features', FeatureViewSet)
-router.register(r'detail', FeatureDetailViewSet)
 router.register(r'document', DocumentViewSet)
 router.register(r'image', ImageViewSet)
 
@@ -53,7 +70,8 @@ urlpatterns = [
     url(r'^blog/', include('whitechapel_blog.urls')),
     url(r'^users/', include('whitechapel_users.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^api/', include(router.urls)),
+    url(r'^api/v1/', include(router.urls)),
+    url(r'^api/v1/query/features/$', QueryFeatures.as_view(), name='query_features'),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     # django-filebrowser
     url(r'^admin/filebrowser/', include(site.urls)),

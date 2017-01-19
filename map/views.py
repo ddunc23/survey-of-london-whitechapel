@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from map.models import Feature, Document, Category, Image, Media, Site
-from map.serializers import FeatureSerializer
+from map.serializers import FeatureSerializer, FeatureOverviewSerializer
 from map.forms import DocumentForm, ImageForm, MediaForm, AdminDocumentForm, AdminImageForm, AdminMediaForm
 from rest_framework.renderers import JSONRenderer
 from haystack.query import SearchQuerySet
@@ -23,6 +23,9 @@ from dal import autocomplete
 from django.contrib.sitemaps import Sitemap
 from honeypot.decorators import check_honeypot
 from whitechapel_users.models import UserProfile
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import authentication, permissions
 
 logger = logging.getLogger(__name__)
 
@@ -613,7 +616,7 @@ class TagAutocomplete(autocomplete.Select2QuerySetView):
 		return qs
 
 
-# API Views
+# API Views - Private
 
 class JSONResponse(HttpResponse):
     """An HttpResponse that its content into JSON."""
@@ -702,6 +705,38 @@ def search_features(request):
 				features.append(result.object)
 			serializer = FeatureSerializer(features, many=True)
 			return JSONResponse(serializer.data)
+
+
+# Public API views (in addition to those specified in ViewSets)
+
+class QueryFeatures(APIView):
+	"""
+	View which allows third parties to query features according to various parameters
+	"""
+	authentication_clases = (authentication.BasicAuthentication,)
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+	def get(self, request, format=None):
+		"""
+		By default, just return the first 10 features, otherwise return different subsets depending on the querystring
+		"""
+
+		features = Feature.objects.all()
+
+		if request.GET.get('author'):
+			author = request.GET.get('author')
+			author = get_object_or_404(User, id=author)
+			doc_features = Feature.objects.filter(documents__author=author, documents__published=True)
+			img_features = Feature.objects.filter(images__author=author, images__published=True)
+			media_features = Feature.objects.filter(media__author=author, media__published=True)
+			features = doc_features | img_features | media_features
+
+		if request.GET.get('category'):
+			category = request.GET.get('category')
+			features.filter(categories__id=category)
+			
+		serializer = FeatureSerializer(features, many=True)
+		return Response(serializer.data)
+
 
 # Sitemap
 
