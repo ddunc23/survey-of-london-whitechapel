@@ -6,7 +6,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 # Whitechapel
-from map.views import MapSitemap, QueryFeatures
+from map.views import MapSitemap, QueryFeatures, QueryDocuments, QueryImages, QueryMedia
 from map.models import Feature, Document, Image, Media
 from whitechapel_pages.views import PageSitemap, FrontPageSitemap
 from whitechapel_blog.views import BlogPostSitemap
@@ -72,6 +72,9 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/v1/', include(router.urls)),
     url(r'^api/v1/query/features/$', QueryFeatures.as_view(), name='query_features'),
+    url(r'^api/v1/query/documents/$', QueryDocuments.as_view(), name='query_documents'),
+    url(r'^api/v1/query/images/$', QueryImages.as_view(), name='query_images'),
+    url(r'^api/v1/query/media/$', QueryMedia.as_view(), name='query_media'),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     # django-filebrowser
     url(r'^admin/filebrowser/', include(site.urls)),
