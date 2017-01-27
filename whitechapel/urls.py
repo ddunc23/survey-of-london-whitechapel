@@ -52,8 +52,9 @@ class MediaViewSet(viewsets.ReadOnlyModelViewSet):
 # Django REST Framework Routers
 router = routers.DefaultRouter()
 router.register(r'features', FeatureViewSet)
-router.register(r'document', DocumentViewSet)
-router.register(r'image', ImageViewSet)
+router.register(r'documents', DocumentViewSet)
+router.register(r'images', ImageViewSet)
+router.register(r'media', MediaViewSet)
 
 # Sitemaps
 sitemaps = {
