@@ -752,7 +752,7 @@ class QueryFeatures(APIView):
 			# All features by tag
 			tags = request.GET.get('tags')
 			tags = tags.split(',')
-			features = features.filter(Q(tags__name__in=tags) | Q(documents__tags__name__in=tags) | Q(images__tags__name__in=tags) | Q(media__tags__name__in=tags))
+			features = features.filter(Q(tags__name__in=tags) | Q(documents__tags__name__in=tags) | Q(images__tags__name__in=tags) | Q(media__tags__name__in=tags)).distinct()
 
 		if request.GET.get('year_range'):
 			# All features built between two years
