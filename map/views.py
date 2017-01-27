@@ -754,11 +754,22 @@ class QueryFeatures(APIView):
 			tags = tags.split(',')
 			features = Feature.objects.filter(Q(tags__name__in=tags) | Q(documents__tags__name__in=tags) | Q(images__tags__name__in=tags) | Q(media__tags__name__in=tags))
 
+		if request.GET.get('year_range'):
+			# All features built between two years
+			year_range = request.GET.get('year_range')
+			year_range = year_range.split(',')
+			# If a user hasn't entered an end year in their date range, return everything created after the starting year
+			try:
+				features = feautres.filter(current__gte=year_range[0]).filter(current__lte=year_range[1])
+			except:
+				features = features.filter(current__gte=year_range[0])
+
 		paginator = StandardResultsSetPagination()
 		result_page = paginator.paginate_queryset(features, request)
 
 		serializer = FeatureSerializer(result_page, many=True)
 		return Response(serializer.data)
+
 
 class QuerySubmissions(APIView):
 	"""
