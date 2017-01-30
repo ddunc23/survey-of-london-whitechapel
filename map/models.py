@@ -212,9 +212,9 @@ class Document(models.Model):
 	tags = TaggableManager(blank=True)
 
 	def __unicode__(self):
-		if self.author.userprofile.display_name != None:
+		try: 
 			author_name = self.author.userprofile.display_name
-		else:
+		except:
 			author_name = self.author.username
 		if self.feature.b_name:
 			return author_name + ' | ' + self.feature.b_name + ' | ' + self.title
@@ -255,9 +255,9 @@ class Image(models.Model):
 	copyright = models.BooleanField(default=False)
 
 	def __unicode__(self):
-		if self.author.userprofile.display_name != None:
+		try: 
 			author_name = self.author.userprofile.display_name
-		else:
+		except:
 			author_name = self.author.username
 
 		return self.title + ' | ' + author_name
