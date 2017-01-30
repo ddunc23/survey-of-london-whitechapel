@@ -752,7 +752,7 @@ class QueryFeatures(APIView):
 			# All features by tag
 			tags = request.GET.get('tags')
 			tags = tags.split(',')
-			features = features.filter(Q(tags__name__in=tags) | Q(documents__tags__name__in=tags) | Q(images__tags__name__in=tags) | Q(media__tags__name__in=tags)).distinct()
+			features = features.filter(Q(tags__name__in=tags) | Q(documents__tags__name__in=tags) | Q(images__tags__name__in=tags) | Q(media__tags__name__in=tags))
 
 		if request.GET.get('year_range'):
 			# All features built between two years
@@ -763,6 +763,9 @@ class QueryFeatures(APIView):
 				features = feautres.filter(current__gte=year_range[0]).filter(current__lte=year_range[1])
 			except:
 				features = features.filter(current__gte=year_range[0])
+
+		# Remove duplicates
+		features = features.distinct()
 
 		paginator = StandardResultsSetPagination()
 		result_page = paginator.paginate_queryset(features, request)
@@ -814,6 +817,8 @@ class QuerySubmissions(APIView):
 				self.results = self.results.filter(created__gte=date_range[0]).filter(created__lte=date_range[1])
 			except:
 				self.results = self.results.filter(created__gte=date_range[0])
+
+		self.results = self.results.distinct()
 
 		paginator = StandardResultsSetPagination()
 		result_page = paginator.paginate_queryset(self.results, request)
