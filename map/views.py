@@ -710,8 +710,9 @@ def features_by_site(request, site):
 def search_features(request):
 	sqs = SearchQuerySet().all()
 	if request.method == 'GET':
-		if request.GET['q']:
-			results = sqs.filter(content=request.GET['q']).models(Feature).exclude(address='Greater Whitechapel')
+		if request.GET.get('q'):
+			q = request.GET.get('q')
+			results = sqs.filter(content=q).models(Feature).exclude(address='Greater Whitechapel')
 			features = []
 			for result in results:
 				features.append(result.object)
@@ -760,9 +761,18 @@ class QueryFeatures(APIView):
 			year_range = year_range.split(',')
 			# If a user hasn't entered an end year in their date range, return everything created after the starting year
 			try:
-				features = feautres.filter(current__gte=year_range[0]).filter(current__lte=year_range[1])
+				features = features.filter(current__gte=year_range[0]).filter(current__lte=year_range[1])
 			except:
 				features = features.filter(current__gte=year_range[0])
+
+		if request.GET.get('q'):
+			# Seach features
+			sqs = SearchQuerySet().all()
+			search_results = sqs.filter(content=request.GET.get('q')).models(Feature).exclude(address='Greater Whitechapel')
+			results = []
+			for result in search_results:
+				results.append(result.object.id)	
+			features = features.filter(id__in=results)
 
 		# Remove duplicates
 		features = features.distinct()
@@ -786,11 +796,11 @@ class QuerySubmissions(APIView):
 		"""
 		# Check to see what model is being queried
 		if self.results[0].__class__.__name__ == 'Document':
-			model = 'document'
+			model = Document
 		elif self.results[0].__class__.__name__ == 'Image':
-			model = 'image'
+			model = Image
 		else:
-			model = 'media'
+			model = Media
 
 		if request.GET.get('author'):
 			# All documents by a particular author
@@ -803,11 +813,6 @@ class QuerySubmissions(APIView):
 			tags = tags.split(',')
 			self.results = self.results.filter(tags__name__in=tags)
 
-		if request.GET.get('date'):
-			# All documents contributed on a particular date
-			date = request.GET.get('date')
-			self.results = self.results.filter(created=date)
-
 		if request.GET.get('date_range'):
 			# All documents contributed between two dates
 			date_range = request.GET.get('date_range')
@@ -818,15 +823,24 @@ class QuerySubmissions(APIView):
 			except:
 				self.results = self.results.filter(created__gte=date_range[0])
 
+		if request.GET.get('q'):
+			# Full text search of results
+			sqs = SearchQuerySet().all()
+			search_results = sqs.filter(content=request.GET.get('q')).models(model).filter(published=True)
+			r = []
+			for result in search_results:
+				r.append(result.object.id)
+			self.results = self.results.filter(id__in=r)
+
 		self.results = self.results.distinct()
 
 		paginator = StandardResultsSetPagination()
 		result_page = paginator.paginate_queryset(self.results, request)
 
 		# Select the correct serializer on the basis of the model
-		if model == 'document':
+		if model == Document:
 			serializer = DocumentSerializer(result_page, many=True)
-		elif model == 'image':
+		elif model == Image:
 			serializer = ImageSerializer(result_page, many=True)
 		else:
 			serializer = MediaSerializer(result_page, many=True)
