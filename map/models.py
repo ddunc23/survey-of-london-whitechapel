@@ -112,6 +112,7 @@ class Feature(models.Model):
 	extension_3 = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Extension/Alteration 3')
 	f_date = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Facade Date')
 	storeys = models.PositiveSmallIntegerField(null=True, blank=True)
+	demolished = models.BooleanField(default=False)
 	BASEMENT_CHOICES = (
 		('YES', 'Yes'),
 		('NO', 'No'),
@@ -212,10 +213,10 @@ class Document(models.Model):
 	tags = TaggableManager(blank=True)
 
 	def __unicode__(self):
-		try: 
-			author_name = self.author.userprofile.display_name
-		except:
-			author_name = self.author.username
+		#try: 
+		#	author_name = self.author.userprofile.display_name
+		#except:
+		author_name = self.author.username
 		if self.feature.b_name:
 			return author_name + ' | ' + self.feature.b_name + ' | ' + self.title
 		else:
@@ -255,10 +256,10 @@ class Image(models.Model):
 	copyright = models.BooleanField(default=False)
 
 	def __unicode__(self):
-		try: 
-			author_name = self.author.userprofile.display_name
-		except:
-			author_name = self.author.username
+		#try: 
+		#	author_name = self.author.userprofile.display_name
+		#except:
+		author_name = self.author.username
 
 		return self.title + ' | ' + author_name
 
@@ -289,10 +290,10 @@ class Media(models.Model):
 	tags = TaggableManager(blank=True)
 
 	def __unicode__(self):
-		try:
-			author_name = self.author.userprofile.display_name
-		except:
-			author_name = self.author.username
+		#try:
+		#	author_name = self.author.userprofile.display_name
+		#except:
+		author_name = self.author.username
 
 		return self.title + ' | ' + author_name
 
