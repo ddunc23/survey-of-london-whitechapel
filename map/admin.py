@@ -39,7 +39,7 @@ class FeatureAdmin(LeafletGeoAdmin):
 			'classes': ('wide',),
 		}),
 		('Dates', {
-			'fields': ('current', 'previous_1', 'previous_2', 'previous_3', 'extension_1', 'extension_2', 'extension_3', 'f_date'),
+			'fields': ('current', 'previous_1', 'previous_2', 'previous_3', 'extension_1', 'extension_2', 'extension_3', 'f_date', 'demolished'),
 			'classes': ('wide',),
 		}),
 		('Building Information', {
