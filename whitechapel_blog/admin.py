@@ -6,11 +6,6 @@ class PostAdmin(admin.ModelAdmin):
 	# exclude = ('author',)
 	list_display = ('title', 'author', 'date_published')
 
-	def save_model(self, request, obj, form, change):
-		obj.author = request.user
-		obj.save()
-
-
 class CategoryAdmin(admin.ModelAdmin):
 	prepopulated_fields = {"slug": ("title",)}
 
