@@ -24,3 +24,17 @@ class Page(models.Model):
 
 	def get_absolute_url(self):
 		return reverse('page', args=[self.slug])
+
+
+class QuickContribution(models.Model):
+	"""
+	A quick contribution to the website from a user who doesn't want to sign up
+	"""
+	name = models.CharField(max_length=140)
+	email = models.EmailField()
+	text = models.TextField()
+	location = models.CharField(max_length=200, blank=True)
+	date_submitted = models.DateTimeField(auto_now_add=True)
+
+	def __unicode__(self):
+		return self.name + ' | ' + str(self.date_submitted)

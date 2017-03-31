@@ -78,18 +78,6 @@
 			</div>
 		</div>
 		<div class="col-xs-12 col-md-4"><!-- Latest contributions and Newsletter -->
-			<h1 class="front-page-heading">Subscribe to our Newsletter</h1>
-			<form action="https://tinyletter.com/surveyoflondon" method="post" target="popupwindow" onsubmit="window.open('https://tinyletter.com/surveyoflondon', 'popupwindow', 'scrollbars=yes,width=800,height=600');return true">
-				<div class="input-group">
-					<input type="text" name="email" id="tlemail" class="form-control" placeholder="Email" /><br />
-					<span class="input-group-btn">
-						<input type="submit" value="Subscribe" class="btn btn-default" />
-					</span>
-				</div>
-				<p><a href="https://tinyletter.com" target="_blank">Powered by TinyLetter</a></p>
-				<input type="hidden" value="1" name="embed"/>
-			</form>
-			<hr />
 			<h1 class="front-page-heading">Latest Contributions</h1>
 			{% for item in latest|slice:":4" %}
 			{% if item.created != None %}
@@ -116,8 +104,28 @@
 				</div>
 				{% endif %}		
 			{% endif %}
-
 			{% endfor %}
+			<h1 class="front-page-heading">Subscribe to our Newsletter</h1>
+			<form action="https://tinyletter.com/surveyoflondon" method="post" target="popupwindow" onsubmit="window.open('https://tinyletter.com/surveyoflondon', 'popupwindow', 'scrollbars=yes,width=800,height=600');return true">
+				<div class="input-group">
+					<input type="text" name="email" id="tlemail" class="form-control" placeholder="Email" /><br />
+					<span class="input-group-btn">
+						<input type="submit" value="Subscribe" class="btn btn-default" />
+					</span>
+				</div>
+				<p><a href="https://tinyletter.com" target="_blank">Powered by TinyLetter</a></p>
+				<input type="hidden" value="1" name="embed"/>
+			</form>
+			<div class="quick-contribution">
+				<form role="form" action="" method="post">
+					<h1 class="front-page-heading">Tell us about Whitechapel</h1>
+					<p>If you'd rather not sign up for an account, you can tell us your memories of Whitechapel using the form below</p>
+					{% load crispy_forms_tags %}
+					{% csrf_token %}
+					{{ form|crispy }}
+					<button type="submit" class="btn btn-default">Submit</button>
+				</form>
+			</div>
 	</div></div>
 
 	

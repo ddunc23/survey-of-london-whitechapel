@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404
+from django.http import  HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from map.models import Feature, Document, Category, Image, Media
 from whitechapel_blog.models import Post
 from whitechapel_pages.models import Page
@@ -6,6 +8,21 @@ from itertools import chain
 from operator import attrgetter
 import datetime
 from django.contrib.sitemaps import Sitemap
+from forms import QuickContributionForm
+from django.core.mail import send_mail
+
+
+def inform_managers_of_quick_contribution(form_data):
+	"""Tell the SoL admins that a new quick contribution has been submitted"""
+	admin_message = 'Hello Survey of London Editors.\nSomeone\'s gone and made a quick contribution!\nName: %s\nEmail: %s\nContribution: %s\nLocation: %s' % (form_data['name'], form_data['email'], form_data['text'], form_data['location'])
+	admin_html_message = '<p>Hello Survey fo London Editors.</p><p>Someone\'s gone and made a quick contribution!</p><p><strong>Name:</strong> %s</p><p><strong>Email:</strong> %s</p><p><strong>Conribution:</strong> %s</p><p><strong>Location:</strong> %s</p>' % (form_data['name'], form_data['email'], form_data['text'], form_data['location'])
+	contributor_message = 'Hello %s.\n Your contribution to the Survey of London: Histories of Whitechapel has been received. An editor will contact you when your submission has been published.\n Thank you for your submission.\nThe Survey of London Editors' % (form_data['name'])
+	contributor_html_message = '<p>Hello %s.</p><p>Your contribution has been received by the Survey of London editors has been received. An editor will contact you when your submission has been published.</p><p>Thank you for your submission.<br />The Survey of London Editors.</p>' % (form_data['name'])
+
+	send_mail('New Quick Contribution', message=admin_message, html_message=admin_html_message, from_email='admin@surveyoflondon.org', recipient_list=['solwhitechapel.bartlett@ucl.ac.uk'])
+	send_mail('Thank You For Your Contribution', message=contributor_message, html_message=contributor_html_message, from_email='admin@surveyoflondon.org', recipient_list=[form_data['email']])
+
+
 
 def site_home(request):
 	"""The front page of the website"""
@@ -19,13 +36,35 @@ def site_home(request):
 	latest = list(chain(documents, images))
 	latest.sort(key=attrgetter('created'), reverse=True)
 
-	return render(request, 'whitechapel_pages/index.html', {'page': page, 'title': 'Survey of London', 'subhead': 'Whitechapel', 'categories': categories, 'images': images, 'documents': documents, 'media': media, 'latest': latest[:5], 'posts': posts })
+	# Quick contribution form
+	if request.method == 'POST':
+		form = QuickContributionForm(request.POST)
+		if form.is_valid():
+			form_data = form.cleaned_data
+			f = form.save()
+			inform_managers_of_quick_contribution(form_data)
+			
+			return HttpResponseRedirect(reverse('quick_contribution_acknowledgement'))
+	
+	else:
+		form = QuickContributionForm()
+
+	return render(request, 'whitechapel_pages/index.html', {'page': page, 'title': 'Survey of London', 'subhead': 'Whitechapel', 'categories': categories, 'images': images, 'documents': documents, 'media': media, 'latest': latest[:5], 'posts': posts, 'form': form })
+
 
 def page(request, page_slug):
 	"""Any other page"""
 	page = Page.objects.get(slug=page_slug)
 
 	return render(request, 'whitechapel_pages/page.html', {'page': page})
+
+
+def quick_contribution_acknowledgement(request):
+	"""
+	Passes the user to a thanks page to let them know their contribution hasn't gone into the ether
+	"""
+	return render(request, 'whitechapel_pages/ugc_thanks.html')
+
 
 # Sitemap
 

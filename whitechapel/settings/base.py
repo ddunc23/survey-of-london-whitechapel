@@ -34,10 +34,6 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     'django.contrib.gis',
     'haystack',
-    'map',
-    'whitechapel_pages',
-    'whitechapel_users',
-    'whitechapel_blog',
     'djgeojson',
     'leaflet',
     'ckeditor',
@@ -61,6 +57,11 @@ INSTALLED_APPS = (
     'honeypot',
     # Celery email message queue
     'djcelery_email',
+    # Whitechapel
+    'map',
+    'whitechapel_pages',
+    'whitechapel_users',
+    'whitechapel_blog',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -1,0 +1,23 @@
+{% extends 'map/base.html' %}
+
+{% block content %}
+{% load static %}
+<div class="jumbotron ugc-jumbotron" style="background-image: url('{% static 'img/no_thumbnail_large.png' %}')">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 col-md-8 col-md-offset-2">
+				<h1 class="text-center">Thank You.</h1>
+				<h2 class="text-center">Your contribution will be moderated by a Survey of London editor shortly. We'll email you as soon as it's been published.</h2>
+				<br />
+				<div class="text-center">
+					<a href="{% url 'site_home' %}" class="btn btn-default btn-lg">Continue</a> 
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

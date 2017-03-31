@@ -85,8 +85,6 @@ class ImageForm(forms.ModelForm):
 			return file
 		
 
-
-
 class AdminImageForm(ImageForm):
 	email_thanks = forms.CharField(label='Email Content', help_text='Once you\'ve approved this content the submitter will be informed by email that it\'s been added to the map. If you\'d like to add a line or two of thanks or explain why you\'ve made any edits, you can do so here. If a contributor has opted out of email updates they won\'t receive this.', required=False, widget=forms.Textarea, initial='Hello.\nYour submission has been published on the Survey of London Whitechapel Website.\nThanks for your contribution.\n\n\nIf you\'d like to stop receiving these emails, log in to your account and uncheck the "Receive emails about your submissions from the Survey of London?" on your profile page.')
 	send_email = forms.BooleanField(label='Send Email?', help_text='If you don\'t want to notify a contributor by email that their contribution has been approved, uncheck this box.', initial=True, required=False)

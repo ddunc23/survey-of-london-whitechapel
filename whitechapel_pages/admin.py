@@ -1,5 +1,5 @@
 from django.contrib import admin
-from whitechapel_pages.models import Page
+from whitechapel_pages.models import Page, QuickContribution
 
 # Register your models here.
 
@@ -12,3 +12,4 @@ class PageAdmin(admin.ModelAdmin):
 	}
 
 admin.site.register(Page, PageAdmin)
+admin.site.register(QuickContribution)
