@@ -47,7 +47,7 @@
 	</style>
 	<div class="container" style="position: relative; z-index: 2;">
 		<h1 class="text-center">{{ title }}</h1>
-		<h2 class="text-center">{{ page.title }}</h2>
+		<h2 class="text-center">Histories of Whitechapel</h2>
 		<br />
 		<div class="text-center">
 			<a href="{% url 'map_home' %}" class="btn btn-lg explore">Explore the Map</a>
@@ -70,42 +70,28 @@
 </div>
 {% load thumbnail %}
 <div class="container">
-	<div class="row"><!-- Front Page Text -->
+	<div class="row">
 		<div class="col-xs-12 col-md-8">
+			<!-- Front Page Text -->
 			<div class="front-page-about">
 				<h1 class="front-page-heading">{{ page.title }}</h1>
 				{{ page.body|safe }}
 			</div>
+			<!-- / Front page text -->
 		</div>
-		<div class="col-xs-12 col-md-4"><!-- Latest contributions and Newsletter -->
-			<h1 class="front-page-heading">Latest Contributions</h1>
-			{% for item in latest|slice:":4" %}
-			{% if item.created != None %}
-				{% if item.file %}
-				<div class="media">
-					<div class="media-left">
-						<a href="{% url 'detail' item.feature.id %}#images"><img src="{% thumbnail item.file 64x64 crop='0,0' %}" class="img-rounded"></a>
-					</div>
-					<div class="media-body">
-						<h3 class="media-heading"><a href="{% url 'detail' item.feature.id %}#images">{{ item.title }}</a></h3>
-						<h4 class="small"><a href="{% url 'detail' item.feature.id %}">{{ item.feature }}</a> | <a href="{% url 'all_content_by_author' item.author.id %}">{% if item.author.userprofile.display_name %}{{ item.author.userprofile.display_name }}{% else %}{{ item.author }}{% endif %}</a> | {{ item.created }}</h4>
-						<p class="results-preview">{{ item.description|truncatewords_html:20|striptags }}</p>
-					</div>
-				</div>
-				{% else %}
-				<div>
-					<h3><a href="{% url 'detail' item.feature.id %}#{{ item.document_type }}?{{ item.title|slugify }}">{{ item.title }}</a></h3>
-					<h4 class="small"><a href="{% url 'detail' item.feature.id %}">{{ item.feature }}</a> | <a href="{% url 'all_content_by_author' item.author.id %}">{% if item.author.userprofile.display_name %}{{ item.author.userprofile.display_name }}{% else %}{{ item.author }}{% endif %}</a> | {{ item.created }}</h4>
-					{% if item.body_processed %}
-					<p class="results-preview">{{ item.body_processed|truncatewords_html:20|striptags }}</p>
-					{% elif item.description %}
-					<p class="results-preview">{{ item.description|truncatewords_html:20|striptags }}</p>
-					{% endif %}
-				</div>
-				{% endif %}		
+		<div class="col-xs-12 col-md-4">
+			<!-- Building of the Week (but now its the month) -->
+			{% if page.building_of_the_week %}
+			<h1 class="front-page-heading">Building of the Month</h1>
+			<a href="{% url 'detail' page.building_of_the_week.id %}#images"><img src="{% thumbnail page.building_of_the_week.thumbnail 400x225 crop='0,0' %}" style="width: 100%;"></a>
+			<h3><a href="{% url 'detail' page.building_of_the_week.id %}">{{ page.building_of_the_week }}</a></h3>
+			<p class="lead">We don't know much about this building yet. Can you tell us something about its history?</p>
+			<p class="lead"><a href="{% url 'ugc_choice' page.building_of_the_week.id %}">Contribute it here</a></p>
 			{% endif %}
-			{% endfor %}
-			<h1 class="front-page-heading">Subscribe to our Newsletter</h1>
+			<!-- / Building of the Week -->
+			<hr />
+			<!-- Newsletter Sign Up-->
+			<h3 class="front-page-heading">Sign up for our Newsletter</h1>
 			<form action="https://tinyletter.com/surveyoflondon" method="post" target="popupwindow" onsubmit="window.open('https://tinyletter.com/surveyoflondon', 'popupwindow', 'scrollbars=yes,width=800,height=600');return true">
 				<div class="input-group">
 					<input type="text" name="email" id="tlemail" class="form-control" placeholder="Email" /><br />
@@ -116,9 +102,47 @@
 				<p><a href="https://tinyletter.com" target="_blank">Powered by TinyLetter</a></p>
 				<input type="hidden" value="1" name="embed"/>
 			</form>
+			<!-- / Newsletter -->
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-md-8">
+			<!-- Latest contributions  -->
+			<h1 class="front-page-heading">Latest Submissions</h1>
+		</div>
+		<div class="col-xs-12 col-md-4">
+			<h1 class="front-page-heading">Quick Contribution</h1>
+		</div>
+	</div>
+	<div class="row">
+		{% for item in latest|slice:":2" %}
+		{% if item.created != None %}
+			{% if item.file %}
+			<div class="col-xs-12 col-md-4">
+				<a href="{% url 'detail' item.feature.id %}#images"><img src="{% thumbnail item.file 400x225 crop='0,0' %}" style="width: 100%;"></a>
+				<h3><a href="{% url 'detail' item.feature.id %}#images">{{ item.title }}</a></h3>
+				<h4 class="small"><a href="{% url 'detail' item.feature.id %}">{{ item.feature }}</a> | <a href="{% url 'all_content_by_author' item.author.id %}">{% if item.author.userprofile.display_name %}{{ item.author.userprofile.display_name }}{% else %}{{ item.author }}{% endif %}</a> | {{ item.created }}</h4>
+				<p class="results-preview">{{ item.description|truncatewords_html:20|striptags }}</p>
+			</div>
+			{% else %}
+			<div class="col-xs-12 col-md-4">
+				<a href="{% url 'detail' item.feature.id %}#{{ item.document_type }}?{{ item.title|slugify }}"><img src="{% thumbnail item.feature.thumbnail 400x225 crop='0,0' %}" style="width: 100%;"></a>
+				<h3><a href="{% url 'detail' item.feature.id %}#{{ item.document_type }}?{{ item.title|slugify }}">{{ item.title }}</a></h3>
+				<h4 class="small"><a href="{% url 'detail' item.feature.id %}">{{ item.feature }}</a> | <a href="{% url 'all_content_by_author' item.author.id %}">{% if item.author.userprofile.display_name %}{{ item.author.userprofile.display_name }}{% else %}{{ item.author }}{% endif %}</a> | {{ item.created }}</h4>
+				{% if item.body_processed %}
+				<p class="results-preview">{{ item.body_processed|truncatewords_html:60|striptags }}</p>
+				{% elif item.description %}
+				<p class="results-preview">{{ item.description|truncatewords_html:60|striptags }}</p>
+				{% endif %}
+			</div>
+			{% endif %}		
+		{% endif %}
+		{% endfor %}
+		<!-- / Latest contributions -->
+		<div class="col-xs-12 col-md-4">
+			<!-- Quick contribution -->
 			<div class="quick-contribution">
 				<form role="form" action="" method="post">
-					<h1 class="front-page-heading">Tell us about Whitechapel</h1>
 					<p>If you'd rather not sign up for an account, you can tell us your memories of Whitechapel using the form below</p>
 					{% load crispy_forms_tags %}
 					{% csrf_token %}
@@ -126,35 +150,21 @@
 					<button type="submit" class="btn btn-default">Submit</button>
 				</form>
 			</div>
-	</div></div>
-
-	
-	
-
+			<!-- / Quick contribution -->
+		</div>
+	</div>
 	<div class="row">
-		{% if page.building_of_the_week %}
-		<div class="col-xs-12 col-md-4"><!-- Building of the Month -->
-			<h1 class="front-page-heading">Building of the Month</h1>
-			<div class="row">
-				<div class="col-xs-12">
-					<a href="{% url 'detail' page.building_of_the_week.id %}#images"><img src="{% thumbnail page.building_of_the_week.thumbnail 400x225 crop='0,0' %}" class="img-rounded" style="width: 100%;"></a>
-					<h3><a href="{% url 'detail' page.building_of_the_week.id %}">{{ page.building_of_the_week }}</a></h3>
-					<p class="lead">We don't know much about this building yet. Can you tell us something about its history?</p>
-					<p class="lead"><a href="{% url 'ugc_choice' page.building_of_the_week.id %}">Contribute it here</a></p>
-				</div>
-			</div>
-		</div><!-- / Building of the Week -->
-		{% endif %}
-		<div class="col-xs-12 col-md-8"><!-- Help Movie -->
+		<div class="col-xs-12">
+			<!-- Help Movie -->
 			<h1 class="front-page-heading">Browsing the Map</h1>
 			<div class="embed-responsive embed-responsive-16by9">
 				<iframe width="560" height="315" src="https://www.youtube.com/embed/q3A1ov8xoLc" frameborder="0" allowfullscreen></iframe>
 			</div>
 			<p class="lead">If you're not sure about how to get started, we've made a short video to give you a quick overview.</p>
+			<!-- / Help Movie -->
 		</div>
-
-	</div><!-- / Help Movie -->
-
+	</div>
+	
 	{% if categories %}
 	<div class="row"><!-- Themes -->
 		<div class="col-xs-12">

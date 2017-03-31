@@ -3,6 +3,7 @@ from django.http import  HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from map.models import Feature, Document, Category, Image, Media
 from whitechapel_blog.models import Post
+from whitechapel_blog.models import Category as BlogCategory
 from whitechapel_pages.models import Page
 from itertools import chain
 from operator import attrgetter
@@ -28,9 +29,9 @@ def site_home(request):
 	"""The front page of the website"""
 	page = Page.objects.get(is_front_page=True)
 	categories = Category.objects.all().order_by('name')
-	images = Image.objects.filter(published=True).exclude(created=None).order_by('-created')[:5]
-	documents = Document.objects.filter(published=True).exclude(created=None).order_by('-created')[:5]
-	media = Media.objects.filter(published=True).exclude(created=None).order_by('-created')[:5]
+	images = Image.objects.filter(published=True, author__is_staff=False).exclude(created=None).order_by('-created')[:5]
+	documents = Document.objects.filter(published=True, author__is_staff=False).exclude(created=None).order_by('-created')[:5]
+	media = Media.objects.filter(published=True, author__is_staff=False).exclude(created=None).order_by('-created')[:5]
 	posts = Post.objects.filter(date_published__lte=datetime.date.today()).exclude(categories__slug__iexact='events')[:3]
 
 	latest = list(chain(documents, images))
@@ -64,6 +65,18 @@ def quick_contribution_acknowledgement(request):
 	Passes the user to a thanks page to let them know their contribution hasn't gone into the ether
 	"""
 	return render(request, 'whitechapel_pages/ugc_thanks.html')
+
+
+def listing(request):
+	"""
+	A view containing an automatically-generated list of upcoming events taken from the blog
+	"""
+	# The below is hard-coded and nasty and should be refactored
+	event_category = BlogCategory.objects.get(id=1)
+	events = Post.objects.filter(categories=event_category)
+	today = datetime.date.today()
+	past_events = events.filter(event_date__year__lte=today.year, event_date__month__lte=today.month, event_date__day__lte=today.day)
+	return render(request, 'whitechapel_pages/listing.html', {'past_events': past_events})
 
 
 # Sitemap

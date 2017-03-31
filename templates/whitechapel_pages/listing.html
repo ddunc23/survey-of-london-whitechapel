@@ -1,0 +1,15 @@
+{% extends 'map/base.html' %}
+{% block content %}
+<div id="" class="map-small" style=""; background-size: cover; background-position: center;" class="hidden-sm hidden-xs">
+</div>
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-md-8 col-md-offset-2 content">
+			<h1>Events</h1>
+			{% for event in past_events %}
+			{{ event }}
+			{% endfor %}
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -23,6 +23,8 @@ class Post(models.Model):
 	body = RichTextUploadingField(blank=True, null=True)
 	date_created = models.DateField(auto_now_add=True)
 	date_published = models.DateField()
+	# If the blog post is about an event, provide a method for filtering past ones from forthcoming ones
+	event_date = models.DateTimeField(blank=True, null=True)
 	categories = models.ManyToManyField(Category, blank=True)
 
 	class Meta:
