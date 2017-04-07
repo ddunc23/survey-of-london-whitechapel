@@ -21,11 +21,16 @@ class Post(models.Model):
 	slug = models.SlugField(unique=True)
 	author = models.ForeignKey(User)
 	body = RichTextUploadingField(blank=True, null=True)
+	post_preview = models.CharField(max_length=140, blank=True)
+	post_thumbnail = models.ImageField(null=True, blank=True, verbose_name='Thumbnail Image')
 	date_created = models.DateField(auto_now_add=True)
 	date_published = models.DateField()
-	# If the blog post is about an event, provide a method for filtering past ones from forthcoming ones
-	event_date = models.DateTimeField(blank=True, null=True)
 	categories = models.ManyToManyField(Category, blank=True)
+	# Event listings
+	event_date_start = models.DateField(blank=True, null=True, verbose_name='Event start date')
+	event_date_end = models.DateField(blank=True, null=True, verbose_name='Event end date')
+	event_time = models.TimeField(blank=True, null=True)
+	past_event = models.BooleanField(default=False)
 
 	class Meta:
 		ordering = ['-date_published']

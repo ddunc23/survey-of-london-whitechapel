@@ -1,13 +1,29 @@
 {% extends 'map/base.html' %}
 {% block content %}
-<div id="" class="map-small" style=""; background-size: cover; background-position: center;" class="hidden-sm hidden-xs">
+<div id="" class="map-small" style="background: url('/media/./SoL-Whitechapel100319_XCPybc9.jpg'); background-size: cover; background-position: center;" class="hidden-sm hidden-xs">
 </div>
 <div class="container">
 	<div class="row">
 		<div class="col-xs-12 col-md-8 col-md-offset-2 content">
 			<h1>Events</h1>
+			<h2>Forthcoming</h2>
+			{% for event in upcoming_events %}
+			{% if event.post_thumbnail %}<div class="event_header" style="background-image: url('/media/{{ event.post_thumbnail }}')"></div>{% endif %}
+			<h3><a href="{% url 'single_post' event.date_published.year event.slug %}">{{ event }}</a></h3>
+			<h4><em>{{ event.event_date_start|date:'l jS F, Y'}} {% if event.event_date_end %} - {{ event.event_date_end|date:'l jS F, Y' }}{% endif %}</em></h4>
+			{% if event.post_preview %}
+			<p>{{ event.post_preview }} | <a href="{% url 'single_post' event.date_published.year event.slug %}">Find out more and book tickets</a></p>
+			{% else %}
+			<p>{{ event.body|striptags|truncatewords_html:20|safe }} | <a href="{% url 'single_post' event.date_published.year event.slug %}">Find out more and book tickets</a></p>
+			{% endif %}
+			{% empty %}
+			<p>We don't have any forthcoming events at the moment: check back later, follow us on Twitter, or subscribe to our newsletter to keep updated.</p>
+			{% endfor %}
+			<hr />
+			<h2>Previous</h2>
 			{% for event in past_events %}
-			{{ event }}
+			<h3><a href="{% url 'single_post' event.date_published.year event.slug %}">{{ event }}</a></h3>
+			<p>{{ event.body|striptags|truncatewords_html:40|safe }}</p>
 			{% endfor %}
 		</div>
 	</div>

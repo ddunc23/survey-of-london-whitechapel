@@ -75,8 +75,9 @@ def listing(request):
 	event_category = BlogCategory.objects.get(id=1)
 	events = Post.objects.filter(categories=event_category)
 	today = datetime.date.today()
-	past_events = events.filter(event_date__year__lte=today.year, event_date__month__lte=today.month, event_date__day__lte=today.day)
-	return render(request, 'whitechapel_pages/listing.html', {'past_events': past_events})
+	past_events = events.filter(past_event=True)
+	upcoming_events = events.filter(event_date_start__gte=today)
+	return render(request, 'whitechapel_pages/listing.html', {'past_events': past_events, 'upcoming_events': upcoming_events})
 
 
 # Sitemap

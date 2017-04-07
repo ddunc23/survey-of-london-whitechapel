@@ -525,7 +525,11 @@ p.results-preview {
 	display: inline-block;
 	float: right;
 }
-
+.event_header {
+	display: block;
+	height: 150px;
+	background-position: center;
+}
 
 /* Medium Editor */
 
