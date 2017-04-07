@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from map.models import Feature, Document, Category, Image, Media, Site
-from map.serializers import FeatureSerializer
+from map.serializers import FeatureSerializer, FeatureOverviewSerializer, DocumentSerializer, ImageSerializer, MediaSerializer
 from map.forms import DocumentForm, ImageForm, MediaForm, AdminDocumentForm, AdminImageForm, AdminMediaForm
 from rest_framework.renderers import JSONRenderer
 from haystack.query import SearchQuerySet
@@ -23,8 +23,23 @@ from dal import autocomplete
 from django.contrib.sitemaps import Sitemap
 from honeypot.decorators import check_honeypot
 from whitechapel_users.models import UserProfile
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import authentication, permissions
 
 logger = logging.getLogger(__name__)
+
+
+# Todo - move this to a more sensible place - it's replicated in whitechapel.urls
+
+from rest_framework.pagination import PageNumberPagination
+
+# Django REST Framework Pagination
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
 
 
 # Map Views
@@ -613,7 +628,7 @@ class TagAutocomplete(autocomplete.Select2QuerySetView):
 		return qs
 
 
-# API Views
+# API Views - Private
 
 class JSONResponse(HttpResponse):
     """An HttpResponse that its content into JSON."""
@@ -695,13 +710,176 @@ def features_by_site(request, site):
 def search_features(request):
 	sqs = SearchQuerySet().all()
 	if request.method == 'GET':
-		if request.GET['q']:
-			results = sqs.filter(content=request.GET['q']).models(Feature).exclude(address='Greater Whitechapel')
+		if request.GET.get('q'):
+			q = request.GET.get('q')
+			results = sqs.filter(content=q).models(Feature).exclude(address='Greater Whitechapel')
 			features = []
 			for result in results:
 				features.append(result.object)
 			serializer = FeatureSerializer(features, many=True)
 			return JSONResponse(serializer.data)
+
+
+# Public API views (in addition to those specified in ViewSets)
+
+class QueryFeatures(APIView):
+	"""
+	View which allows third parties to query features according to various parameters
+	"""
+	authentication_clases = (authentication.BasicAuthentication,)
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+	def get(self, request, format=None):
+		"""
+		By default, just return the first 20 features, otherwise return different subsets depending on the querystring
+		"""
+		features = Feature.objects.all()
+
+		if request.GET.get('author'):
+			# All features with contributions from a particular author
+			author = request.GET.get('author')
+			author = get_object_or_404(User, id=author)
+			doc_features = Feature.objects.filter(documents__author=author, documents__published=True)
+			img_features = Feature.objects.filter(images__author=author, images__published=True)
+			media_features = Feature.objects.filter(media__author=author, media__published=True)
+			features = doc_features | img_features | media_features
+
+		if request.GET.get('categories'):
+			# All features in a category or list of categories
+			categories = request.GET.get('categories')
+			categories = categories.split(',')
+			features = features.filter(categories__id__in=categories)
+
+		if request.GET.get('tags'):
+			# All features by tag
+			tags = request.GET.get('tags')
+			tags = tags.split(',')
+			features = features.filter(Q(tags__name__in=tags) | Q(documents__tags__name__in=tags) | Q(images__tags__name__in=tags) | Q(media__tags__name__in=tags))
+
+		if request.GET.get('year_range'):
+			# All features built between two years
+			year_range = request.GET.get('year_range')
+			year_range = year_range.split(',')
+			# If a user hasn't entered an end year in their date range, return everything created after the starting year
+			try:
+				features = features.filter(current__gte=year_range[0]).filter(current__lte=year_range[1])
+			except:
+				features = features.filter(current__gte=year_range[0])
+
+		if request.GET.get('q'):
+			# Seach features
+			sqs = SearchQuerySet().all()
+			search_results = sqs.filter(content=request.GET.get('q')).models(Feature).exclude(address='Greater Whitechapel')
+			results = []
+			for result in search_results:
+				results.append(result.object.id)	
+			features = features.filter(id__in=results)
+
+		# Remove duplicates
+		features = features.distinct()
+
+		paginator = StandardResultsSetPagination()
+		result_page = paginator.paginate_queryset(features, request)
+
+		serializer = FeatureSerializer(result_page, many=True)
+		return Response(serializer.data)
+
+
+class QuerySubmissions(APIView):
+	"""
+	View which allows third parties to query submissions according to various parameters. Acutal implementations subclassed below
+	"""
+	authentication_clases = (authentication.BasicAuthentication,)
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+	def get(self, request, format=None):
+		"""
+		By default, just return the first 20 documents, otherwise return different subsets depending on the querystring
+		"""
+		# Check to see what model is being queried
+		if self.results[0].__class__.__name__ == 'Document':
+			model = Document
+		elif self.results[0].__class__.__name__ == 'Image':
+			model = Image
+		else:
+			model = Media
+
+		if request.GET.get('author'):
+			# All documents by a particular author
+			author = request.GET.get('author')
+			self.results = self.results.filter(author__id=author)
+
+		if request.GET.get('tags'):
+			# All documents with a set of tags
+			tags = request.GET.get('tags')
+			tags = tags.split(',')
+			self.results = self.results.filter(tags__name__in=tags)
+
+		if request.GET.get('date_range'):
+			# All documents contributed between two dates
+			date_range = request.GET.get('date_range')
+			date_range = date_range.split(',')
+			# If a user hasn't entered an end date in their date range, return everything created after the starting date
+			try:
+				self.results = self.results.filter(created__gte=date_range[0]).filter(created__lte=date_range[1])
+			except:
+				self.results = self.results.filter(created__gte=date_range[0])
+
+		if request.GET.get('q'):
+			# Full text search of results
+			sqs = SearchQuerySet().all()
+			search_results = sqs.filter(content=request.GET.get('q')).models(model).filter(published=True)
+			r = []
+			for result in search_results:
+				r.append(result.object.id)
+			self.results = self.results.filter(id__in=r)
+
+		self.results = self.results.distinct()
+
+		paginator = StandardResultsSetPagination()
+		result_page = paginator.paginate_queryset(self.results, request)
+
+		# Select the correct serializer on the basis of the model
+		if model == Document:
+			serializer = DocumentSerializer(result_page, many=True)
+		elif model == Image:
+			serializer = ImageSerializer(result_page, many=True)
+		else:
+			serializer = MediaSerializer(result_page, many=True)
+		
+		return Response(serializer.data)
+
+
+class QueryDocuments(QuerySubmissions):
+	"""
+	View which allows third parties to query documents by author, tags, date of submission, or date range.
+	Query format:
+	?author=<author_id>&tags=<tag_1,tag_2>&date=<YYYY-MM-DD>&date_range=<YYYY-MM-DD,YYYY-MM-DD>
+	Example:
+	?author=27&tags=pub&date_range=2016-09-28,2016-10-31
+	"""
+	results = Document.objects.filter(published=True).order_by('created')
+
+class QueryImages(QuerySubmissions):
+	"""
+	View which allows third parties to query images by author, tags, date, or date range.
+	Query format:
+	?author=<author_id>&tags=<tag_1,tag_2>&date=<YYYY-MM-DD>&date_range=<YYYY-MM-DD,YYYY-MM-DD>
+	Example:
+	?author=27&tags=pub&date_range=2016-09-28,2016-10-31
+	"""
+	results = Image.objects.filter(published=True).order_by('created')
+
+class QueryMedia(QuerySubmissions):
+	"""
+	View which allows third parties to query media by author, tags, date, or date range
+	Query format:
+	?author=<author_id>&tags=<tag_1,tag_2>&date=<YYYY-MM-DD>&date_range=<YYYY-MM-DD,YYYY-MM-DD>
+	Example:
+	?author=27&tags=pub&date_range=2016-09-28,2016-10-31
+	"""
+	results = Media.objects.filter(published=True).order_by('created')
+
+
+
 
 # Sitemap
 

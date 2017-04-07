@@ -38,8 +38,11 @@ INSTALLED_APPS = (
     'leaflet',
     'ckeditor',
     'ckeditor_uploader',
+    # REST Framework
     'rest_framework',
     'rest_framework_gis',
+    'rest_framework.authtoken',
+    'corsheaders',
     'taggit',
     'crispy_forms',
     'easy_thumbnails',
@@ -65,6 +68,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -208,8 +212,33 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '1000/day',
+        'user': '10000/day'
+    },
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication'
     ]
+    
 }
+
+# CORS Headers settings
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+# Only send CORS headers for the public API
+CORS_URLS_REGEX = r'^/api/.*$'
+
+# Only accept 'GET' methods
+CORS_ALLOW_METHODS = (
+    'GET',
+)
 
 # Haystack Settings
 
