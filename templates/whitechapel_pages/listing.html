@@ -10,20 +10,21 @@
 			{% for event in upcoming_events %}
 			{% if event.post_thumbnail %}<div class="event_header" style="background-image: url('/media/{{ event.post_thumbnail }}')"></div>{% endif %}
 			<h3><a href="{% url 'single_post' event.date_published.year event.slug %}">{{ event }}</a></h3>
-			<h4><em>{{ event.event_date_start|date:'l jS F, Y'}} {% if event.event_date_end %} - {{ event.event_date_end|date:'l jS F, Y' }}{% endif %}</em></h4>
+			<h4><em>{% if event.event_time %}{{ event.event_time }}, {% endif %}{{ event.event_date_start|date:'l jS F, Y'}} {% if event.event_date_end %} - {{ event.event_date_end|date:'l jS F, Y' }}{% endif %}</em></h4>
 			{% if event.post_preview %}
-			<p>{{ event.post_preview }} | <a href="{% url 'single_post' event.date_published.year event.slug %}">Find out more and book tickets</a></p>
+			<p>{{ event.post_preview }} | <a href="{% url 'single_post' event.date_published.year event.slug %}">Read more</a></p>
 			{% else %}
-			<p>{{ event.body|striptags|truncatewords_html:20|safe }} | <a href="{% url 'single_post' event.date_published.year event.slug %}">Find out more and book tickets</a></p>
+			<p>{{ event.body|striptags|truncatewords_html:20|safe }} | <a href="{% url 'single_post' event.date_published.year event.slug %}">Read more</a></p>
 			{% endif %}
 			{% empty %}
-			<p>We don't have any forthcoming events at the moment: check back later, follow us on Twitter, or subscribe to our newsletter to keep updated.</p>
+			<p>We don't have any forthcoming events at the moment: check back later, follow us on Twitter, or subscribe to our newsletter to stay updated.</p>
 			{% endfor %}
 			<hr />
 			<h2>Previous</h2>
 			{% for event in past_events %}
+			{% if event.post_thumbnail %}<div class="event_header" style="background-image: url('/media/{{ event.post_thumbnail }}')"></div>{% endif %}
 			<h3><a href="{% url 'single_post' event.date_published.year event.slug %}">{{ event }}</a></h3>
-			<p>{{ event.body|striptags|truncatewords_html:40|safe }}</p>
+			<p>{{ event.body|striptags|truncatewords_html:45|safe }} | <a href="{% url 'single_post' event.date_published.year event.slug %}">Read more</a></p></p>
 			{% endfor %}
 		</div>
 	</div>
