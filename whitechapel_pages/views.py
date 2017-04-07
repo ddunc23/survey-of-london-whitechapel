@@ -21,7 +21,7 @@ def inform_managers_of_quick_contribution(form_data):
 	contributor_html_message = '<p>Hello %s.</p><p>Your contribution has been received by the Survey of London editors has been received. An editor will contact you when your submission has been published.</p><p>Thank you for your submission.<br />The Survey of London Editors.</p>' % (form_data['name'])
 
 	send_mail('New Quick Contribution', message=admin_message, html_message=admin_html_message, from_email='admin@surveyoflondon.org', recipient_list=['solwhitechapel.bartlett@ucl.ac.uk'])
-	send_mail('Thank You For Your Contribution', message=contributor_message, html_message=contributor_html_message, from_email='admin@surveyoflondon.org', recipient_list=[form_data['email']])
+	# send_mail('Thank You For Your Contribution', message=contributor_message, html_message=contributor_html_message, from_email='admin@surveyoflondon.org', recipient_list=[form_data['email']])
 
 
 
