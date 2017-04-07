@@ -3,6 +3,9 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from filebrowser.fields import FileBrowseField
 from django.core.urlresolvers import reverse
 
+# Other python modules
+import bleach
+
 class Page(models.Model):
 	"""An HTML page, with the capacity for adding featured content if it's the front page."""
 	title = models.CharField(max_length=140)
@@ -38,3 +41,10 @@ class QuickContribution(models.Model):
 
 	def __unicode__(self):
 		return self.name + ' | ' + str(self.date_submitted)
+
+	def save(self, *args, **kwargs):
+		# Sanitise user input
+		self.text = bleach.clean(self.text)
+		self.name = bleach.clean(self.name)
+		self.location = bleach.clean(self.location)
+		super(QuickContribution, self).save(*args, **kwargs)
