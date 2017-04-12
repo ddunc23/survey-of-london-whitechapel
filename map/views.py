@@ -642,7 +642,7 @@ def features(request):
 	"""All Features as geoJson"""
 	if request.method == 'GET':
 		features =  Feature.objects.all()
-		serializer = FeatureSerializer(features, many=True)
+		serializer = FeatureOverviewSerializer(features, many=True)
 		return JSONResponse(serializer.data)
 
 def single_feature(request, feature):
