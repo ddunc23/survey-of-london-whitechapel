@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
 class FeatureOverviewSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Feature
-		fields = ('id', 'b_number', 'b_name', 'street', 'address')
+		fields = ('id', 'b_number', 'b_name', 'street', 'address', 'feature_type')
 
 class ImageSerializer(serializers.ModelSerializer):
 	author = UserSerializer()
