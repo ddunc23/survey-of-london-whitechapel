@@ -3,10 +3,11 @@ from rest_framework_gis.serializers import GeoFeatureModelSerializer
 from map.models import Feature, Document, Image, Media
 from django.contrib.auth.models import User
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.GeoFeatureModelSerializer):
 	class Meta:
 		model = User
 		fields = ('id', 'username')
+		geo_field = 'geom'
 
 class FeatureOverviewSerializer(serializers.ModelSerializer):
 	class Meta:
