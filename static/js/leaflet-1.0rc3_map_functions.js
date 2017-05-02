@@ -255,7 +255,7 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				geojson = data;
 
-				sketchylayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/whitechapel_september_2016/{z}/{x}/{y}.png', {maxZoom: 20});
+				sketchylayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/whitechapel_2017_05_02/{z}/{x}/{y}.png', {maxZoom: 20});
 
 				scanlayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/os_1873/{z}/{x}/{y}.png', {maxZoom: 20});
 

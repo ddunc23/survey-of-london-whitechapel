@@ -73,7 +73,7 @@ def listing(request):
 	"""
 	# The below is hard-coded and nasty and should be refactored
 	event_category = BlogCategory.objects.get(id=1)
-	events = Post.objects.filter(categories=event_category)
+	events = Post.objects.filter(categories=event_category).order_by('event_date_start')
 	today = datetime.date.today()
 	past_events = events.filter(past_event=True)
 	upcoming_events = events.filter(event_date_start__gte=today)
