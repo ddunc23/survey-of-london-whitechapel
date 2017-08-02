@@ -104,6 +104,11 @@
 					<h3><a href="{% url 'detail' item.feature.id %}#images">{{ item.title }}</a></h3>
 					<h4 class="small"><a href="{% url 'detail' item.feature.id %}">{{ item.feature }}</a> | <a href="{% url 'all_content_by_author' item.author.id %}">{% if item.author.userprofile.display_name %}{{ item.author.userprofile.display_name }}{% else %}{{ item.author }}{% endif %}</a> | {{ item.created }}</h4>
 					<p class="results-preview">{{ item.description|truncatewords_html:20|striptags }}</p>
+					{% if item.weighted_tags|length > 0 %}
+						{% for tag in item.weighted_tags %}
+							<a href="{% url 'tag' tag.name %}" class="btn btn-default btn-xs tag">{{ tag.name }}</a> 
+						{% endfor %}
+					{% endif %}
 				</div>
 				{% else %}
 				<div class="col-xs-12 col-md-6">
@@ -114,6 +119,11 @@
 					<p class="results-preview">{{ item.body_processed|truncatewords_html:60|striptags }}</p>
 					{% elif item.description %}
 					<p class="results-preview">{{ item.description|truncatewords_html:60|striptags }}</p>
+					{% endif %}
+					{% if item.weighted_tags|length > 0 %}
+						{% for tag in item.weighted_tags %}
+							<a href="{% url 'tag' tag.name %}" class="btn btn-default btn-xs tag">{{ tag.name }}</a> 
+						{% endfor %}
 					{% endif %}
 				</div>
 				{% endif %}		

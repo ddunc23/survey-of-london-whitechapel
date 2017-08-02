@@ -37,6 +37,15 @@ def site_home(request):
 	latest = list(chain(documents, images))
 	latest.sort(key=attrgetter('created'), reverse=True)
 
+	latest = latest[:2]
+
+	for item in latest:
+		tags = item.tags.names()
+		item.weighted_tags = []
+		for tag in tags:
+			count = Document.objects.filter(tags__name__in=[tag]).count() + Image.objects.filter(tags__name__in=[tag]).count() + Media.objects.filter(tags__name__in=[tag]).count()
+			item.weighted_tags.append({'name': tag, 'count': count})
+
 	# Quick contribution form
 	if request.method == 'POST':
 		form = QuickContributionForm(request.POST)
@@ -50,7 +59,7 @@ def site_home(request):
 	else:
 		form = QuickContributionForm()
 
-	return render(request, 'whitechapel_pages/index.html', {'page': page, 'title': 'Survey of London', 'subhead': 'Whitechapel', 'categories': categories, 'images': images, 'documents': documents, 'media': media, 'latest': latest[:5], 'posts': posts, 'form': form })
+	return render(request, 'whitechapel_pages/index.html', {'page': page, 'title': 'Survey of London', 'subhead': 'Whitechapel', 'categories': categories, 'images': images, 'documents': documents, 'media': media, 'latest': latest, 'posts': posts, 'form': form })
 
 
 def page(request, page_slug):

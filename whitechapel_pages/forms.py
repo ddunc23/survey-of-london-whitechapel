@@ -10,7 +10,7 @@ class QuickContributionForm(forms.ModelForm):
 	"""
 	class Meta:
 		model = QuickContribution
-		fields = ('name', 'email', 'text', 'location')
+		fields = ('name', 'email', 'location', 'text',)
 		labels = {
 			'name': '',
 			'email': '',
@@ -20,7 +20,7 @@ class QuickContributionForm(forms.ModelForm):
 		widgets = {
 			'name': forms.TextInput(attrs={'placeholder': 'Your Name'}),
 			'email': forms.EmailInput(attrs={'placeholder': 'Your Email Address'}),
-			'text': forms.Textarea(attrs={'placeholder': 'Your Contribution', 'rows': 7}),
 			'location': forms.TextInput(attrs={'placeholder': 'Where in Whitechapel is your contribution about?'}),
+			'text': forms.Textarea(attrs={'placeholder': 'Your Contribution', 'rows': 7}),
 		}
 
