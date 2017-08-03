@@ -87,11 +87,14 @@
 			<h3><a href="{% url 'detail' page.building_of_the_week.id %}">{{ page.building_of_the_week }}</a></h3>
 			<p class="lead">We don't know much about this building yet. Can you tell us something about its history?</p>
 			<p class="lead"><a href="{% url 'ugc_choice' page.building_of_the_week.id %}">Contribute it here</a></p>
-			{% if page.building_of_the_week.tags.similar_objects|length > 0 %}
-				<h4>Other Places Like This</h4>
-				{% for building in page.building_of_the_week.tags.similar_objects %}
-					<a href="{{ building }}">{{ building }}</a>  
+			{% if page.featured_similar|length > 0 %}
+				<hr />
+				<h4>Similar Places</h4>
+				<ul class="list-unstyled">
+				{% for building in page.featured_similar %}
+					<li><a href="{% url 'detail' building.id %}">{{ building }}</a></li>
  				{% endfor %}
+ 				</ul>
 			{% endif %}
 			{% endif %}
 			<!-- / Building of the Week -->

@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from map.models import Feature, Document, Category, Image, Media, Site
 from map.serializers import FeatureSerializer, FeatureOverviewSerializer, DocumentSerializer, ImageSerializer, MediaSerializer
 from map.forms import DocumentForm, ImageForm, MediaForm, AdminDocumentForm, AdminImageForm, AdminMediaForm
+from map.utils import get_similar_features
 from rest_framework.renderers import JSONRenderer
 from haystack.query import SearchQuerySet
 from django.contrib.auth.decorators import login_required
@@ -126,8 +127,10 @@ def detail(request, feature):
 	stories = documents.filter(document_type='STORY').order_by('order')
 	notes = documents.filter(document_type='NOTE').order_by('order')
 	categories = Category.objects.filter(feature=feature)
-	all_similar = feature.tags.similar_objects()
-	similar_features = [x for x in all_similar if hasattr(x, 'geom') == True] 
+	# all_similar = feature.tags.similar_objects()
+	# similar_features = [x for x in all_similar if hasattr(x, 'geom') == True] 
+	similar_features = get_similar_features(feature)
+
 	subtitle = '| ' + str(feature)
 	# tags = []
 
@@ -145,7 +148,7 @@ def detail(request, feature):
 	for tag in feature.tags.all():
 		tags.update([tag])
 
-	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar_features, 'subtitle': subtitle, 'images': images, 'media': media, 'tags': tags, 'site_docs': site_docs, 'other_features': other_features, 'notes': notes, 'documents': documents })
+	return render(request, 'map/detail.html', {'title': 'Survey of London', 'feature': feature, 'categories': categories, 'histories': histories, 'descriptions': descriptions, 'stories': stories, 'similar': similar_features[:5], 'subtitle': subtitle, 'images': images, 'media': media, 'tags': tags, 'site_docs': site_docs, 'other_features': other_features, 'notes': notes, 'documents': documents })
 
 
 def category(request, category):

@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import  HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from map.models import Feature, Document, Category, Image, Media
+from map.utils import get_similar_features
 from whitechapel_blog.models import Post
 from whitechapel_blog.models import Category as BlogCategory
 from whitechapel_pages.models import Page
@@ -11,6 +12,7 @@ import datetime
 from django.contrib.sitemaps import Sitemap
 from forms import QuickContributionForm
 from django.core.mail import send_mail
+
 
 
 def inform_managers_of_quick_contribution(form_data):
@@ -58,6 +60,8 @@ def site_home(request):
 	
 	else:
 		form = QuickContributionForm()
+
+	page.featured_similar = get_similar_features(page.building_of_the_week)[:3]
 
 	return render(request, 'whitechapel_pages/index.html', {'page': page, 'title': 'Survey of London', 'subhead': 'Whitechapel', 'categories': categories, 'images': images, 'documents': documents, 'media': media, 'latest': latest, 'posts': posts, 'form': form })
 
