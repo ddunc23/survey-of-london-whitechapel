@@ -50,11 +50,17 @@ def get_similar_features(feature):
 	similar_media = Media.objects.filter(tags__name__in=tags).distinct()
 
 	for doc in similar_docs:
-		similar_features_set.update([doc.feature])
+		doc.matched_tags=tags.intersection(set(doc.tags.all()))
+		if len(doc.matched_tags) >= 2:
+			similar_features_set.update([doc.feature])
 	for img in similar_images:
-		similar_features_set.update([img.feature])
+		img.matched_tags=tags.intersection(set(img.tags.all()))
+		if len(img.matched_tags) >= 2:
+			similar_features_set.update([img.feature])
 	for m in similar_media:
-		similar_features_set.update([m.feature])
+		m.matched_tags=tags.intersection(set(m.tags.all()))
+		if len(m.matched_tags) >= 2:
+			similar_features_set.update([m.feature])
 
 	similar_features = list(similar_features_set)
 
