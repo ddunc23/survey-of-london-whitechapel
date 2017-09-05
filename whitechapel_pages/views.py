@@ -86,10 +86,10 @@ def listing(request):
 	"""
 	# The below is hard-coded and nasty and should be refactored
 	event_category = BlogCategory.objects.get(id=1)
-	events = Post.objects.filter(categories=event_category).order_by('event_date_start')
+	events = Post.objects.filter(categories=event_category)
 	today = datetime.date.today()
-	past_events = events.filter(past_event=True)
-	upcoming_events = events.filter(event_date_start__gte=today)
+	past_events = events.filter(past_event=True).order_by('-event_date_start')
+	upcoming_events = events.filter(event_date_start__gte=today).order_by('event_date_start')
 	return render(request, 'whitechapel_pages/listing.html', {'past_events': past_events, 'upcoming_events': upcoming_events})
 
 

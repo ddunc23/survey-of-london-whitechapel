@@ -23,7 +23,7 @@
 			<h2>Previous</h2>
 			{% for event in past_events %}
 			{% if event.post_thumbnail %}<div class="event_header" style="background-image: url('/media/{{ event.post_thumbnail }}')"></div>{% endif %}
-			<h3><a href="{% url 'single_post' event.date_published.year event.slug %}">{{ event }}</a></h3>
+			<h3><a href="{% url 'single_post' event.date_published.year event.slug %}">{{ event }} | {{ event.event_date_start|date:"F o" }}</a></h3>
 			<p>{{ event.body|striptags|truncatewords_html:45|safe }} | <a href="{% url 'single_post' event.date_published.year event.slug %}">Read more</a></p></p>
 			{% endfor %}
 		</div>

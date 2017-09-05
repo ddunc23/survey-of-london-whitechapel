@@ -5,7 +5,8 @@ from whitechapel_blog.models import Post, Category
 
 class PostAdmin(admin.ModelAdmin):
 	prepopulated_fields = {'slug': ('title',)}
-	list_display = ('title', 'author', 'date_published', 'category', 'past_event')
+	list_display = ('title', 'author', 'date_published', 'category', 'past_event',)
+	list_editable = ('past_event',)
 	fieldsets = (
 		('Post', {
 			'fields': ('title', 'slug', 'author', 'post_preview', 'post_thumbnail', 'body', 'date_published', 'categories')
