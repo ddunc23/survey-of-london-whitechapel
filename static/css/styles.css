@@ -400,6 +400,7 @@ p.login-dialogue-text {
 #lightbox_image {
 	width: 100%;
 	margin-bottom: 5px;
+	image-orientation: from-image;
 }
 p#lightbox_caption, p#lightbox_image_author {
 	margin-bottom: 0px;
