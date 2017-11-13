@@ -171,7 +171,7 @@ html, body {
 .affix-top {
 	margin-top: 15px;
 }
-
+/*
 @media (min-width: 992px) {
 	.affix {
 		width: 25%;
@@ -181,6 +181,47 @@ html, body {
 @media (min-width: 1200px) {
 	.affix {
 		width: 16%;
+		padding-right: 25px;
+	}
+} */
+
+@media (min-width: 992px) {
+	.affix {
+		width: 21%;
+	}
+}
+
+@media (min-width: 1200px) {
+	.affix {
+		width: 20%;
+		padding-right: 25px;
+	}
+}
+
+@media (min-width: 1600px) {
+	.affix {
+		width: 18%;
+		padding-right: 25px;
+	}
+}
+
+@media (min-width: 1800px) {
+	.affix {
+		width: 16%;
+		padding-right: 25px;
+	}
+}
+
+@media (min-width: 2000px) {
+	.affix {
+		width: 14%;
+		padding-right: 25px;
+	}
+}
+
+@media (min-width: 2200px) {
+	.affix {
+		width: 12%;
 		padding-right: 25px;
 	}
 }
