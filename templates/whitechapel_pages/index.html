@@ -80,8 +80,8 @@
 			<!-- / Front page text -->
 		</div>
 		<div class="col-xs-12 col-md-4">
-			<!-- Building of the Week (but now its the month) -->
-			{% if page.building_of_the_week %}
+			<!-- Building of the Week (but now its the month) DISABLED FOR PROGRESS INDICATOR-->
+			<!--{% if page.building_of_the_week %}
 			<h1 class="front-page-heading">Building of the Month</h1>
 			<a href="{% url 'detail' page.building_of_the_week.id %}#images"><img src="{% thumbnail page.building_of_the_week.thumbnail 400x225 crop='0,0' %}" style="width: 100%;"></a>
 			<h3><a href="{% url 'detail' page.building_of_the_week.id %}">{{ page.building_of_the_week }}</a></h3>
@@ -96,8 +96,11 @@
  				{% endfor %}
  				</ul>
 			{% endif %}
-			{% endif %}
+			{% endif %}-->
 			<!-- / Building of the Week -->
+			<h1 class="front-page-heading">Progress So Far</h1>
+			<canvas id="progressPie" width="100%" height="100%"></canvas>
+			<p>There are still {{ empty_features }} buildings that we don't know anything about. If you know something about a building in Whitechapel, tell us using the form below or sign up for an account <a href="{% url 'account_login' %}">here</a>.</p>
 		</div>
 	</div>
 	<div class="row">
@@ -194,6 +197,43 @@
 	</div><!-- / Themes -->
 	{% endif %}
 </div><!-- / Container -->
+
+
+<script type="text/javascript">
+	// Progress piechart
+	var ctx = document.getElementById("progressPie").getContext('2d');
+
+	var empty = {{ empty_features }};
+	var full = {{ total_features }} - {{ empty_features }};
+
+	var progressPie = new Chart(ctx, {
+		type: 'pie',
+		data: {
+			labels: ["No Submissions", "With Submissions"],
+			datasets: [{
+				data: [empty, full],
+				backgroundColor: [
+	                'rgba(26, 169, 255, 1)',
+	                'rgba(245, 130, 22, 1)',
+				],
+				borderColor: [	          
+	                'rgba(26, 169, 255, 1)',
+	                'rgba(245, 130, 22, 1)',
+	            ],
+	            borderWidth: 1
+			}]
+		},
+		options: {
+			legend: {
+				position: 'bottom',
+				reverse: true
+			}
+		}
+	});
+
+</script>
+
+
 
 {% endblock %}
 

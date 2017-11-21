@@ -63,7 +63,10 @@ def site_home(request):
 
 	page.featured_similar = get_similar_features(page.building_of_the_week)[:3]
 
-	return render(request, 'whitechapel_pages/index.html', {'page': page, 'title': 'Survey of London', 'subhead': 'Whitechapel', 'categories': categories, 'images': images, 'documents': documents, 'media': media, 'latest': latest, 'posts': posts, 'form': form })
+	total_features = Feature.objects.all().count()
+	empty_features = Feature.objects.filter(count=0).count()
+
+	return render(request, 'whitechapel_pages/index.html', {'page': page, 'title': 'Survey of London', 'subhead': 'Whitechapel', 'categories': categories, 'images': images, 'documents': documents, 'media': media, 'latest': latest, 'posts': posts, 'form': form, 'empty_features': empty_features, 'total_features': total_features })
 
 
 def page(request, page_slug):
