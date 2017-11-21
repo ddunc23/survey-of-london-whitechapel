@@ -37,7 +37,7 @@ def site_home(request):
 	posts = Post.objects.filter(date_published__lte=datetime.date.today()).exclude(categories__slug__iexact='events')[:3]
 
 	latest = list(chain(documents, images))
-	latest.sort(key=attrgetter('created'), reverse=True)
+	latest.sort(key=attrgetter('date_published'), reverse=True)
 
 	latest = latest[:2]
 
