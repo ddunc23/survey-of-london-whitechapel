@@ -14,9 +14,9 @@ def blog_post_list(request):
 	return {'blog_post_list': blog_post_list}
 
 def latest_contributions(request):
-	images = Image.objects.filter(published=True).exclude(created=None).order_by('-created')[:5]
-	documents = Document.objects.filter(published=True).exclude(created=None).order_by('-created')[:5]
-	media = Media.objects.filter(published=True).exclude(created=None).order_by('-created')[:5]
+	images = Image.objects.filter(published=True).exclude(created=None).order_by('-date_published')[:5]
+	documents = Document.objects.filter(published=True).exclude(created=None).order_by('-date_published')[:5]
+	media = Media.objects.filter(published=True).exclude(created=None).order_by('-date_published')[:5]
 	latest = list(chain(documents, images))
 	latest.sort(key=attrgetter('created'), reverse=True)
 

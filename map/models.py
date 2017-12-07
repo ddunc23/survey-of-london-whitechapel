@@ -210,6 +210,7 @@ class Document(models.Model):
 	aggregate = models.BooleanField(default=False, verbose_name="Aggregate to Site")
 	created = models.DateField(auto_now_add=True, null=True, blank=True)
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
+	date_published = models.DateField(null=True, blank=True)
 	tags = TaggableManager(blank=True)
 
 	def __unicode__(self):
@@ -252,6 +253,7 @@ class Image(models.Model):
 	aggregate = models.BooleanField(default=False, verbose_name="Aggregate to Site")
 	created = models.DateField(auto_now_add=True, null=True, blank=True)
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
+	date_published = models.DateField(null=True, blank=True)
 	tags = TaggableManager(blank=True)
 	copyright = models.BooleanField(default=False)
 
@@ -287,6 +289,7 @@ class Media(models.Model):
 	aggregate = models.BooleanField(default=False, verbose_name="Aggregate to Site")
 	created = models.DateField(auto_now_add=True, null=True, blank=True)
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
+	date_published = models.DateField(null=True, blank=True)
 	tags = TaggableManager(blank=True)
 
 	def __unicode__(self):
