@@ -31,9 +31,9 @@ def site_home(request):
 	"""The front page of the website"""
 	page = Page.objects.get(is_front_page=True)
 	categories = Category.objects.all().order_by('name')
-	images = Image.objects.filter(published=True, author__is_staff=False).exclude(created=None).order_by('-created')[:5]
-	documents = Document.objects.filter(published=True, author__is_staff=False).exclude(created=None).order_by('-created')[:5]
-	media = Media.objects.filter(published=True, author__is_staff=False).exclude(created=None).order_by('-created')[:5]
+	images = Image.objects.filter(published=True, author__is_staff=False).exclude(created=None).order_by('-last_edited')[:5]
+	documents = Document.objects.filter(published=True, author__is_staff=False).exclude(created=None).order_by('-last_edited')[:5]
+	media = Media.objects.filter(published=True, author__is_staff=False).exclude(created=None).order_by('-last_edited')[:5]
 	posts = Post.objects.filter(date_published__lte=datetime.date.today()).exclude(categories__slug__iexact='events')[:3]
 
 	latest = list(chain(documents, images))
