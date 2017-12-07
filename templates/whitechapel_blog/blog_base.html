@@ -17,12 +17,12 @@
 
 		</div>
 		<div class="col-xs-12 col-md-4 sidebar">
-			<h3>Categories</h3>
+			<!--<h3>Categories</h3>
 			<ul class="list-unstyled">
 				{% for category in blog_category_links %}
 				<li><a href="{% url 'posts_by_category' category.slug %}">{{ category }}</a></li>
 				{% endfor %}
-			</ul>
+			</ul>-->
 			<h3>Archive</h3>
 			{% regroup blog_post_list by date_published|date:'Y' as posts_by_year %}
 			<ul class="list-unstyled">

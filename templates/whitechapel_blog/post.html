@@ -10,6 +10,5 @@
 	{% endif %}
 	
 	{{ post.body|safe }}
-	{% if post.categories.all %}<p class="results-preview">Posted in {% for category in post.categories.all %}<a href="{% url 'posts_by_category' category.slug %}">{{ category }}</a> {% endfor %}</p>{% endif %}
 
 </div>
