@@ -25,6 +25,8 @@ urlpatterns = [
     url(r'^api/features/author/(?P<author>\d+)/$', views.features_by_author, name='features_by_author'),
     url(r'^api/features/site/(?P<site>\d+)/$', views.features_by_site, name='features_by_site'),
     # User Generated Content
+    url(r'^feature/\d+/(content|document|image|media)/add/$', views.maintenance_add, name='add_maintenance'),
+    url(r'^feature/\d+/(content|document|image|media)/\d+/edit/$', views.maintenance_edit, name='edit_maintenance'),
     url(r'^feature/(?P<feature>\d+)/content/add/$', views.ugc_choice, name='ugc_choice'),
     url(r'^feature/(?P<feature>\d+)/document/add/$', views.edit_document, name='add_document'),
     url(r'^feature/(?P<feature>\d+)/document/(?P<document>\d+)/edit/$', views.edit_document, name='edit_document'),

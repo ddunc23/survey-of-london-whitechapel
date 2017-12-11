@@ -893,3 +893,14 @@ class MapSitemap(Sitemap):
 	def items(self):
 		return Feature.objects.all()
 
+
+# Maintenance Mode
+
+def maintenance_add(request, feature_id):
+	"""Returns a temporary maintenance mode page"""
+	return render(request, 'map/maintenance.html')
+
+
+def maintenance_edit(request, feature_id, content_id):
+	"""Returns a temporary maintenance mode page"""
+	return render(request, 'map/maintenance.html')
