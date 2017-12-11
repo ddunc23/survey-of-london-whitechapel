@@ -89,7 +89,9 @@ urlpatterns = [
      {'next_page': '/'}),
     url(r'^accounts/login/$', check_honeypot(account.views.login)),
     url(r'^accounts/', include('allauth.urls')),
-    url(r'^accounts/profile/$', 'whitechapel_users.views.user_profile', name='user_profile'),
+    # Temporarily redirect profile page to maintenance mode
+    # url(r'^accounts/profile/$', 'whitechapel_users.views.user_profile', name='user_profile'),
+    url(r'^accounts/profile/$', 'map.views.maintenance_profile', name='user_profile'),
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
     name='django.contrib.sitemaps.views.sitemap'),
 ]
