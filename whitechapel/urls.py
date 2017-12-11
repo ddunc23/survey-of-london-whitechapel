@@ -87,7 +87,9 @@ urlpatterns = [
     # django-allauth
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
      {'next_page': '/'}),
-    url(r'^accounts/login/$', check_honeypot(account.views.login)),
+    # Temporarily redirect login page to maintenance mode
+    # url(r'^accounts/login/$', check_honeypot(account.views.login)),
+    url(r'^accounts/login/$', 'map.views.maintenance_profile'),
     url(r'^accounts/', include('allauth.urls')),
     # Temporarily redirect profile page to maintenance mode
     # url(r'^accounts/profile/$', 'whitechapel_users.views.user_profile', name='user_profile'),
