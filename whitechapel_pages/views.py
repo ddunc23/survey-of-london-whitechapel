@@ -38,7 +38,7 @@ def site_home(request):
 	posts = Post.objects.filter(date_published__lte=datetime.date.today()).exclude(categories__slug__iexact='events')[:3]
 
 	# A random selection of images by the professional photographers
-	lost_properties = Image.objects.filter(Q(published=True) & Q(author__id=27) | Q(author__id=26) | Q(author__id=31) | Q(author__id=49)).order_by("?")[:5]
+	lost_properties = Image.objects.filter(Q(published=True) & Q(author__id=27) | Q(author__id=26) | Q(author__id=31) | Q(author__id=49)).exclude(feature__feature_type="GREATER_WHITECHAPEL", feature__count__lte=7).order_by("?")[:5]
 
 	latest = list(chain(documents, images))
 	latest.sort(key=attrgetter('created'), reverse=True)
