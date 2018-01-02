@@ -96,7 +96,7 @@
 				<div class="carousel-inner" role="listbox">
 					{% for property in lost_properties %}
 					<div class="item {% if forloop.first %}active{% endif %}">
-						<img src="{% thumbnail property.file 400x225 crop='smart' %}" style="width: 100;" }}>
+						<img src="{% thumbnail property.file 400x225 crop='0,0' %}" style="width: 100;" }}>
 						<div class="carousel-caption">
 							<p><a href="{% url 'detail' property.feature.id %}">{{ property.feature }}</a></p>
 						</div>
