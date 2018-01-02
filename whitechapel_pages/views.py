@@ -12,6 +12,7 @@ import datetime
 from django.contrib.sitemaps import Sitemap
 from forms import QuickContributionForm
 from django.core.mail import send_mail
+from django.db.models import Q
 
 
 
@@ -36,10 +37,13 @@ def site_home(request):
 	media = Media.objects.filter(published=True, author__is_staff=False).exclude(created=None).order_by('-created')[:5]
 	posts = Post.objects.filter(date_published__lte=datetime.date.today()).exclude(categories__slug__iexact='events')[:3]
 
+	# A random selection of images by the professional photographers
+	lost_properties = Image.objects.filter(Q(published=True) & Q(author__id=27) | Q(author__id=26) | Q(author__id=31) | Q(author__id=49)).order_by("?")[:5]
+
 	latest = list(chain(documents, images))
 	latest.sort(key=attrgetter('created'), reverse=True)
 
-	latest = latest[:2]
+	latest = latest[:3]
 
 	for item in latest:
 		tags = item.tags.names()
@@ -63,7 +67,7 @@ def site_home(request):
 
 	page.featured_similar = get_similar_features(page.building_of_the_week)[:3]
 
-	return render(request, 'whitechapel_pages/index.html', {'page': page, 'title': 'Survey of London', 'subhead': 'Whitechapel', 'categories': categories, 'images': images, 'documents': documents, 'media': media, 'latest': latest, 'posts': posts, 'form': form })
+	return render(request, 'whitechapel_pages/index.html', {'page': page, 'title': 'Survey of London', 'subhead': 'Whitechapel', 'categories': categories, 'images': images, 'documents': documents, 'media': media, 'latest': latest, 'posts': posts, 'form': form, 'lost_properties': lost_properties })
 
 
 def page(request, page_slug):

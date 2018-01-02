@@ -530,7 +530,7 @@ p.results-preview {
 	background-color: rgba(51, 122, 183, 0.2);
 }
 
-.carousel {
+/*.carousel {
 	height: 500px;
 	width: 100%;
 	position: absolute;
@@ -538,6 +538,15 @@ p.results-preview {
 	overflow: hidden;
 	display: block;
 	z-index: 1;
+}*/
+
+.carousel-caption {
+	bottom: 0px;
+	padding-bottom: 0px;
+}
+
+.carousel-caption a {
+	color: white;
 }
 
 .jumbotron.whitechapel_front_page {

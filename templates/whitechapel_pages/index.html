@@ -35,7 +35,7 @@
 <div class="jumbotron whitechapel_front_page">
 	
 	<style>
-		.carousel {
+		.front-page-banner {
 			height: 500px;
 			width: 100%;
 			position: absolute;
@@ -53,18 +53,9 @@
 			<a href="{% url 'map_home' %}" class="btn btn-lg explore">Explore the Map</a>
 		</div>
 	</div>
-	<div class="carousel">
+	<div class="front-page-banner">
 		{% if page.banner_image_1 %}
 		<div style="background-image: url('/media/{{ page.banner_image_1 }}'); background-size: cover; display: block; width: 100%; height: 600px; background-position: center center;'"></div>
-		{% endif %}
-		{% if page.banner_image_2 %}
-		<div style="background-image: url('/media/{{ page.banner_image_2 }}'); background-size: cover; display: block; width: 100%; height: 600px; background-position: center center;'"></div>
-		{% endif %}
-		{% if page.banner_image_3 %}
-		<div style="background-image: url('/media/{{ page.banner_image_3 }}'); background-size: cover; display: block; width: 100%; height: 600px; background-position: center center;'"></div>
-		{% endif %}
-		{% if page.banner_image_4 %}
-		<div style="background-image: url('/media/{{ page.banner_image_4 }}'); background-size: cover; display: block; width: 100%; height: 600px; background-position: center center;'"></div>
 		{% endif %}
 	</div>
 </div>
@@ -79,9 +70,9 @@
 			</div>
 			<!-- / Front page text -->
 		</div>
-		<div class="col-xs-12 col-md-4">
+		<!-- <div class="col-xs-12 col-md-4"> -->
 			<!-- Building of the Week (but now its the month) -->
-			{% if page.building_of_the_week %}
+			<!--{% if page.building_of_the_week %}
 			<h1 class="front-page-heading">Building of the Month</h1>
 			<a href="{% url 'detail' page.building_of_the_week.id %}#images"><img src="{% thumbnail page.building_of_the_week.thumbnail 400x225 crop='0,0' %}" style="width: 100%;"></a>
 			<h3><a href="{% url 'detail' page.building_of_the_week.id %}">{{ page.building_of_the_week }}</a></h3>
@@ -96,19 +87,51 @@
  				{% endfor %}
  				</ul>
 			{% endif %}
-			{% endif %}
+			{% endif %}-->
 			<!-- / Building of the Week -->
+		<!--</div> -->
+		<div class="col-xs-12 col-md-4">
+			<h1 class="front-page-heading">Stories Wanted</h1>
+			<div id="carousel-lost-properties" class="carousel slide" data-ride="carousel">
+				<div class="carousel-inner" role="listbox">
+					{% for property in lost_properties %}
+					<div class="item {% if forloop.first %}active{% endif %}">
+						<img src="{% thumbnail property.file 400x225 crop='smart' %}" style="width: 100;" }}>
+						<div class="carousel-caption">
+							<p><a href="{% url 'detail' property.feature.id %}">{{ property.feature }}</a></p>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+			<br />
+			<p>There are many buildings in Whitechapel that we don't know anything about. If you know something, you can <a href="/accounts/login/">make an account</a> or use the form below to tell us.</p>
+			<!-- Quick contribution -->
+			<!-- <h2 class="front-page-heading">Quick Contribution</h2> -->
+			<hr />
+			<div class="quick-contribution">
+				<form role="form" action="" method="post">
+					<!--<p>If you'd rather not register with us, you can tell us your memories of Whitechapel using the form below</p>-->
+					{% load crispy_forms_tags %}
+					{% csrf_token %}
+					{{ form|crispy }}
+					{% load honeypot %}
+	            	{% render_honeypot_field "phone_number" %}
+					<button type="submit" class="btn btn-default">Submit</button>
+				</form>
+			</div>
+			<!-- / Quick contribution -->
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-xs-12 col-md-8">
+		<div class="col-xs-12">
 			<!-- Latest contributions  -->
 			<h1 class="front-page-heading">Latest Submissions</h1>
 			<div class="row">	
-			{% for item in latest|slice:":2" %}
+			{% for item in latest|slice:":3" %}
 			{% if item.created != None %}
 				{% if item.file %}
-				<div class="col-xs-12 col-md-6">
+				<div class="col-xs-12 col-md-4">
 					<a href="{% url 'detail' item.feature.id %}#images"><img src="{% thumbnail item.file 400x225 crop='0,0' %}" style="width: 100%;"></a>
 					<h3><a href="{% url 'detail' item.feature.id %}#images">{{ item.title }}</a></h3>
 					<h4 class="small"><a href="{% url 'detail' item.feature.id %}">{{ item.feature }}</a> | <a href="{% url 'all_content_by_author' item.author.id %}">{% if item.author.userprofile.display_name %}{{ item.author.userprofile.display_name }}{% else %}{{ item.author }}{% endif %}</a> | {{ item.created }}</h4>
@@ -120,7 +143,7 @@
 					{% endif %}
 				</div>
 				{% else %}
-				<div class="col-xs-12 col-md-6">
+				<div class="col-xs-12 col-md-4">
 					<a href="{% url 'detail' item.feature.id %}#{{ item.document_type }}?{{ item.title|slugify }}"><img src="{% thumbnail item.feature.thumbnail 400x225 crop='0,0' %}" style="width: 100%;"></a>
 					<h3><a href="{% url 'detail' item.feature.id %}#{{ item.document_type }}?{{ item.title|slugify }}">{{ item.title }}</a></h3>
 					<h4 class="small"><a href="{% url 'detail' item.feature.id %}">{{ item.feature }}</a> | <a href="{% url 'all_content_by_author' item.author.id %}">{% if item.author.userprofile.display_name %}{{ item.author.userprofile.display_name }}{% else %}{{ item.author }}{% endif %}</a> | {{ item.created }}</h4>
@@ -140,22 +163,6 @@
 			{% endfor %}
 			</div>
 		</div><!-- / Latest contributions -->
-		<div class="col-xs-12 col-md-4">
-			<!-- Quick contribution -->
-			<h1 class="front-page-heading">Quick Contribution</h1>
-			<div class="quick-contribution">
-				<form role="form" action="" method="post">
-					<p>If you'd rather not register with us, you can tell us your memories of Whitechapel using the form below</p>
-					{% load crispy_forms_tags %}
-					{% csrf_token %}
-					{{ form|crispy }}
-					{% load honeypot %}
-	            	{% render_honeypot_field "phone_number" %}
-					<button type="submit" class="btn btn-default">Submit</button>
-				</form>
-			</div>
-			<!-- / Quick contribution -->
-		</div>
 	</div>
 	<div class="row">
 		<div class="col-xs-12">
