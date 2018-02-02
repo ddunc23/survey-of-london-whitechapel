@@ -254,6 +254,7 @@ class Image(models.Model):
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
 	tags = TaggableManager(blank=True)
 	copyright = models.BooleanField(default=False)
+	order = models.PositiveSmallIntegerField(default=0)
 
 	def __unicode__(self):
 		#try: 

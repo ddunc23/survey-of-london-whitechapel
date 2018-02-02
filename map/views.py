@@ -111,13 +111,13 @@ def detail(request, feature):
 	
 	if feature.site != None:
 		documents = Document.objects.filter(feature=feature).filter(published=True, aggregate=False)
-		images = Image.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True)
+		images = Image.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True).order_by('order')
 		media = Media.objects.filter(Q(feature=feature) | Q(feature__site=feature.site, aggregate=True)).filter(published=True)
 		site_docs = Document.objects.filter(feature__site=feature.site, aggregate=True, published=True)
 		other_features = Feature.objects.filter(site=feature.site).exclude(id=feature.id)
 	else:
 		documents = Document.objects.filter(feature=feature).filter(published=True)
-		images = Image.objects.filter(feature=feature).filter(published=True)
+		images = Image.objects.filter(feature=feature).filter(published=True).order_by('order')
 		media = Media.objects.filter(feature=feature).filter(published=True)
 		site_docs = None
 		other_features = None
