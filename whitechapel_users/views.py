@@ -41,21 +41,28 @@ def check_first_login(request):
 	threshold = 90
 	if (request.user.last_login - request.user.date_joined).seconds < threshold:
 		return HttpResponseRedirect(reverse('user_profile'))
-	#else:
-	#	return HttpResponseRedirect(reverse('map_home'))
+	if request.user.last_login.date() < datetime.strptime('2018-05-25', '%Y-%m-%d').date() and request.user.userprofile.gdpr_confirm == False:
+		return HttpResponseRedirect(reverse('gdpr_prompt'))
+	else:
+		return HttpResponseRedirect(reverse('map_home'))
+
+
+
+
 
 @login_required
 def gdpr_prompt(request):
-	user = User.objects.get(id=request.user.id)
+	profile = UserProfile.objects.get(user=request.user.id)
+
 	if request.method == 'POST':
-		form = WhitechapelUserGDPRConfirmationForm(request.POST, instance=user)
+		form = WhitechapelUserGDPRConfirmationForm(request.POST, instance=profile)
 		if form.is_valid():
 			form.save()
 			return HttpResponseRedirect(reverse('map_home'))
 		else:
-			form = WhitechapelUserGDPRConfirmationForm(instance=user)
+			form = WhitechapelUserGDPRConfirmationForm(instance=profile)
 	else:
-		form = WhitechapelUserGDPRConfirmationForm(instance=user)
+		form = WhitechapelUserGDPRConfirmationForm(instance=profile)
 
 	return render(request, 'whitechapel_users/gdpr_prompt.html', {'form': form})
 

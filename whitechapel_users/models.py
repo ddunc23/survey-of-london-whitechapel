@@ -19,10 +19,12 @@ class UserProfile(models.Model):
 			return self.user.username
 
 	def save(self, *args, **kwargs):
-		super(UserProfle, self).save(*args, **kwargs)
 		if self.gdpr_confirm == True:
 			self.emails = True
 		else:
 			self.emails = False
 
-		self.save()
+		super(UserProfile, self).save(*args, **kwargs)
+
+		
+

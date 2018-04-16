@@ -45,7 +45,7 @@
           {% elif next_edit %}
           <input type="hidden" name="next" value="{{ next_edit }}" />
           {% else %}
-          <input type="hidden" name="{{ redirect_field_name }}" value="{% url 'map_home' %}" />
+          <input type="hidden" name="{{ redirect_field_name }}" value="{% url 'check_first_login' %}" />
           {% endif %}
           <a class="btn btn-default" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
           <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
