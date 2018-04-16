@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from whitechapel_users.forms import WhitechapelUserProfileForm, WhitechapelUserProfileFormExtra
+from whitechapel_users.forms import WhitechapelUserProfileForm, WhitechapelUserProfileFormExtra, WhitechapelUserGDPRConfirmationForm
 from django.contrib.auth.models import User
 from whitechapel_users.models import UserProfile
 from map.views import user_overview, map_home
@@ -42,3 +42,24 @@ def check_first_login(request):
 		return HttpResponseRedirect(reverse('user_profile'))
 	else:
 		return HttpResponseRedirect(reverse('map_home'))
+
+@login_required
+def gdpr_prompt(request):
+	user = User.objects.get(id=request.user.id)
+	if request.method == 'POST':
+		form = WhitechapelUserGDPRConfirmationForm(request.POST, instance=user)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect(reverse('map_home'))
+		else:
+			form = WhitechapelUserGDPRConfirmationForm(instance=user)
+	else:
+		form = WhitechapelUserGDPRConfirmationForm(instance=user)
+
+	return render(request, 'whitechapel_users/gdpr_prompt.html', {'form': form})
+
+@login_required
+def gdpr_prompt_redirect(request):
+	"""If the user's gdpr_confirm is False and they last logged in before GDPR came in, punt them to a GDPR confirmation page"""
+	if request.user.last_login < '2018-05-25' and request.user.gdpr_confirm == False:
+		return HttpResponseRedirect(reverse('gdpr_prompt'))

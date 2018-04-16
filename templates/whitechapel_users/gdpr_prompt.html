@@ -1,0 +1,20 @@
+{% extends 'map/base.html'%}
+
+{% block content %}
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-md-8 col-md-offset-2 content">
+			<h1>GDPR Regulation</h1>
+			<p class="lead">When you first signed up for the Survey of London Whitechapel, you submitted your email so that we could keep you informed about your submissions. The General Data Protection Regulation means that we need to request your consent carry on contacting you in this way.<p>
+			<p class="lead">If you're happy to continue to receive these emails, please check the box below and click 'Save'. Otherwise, leave it blank. You can change these settings at any time from your profile page.<p>
+			<form id="gdpr_form" method="post" action="{% url 'gdpr_prompt' %}">
+				{% load crispy_forms_tags %}
+				{% csrf_token %}
+				{{ form|crispy }}
+				{{ profile_extra|crispy }}
+				<input type="submit" name="save" value="Save" class="btn btn-primary"/>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -24,3 +24,10 @@ class WhitechapelUserProfileForm(forms.ModelForm):
 		fields = ['username', 'email']
 
 WhitechapelUserProfileFormExtra = inlineformset_factory(User, UserProfile, can_delete=False, fields=['emails', 'newsletter', 'display_name', 'bio'], help_texts={'display_name': 'Your contributions will be attributed to you by your user name. If you\'d like to change this, enter a display name here.', 'bio': 'If you\'d like to tell us a little bit about yourself you can do so here. This information will be visible to other users if they look at your contributions.', 'emails': 'When you submit content and it\'s been approved by the Survey of London editors, you\'ll be notified by email. If you\'d rather not receive these emails, uncheck this box. Your email address isn\'t visible on the website, and we won\'t share it with anyone.', 'newsletter': 'Tick this box if you\'d like to subscribe to our mailing list for regular updates about the project.'})
+
+class WhitechapelUserGDPRConfirmationForm(forms.ModelForm):
+	class UserProfile:
+		fields = ['gdpr_confirm']
+		help_texts = {
+			'gdpr_confirm': 'Please check this box if you\'d like to continue to receive messages about your submissions.'
+		}

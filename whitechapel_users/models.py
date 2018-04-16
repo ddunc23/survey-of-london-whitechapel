@@ -10,9 +10,19 @@ class UserProfile(models.Model):
 	bio = models.CharField(max_length=420, blank=True, null=True)
 	emails = models.BooleanField(default=False, verbose_name='Receive emails about your submissions from the Survey of London?')
 	newsletter = models.BooleanField(default=False, verbose_name='Subscribe to our newsletter')
+	gdpr_confirm = models.BooleanField(default=False, verbose_name='Continue to receive emails from the Survey of London?')
 
 	def __unicode__(self):
 		if self.display_name != None:
 			return self.display_name
 		else:
 			return self.user.username
+
+	def save(self, *args, **kwargs):
+		super(UserProfle, self).save(*args, **kwargs)
+		if self.gdpr_confirm == True:
+			self.emails = True
+		else:
+			self.emails = False
+
+		self.save()
