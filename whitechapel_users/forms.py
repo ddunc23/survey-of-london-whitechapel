@@ -17,6 +17,7 @@ class WhitechapelSignupForm(SignupForm):
 		super(WhitechapelSignupForm, self).__init__(*args, **kwargs)
 		self.fields['username'].help_text = 'By default, your contributions will appear under your user name. If you\'d rather use a different name, you can change this on the \'Edit Profile\' page once you\'ve signed up. It\'s best not to use your email address as a username.'
 		self.fields['email'].help_text = 'We won\'t share your email address with anyone. You can opt out of email communications with the Survey of London at any time.'
+		self.fields['emails'].help_text = 'Please tick this box to confirm that you consent to receiving emails about your submissions.'
 
 class WhitechapelUserProfileForm(forms.ModelForm):
 	class Meta:
