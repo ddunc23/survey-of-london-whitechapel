@@ -8,7 +8,7 @@ class UserProfile(models.Model):
 	user = models.OneToOneField(User)
 	display_name = models.CharField(max_length=100, blank=True, null=True, unique=True)
 	bio = models.CharField(max_length=420, blank=True, null=True)
-	emails = models.BooleanField(default=True, verbose_name='Receive emails about your submissions from the Survey of London?')
+	emails = models.BooleanField(default=False, verbose_name='Receive emails about your submissions from the Survey of London?')
 	newsletter = models.BooleanField(default=False, verbose_name='Subscribe to our newsletter')
 
 	def __unicode__(self):
