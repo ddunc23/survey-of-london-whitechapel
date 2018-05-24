@@ -47,17 +47,20 @@ def check_first_login(request):
 		return HttpResponseRedirect(reverse('map_home'))
 
 
-
-
-
 @login_required
 def gdpr_prompt(request):
-	profile = UserProfile.objects.get(user=request.user.id)
+	user = request.user
+	profile = UserProfile.objects.get(user=user)
 
 	if request.method == 'POST':
 		form = WhitechapelUserGDPRConfirmationForm(request.POST, instance=profile)
 		if form.is_valid():
 			form.save()
+			
+			if profile.gdpr_confirm == True:
+				profile.emails = True
+				profile.save()
+
 			return HttpResponseRedirect(reverse('map_home'))
 		else:
 			form = WhitechapelUserGDPRConfirmationForm(instance=profile)

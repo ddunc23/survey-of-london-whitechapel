@@ -17,14 +17,3 @@ class UserProfile(models.Model):
 			return self.display_name
 		else:
 			return self.user.username
-
-	def save(self, *args, **kwargs):
-		if self.gdpr_confirm == True:
-			self.emails = True
-		else:
-			self.emails = False
-
-		super(UserProfile, self).save(*args, **kwargs)
-
-		
-
