@@ -11,6 +11,7 @@ from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
 from django.core.mail import mail_managers, send_mail
 from django.core.mail.message import EmailMessage
+from datetime import datetime
 
 @login_required
 def user_profile(request):
@@ -61,5 +62,5 @@ def gdpr_prompt(request):
 @login_required
 def gdpr_prompt_redirect(request):
 	"""If the user's gdpr_confirm is False and they last logged in before GDPR came in, punt them to a GDPR confirmation page"""
-	if request.user.last_login < '2018-05-25' and request.user.gdpr_confirm == False:
+	if request.user.last_login.date() < datetime.datetime.strptime('2018-05-25', '%Y-%m-%d') and request.user.gdpr_confirm == False:
 		return HttpResponseRedirect(reverse('gdpr_prompt'))
