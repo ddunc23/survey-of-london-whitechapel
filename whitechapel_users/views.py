@@ -62,5 +62,5 @@ def gdpr_prompt(request):
 @login_required
 def gdpr_prompt_redirect(request):
 	"""If the user's gdpr_confirm is False and they last logged in before GDPR came in, punt them to a GDPR confirmation page"""
-	if request.user.last_login.date() < datetime.datetime.strptime('2018-05-25', '%Y-%m-%d') and request.user.userprofile.gdpr_confirm == False:
+	if request.user.last_login.date() < datetime.datetime.strptime('2018-05-25', '%Y-%m-%d').date() and request.user.userprofile.gdpr_confirm == False:
 		return HttpResponseRedirect(reverse('gdpr_prompt'))
