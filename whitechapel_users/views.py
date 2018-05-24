@@ -41,7 +41,7 @@ def check_first_login(request):
 	threshold = 90
 	if (request.user.last_login - request.user.date_joined).seconds < threshold:
 		return HttpResponseRedirect(reverse('user_profile'))
-	if request.user.last_login.date() < datetime.strptime('2018-05-25', '%Y-%m-%d').date() and request.user.userprofile.gdpr_confirm == False:
+	if request.user.date_joined.date() < datetime.strptime('2018-05-25', '%Y-%m-%d').date() and request.user.userprofile.had_gdpr_notificaton == False:
 		return HttpResponseRedirect(reverse('gdpr_prompt'))
 	else:
 		return HttpResponseRedirect(reverse('map_home'))
@@ -56,10 +56,14 @@ def gdpr_prompt(request):
 		form = WhitechapelUserGDPRConfirmationForm(request.POST, instance=profile)
 		if form.is_valid():
 			form.save()
-			
+
 			if profile.gdpr_confirm == True:
 				profile.emails = True
-				profile.save()
+			else:
+				profile.emails = False
+
+			profile.had_gdpr_notificaton = True
+			profile.save()
 
 			return HttpResponseRedirect(reverse('map_home'))
 		else:
