@@ -41,8 +41,8 @@ def check_first_login(request):
 	threshold = 90
 	if (request.user.last_login - request.user.date_joined).seconds < threshold:
 		return HttpResponseRedirect(reverse('user_profile'))
-	else:
-		return HttpResponseRedirect(reverse('map_home'))
+	#else:
+	#	return HttpResponseRedirect(reverse('map_home'))
 
 @login_required
 def gdpr_prompt(request):
