@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from map.models import Feature, Document, Category, Image, Media, Site
 from map.serializers import FeatureSerializer, FeatureOverviewSerializer, DocumentSerializer, ImageSerializer, MediaSerializer
 from map.forms import DocumentForm, ImageForm, MediaForm, AdminDocumentForm, AdminImageForm, AdminMediaForm
@@ -50,18 +50,19 @@ def map_home(request):
 	subtitle = '| Map'
 	first_visit = None
 
-	try:
-		request.session['has_visited']
-	except KeyError:
-		first_visit = True
-		request.session['has_visited'] = True
+
+	#try:
+	#	request.session['has_visited']
+	#except KeyError:
+	#	first_visit = True
+	#	request.session['has_visited'] = True
 	
-	last_feature = request.GET.get('last_feature')
-	if last_feature is not None and last_feature !='':
-		last_feature = int(last_feature)
-		return HttpResponseRedirect(reverse('ugc_choice', args=(last_feature,)))
-	else:
-		pass
+	#last_feature = request.GET.get('last_feature')
+	#if last_feature is not None and last_feature !='':
+	#	last_feature = int(last_feature)
+	#	return HttpResponseRedirect(reverse('ugc_choice', args=(last_feature,)))
+	#else:
+	#	pass
 
 	return render(request, 'map/index.html', {'title': 'Survey of London', """'features': features,""" 'subtitle': subtitle, 'first_visit': first_visit })
 
@@ -160,11 +161,11 @@ def category(request, category):
 
 def tag(request, tag):
 	"""Feetures by tag"""
-	tag = tag
-	features = Feature.objects.filter(Q(tags__name__in=[tag]) | Q(documents__tags__name__in=[tag]) | Q(images__tags__name__in=[tag]) | Q(media__tags__name__in=[tag])).distinct()
-	documents = Document.objects.filter(tags__name__in=[tag])
-	images = Image.objects.filter(tags__name__in=[tag])
-	media = Media.objects.filter(tags__name__in=[tag])
+	tag = get_object_or_404(Tag, slug=tag)
+	features = Feature.objects.filter(Q(tags__name__in=[tag.name]) | Q(documents__tags__name__in=[tag.name]) | Q(images__tags__name__in=[tag.name]) | Q(media__tags__name__in=[tag.name])).distinct()
+	documents = Document.objects.filter(tags__name__in=[tag.name])
+	images = Image.objects.filter(tags__name__in=[tag.name])
+	media = Media.objects.filter(tags__name__in=[tag.name])
 
 	return render(request, 'map/tag.html', {'title': 'Survey of London', 'tag': tag, 'features': features })
 
@@ -640,7 +641,7 @@ class JSONResponse(HttpResponse):
         kwargs['content_type'] = 'application/json'
         super(JSONResponse, self).__init__(content, **kwargs)
 
-@cache_page(60 * 30)
+#@cache_page(60 * 30)
 def features(request):
 	"""All Features as geoJson"""
 	if request.method == 'GET':
@@ -658,7 +659,7 @@ def single_feature(request, feature):
 def features_by_build_date(request, build_date):
 	"""Get all Features built in a specific year"""
 	if request.method == 'GET':
-		features = Feature.objects.filter(year_built=build_date)
+		features = Feature.objects.filter(f_date=build_date)
 		serializer = FeatureSerializer(features, many=True)
 		return JSONResponse(serializer.data)
 
@@ -684,7 +685,7 @@ def features_by_category(request, category):
 def features_by_tag(request, tag):
 	if request.method == 'GET':
 		"""Gather all features by a particular tag, ensuring that you include tags attached to media, images, and documents"""
-		features = Feature.objects.filter(Q(tags__name__in=[tag]) | Q(documents__tags__name__in=[tag]) | Q(images__tags__name__in=[tag]) | Q(media__tags__name__in=[tag]))
+		features = Feature.objects.filter(Q(tags__slug__in=[tag]) | Q(documents__tags__slug__in=[tag]) | Q(images__tags__slug__in=[tag]) | Q(media__tags__slug__in=[tag])).distinct()
 		serializer = FeatureSerializer(features, many=True)
 		return JSONResponse(serializer.data)
 
@@ -700,6 +701,9 @@ def features_by_author(request, author):
 			features.append(image.feature)
 		for media_item in media:
 			features.append(media_item.feature)
+
+		features = list(set(features))
+
 		# features = list(chain(documents, images, media))
 		serializer = FeatureSerializer(features, many=True)
 		return JSONResponse(serializer.data)

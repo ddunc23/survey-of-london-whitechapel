@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='document',
             name='author',
-            field=models.ForeignKey(default=1, to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(default=1, to=settings.AUTH_USER_MODEL, on_delete=models.SET_NULL),
             preserve_default=False,
         ),
     ]

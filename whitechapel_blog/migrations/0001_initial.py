@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('body', ckeditor_uploader.fields.RichTextUploadingField(null=True, blank=True)),
                 ('date_created', models.DateField(auto_now_add=True)),
                 ('date_published', models.DateField()),
-                ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.SET_NULL)),
             ],
             options={
                 'ordering': ['-date_published'],

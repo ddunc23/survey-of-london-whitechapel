@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='page',
             name='building_of_the_week',
-            field=models.ForeignKey(verbose_name=b'Building of the Week', blank=True, to='map.Feature', null=True),
+            field=models.ForeignKey(verbose_name=b'Building of the Week', blank=True, to='map.Feature', null=True, on_delete=models.SET_NULL),
         ),
     ]

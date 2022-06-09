@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='os_feature',
             name='category',
-            field=models.ForeignKey(to='map.Category', null=True),
+            field=models.ForeignKey(to='map.Category', null=True, on_delete=models.SET_NULL),
         ),
     ]

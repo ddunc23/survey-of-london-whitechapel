@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('address', models.CharField(max_length=255)),
                 ('count', models.PositiveSmallIntegerField(default=0)),
                 ('categories', models.ManyToManyField(to='map.Category', blank=True)),
-                ('neighbourhood', models.ForeignKey(to='map.Neighbourhood', null=True)),
+                ('neighbourhood', models.ForeignKey(to='map.Neighbourhood', null=True, on_delete=models.SET_NULL)),
             ],
         ),
         migrations.RemoveField(
@@ -35,12 +35,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='document',
             name='os_id',
-            field=models.ForeignKey(to='map.Feature'),
+            field=models.ForeignKey(to='map.Feature', on_delete=models.SET_NULL),
         ),
         migrations.AlterField(
             model_name='story',
             name='os_id',
-            field=models.ForeignKey(blank=True, to='map.Feature', null=True),
+            field=models.ForeignKey(blank=True, to='map.Feature', null=True, on_delete=models.SET_NULL),
         ),
         migrations.DeleteModel(
             name='OS_Feature',

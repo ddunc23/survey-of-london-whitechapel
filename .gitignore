@@ -28,6 +28,9 @@ Thumbs.db
 /logs/*
 /backups/
 /backups/*
+/static/
+/static/*
+*.tar.gz
 
 # Backup Script - settings change depending on what db you're using
 map_backup.sh

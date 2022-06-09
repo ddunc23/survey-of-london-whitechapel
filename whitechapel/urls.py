@@ -1,10 +1,12 @@
 # Django Core
 from django.contrib.sitemaps.views import sitemap
 from django.conf.urls import include, url
+from django.urls import path
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.contrib.auth import logout
 
 # Whitechapel
 from map.views import MapSitemap, QueryFeatures, QueryDocuments, QueryImages, QueryMedia
@@ -12,6 +14,7 @@ from map.models import Feature, Document, Image, Media
 from whitechapel_pages.views import PageSitemap, FrontPageSitemap
 from whitechapel_blog.views import BlogPostSitemap
 from map.serializers import FeatureSerializer, DocumentSerializer, ImageSerializer, MediaSerializer
+from whitechapel_users.views import user_profile
 
 # 3rd Party
 from filebrowser.sites import site
@@ -66,7 +69,7 @@ sitemaps = {
 }
 
 urlpatterns = [
-    url(r'^survey-of-london-whitechapel-admin-site/', include(admin.site.urls)),
+    path(r'survey-of-london-whitechapel-admin-site/', admin.site.urls),
     url(r'^map/', include('map.urls')),
     url(r'', include('whitechapel_pages.urls')),
     url(r'^blog/', include('whitechapel_blog.urls')),
@@ -79,22 +82,24 @@ urlpatterns = [
     url(r'^api/v1/query/media/$', QueryMedia.as_view(), name='query_media'),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     # django-filebrowser
-    url(r'^admin/filebrowser/', include(site.urls)),
+    path(r'admin/filebrowser/', site.urls),
     # Search
     url(r'^search/', include('haystack.urls')),
     # Grappelli
     url(r'^grappelli/', include('grappelli.urls')),
     # django-allauth
-    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
+    url(r'^accounts/logout/$', logout,
      {'next_page': '/'}),
     url(r'^accounts/login/$', check_honeypot(account.views.login)),
     url(r'^accounts/', include('allauth.urls')),
-    url(r'^accounts/profile/$', 'whitechapel_users.views.user_profile', name='user_profile'),
+    url(r'^accounts/profile/$', user_profile, name='user_profile'),
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
     name='django.contrib.sitemaps.views.sitemap'),
 ]
 
+#urlpatterns += staticfiles_urlpatterns()
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    # urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += staticfiles_urlpatterns()
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    

@@ -1,7 +1,7 @@
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 from filebrowser.fields import FileBrowseField
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 # Other python modules
 import bleach
@@ -12,8 +12,8 @@ class Page(models.Model):
 	slug = models.SlugField()
 	body = RichTextUploadingField(blank=True, null=True)
 	documents = models.ManyToManyField('map.Document', blank=True)
-	building_of_the_week = models.ForeignKey('map.Feature', blank=True, null=True, verbose_name='Building of the Week')
-	blog_post = models.ForeignKey('whitechapel_blog.Post', blank=True, null=True, verbose_name='Featured Event')
+	building_of_the_week = models.ForeignKey('map.Feature', blank=True, null=True, verbose_name='Building of the Week', on_delete=models.SET_NULL)
+	blog_post = models.ForeignKey('whitechapel_blog.Post', blank=True, null=True, verbose_name='Featured Event', on_delete=models.SET_NULL)
 	images = models.ManyToManyField('map.Image', blank=True)
 	media = models.ManyToManyField('map.Media', blank=True)
 	is_front_page = models.BooleanField(default=False)
@@ -22,7 +22,7 @@ class Page(models.Model):
 	banner_image_3 = models.ImageField(blank=True, null=True)
 	banner_image_4 = models.ImageField(blank=True, null=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.title
 
 	def get_absolute_url(self):
@@ -39,7 +39,7 @@ class QuickContribution(models.Model):
 	location = models.CharField(max_length=200, blank=True)
 	date_submitted = models.DateTimeField(auto_now_add=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.name + ' | ' + str(self.date_submitted)
 
 	def save(self, *args, **kwargs):

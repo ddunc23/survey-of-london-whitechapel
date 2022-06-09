@@ -21,8 +21,8 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=128)),
                 ('caption', models.CharField(max_length=255)),
                 ('image', models.ImageField(upload_to=map.models.feature_directory_path, null=True, verbose_name=b'Image', blank=True)),
-                ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
-                ('feature', models.ForeignKey(to='map.Feature')),
+                ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.SET_NULL)),
+                ('feature', models.ForeignKey(to='map.Feature', on_delete=models.SET_NULL)),
             ],
         ),
     ]

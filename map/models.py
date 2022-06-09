@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import F, Q
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from djgeojson.fields import PolygonField
 from django.contrib.gis.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -74,7 +74,7 @@ class Category(models.Model):
 	class Meta:
 		verbose_name_plural = "Categories"
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.name
 
 
@@ -82,7 +82,7 @@ class Site(models.Model):
 	"""A Site to which many features can belong"""
 	name = models.CharField(max_length=140)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.name
 
 
@@ -136,7 +136,7 @@ class Feature(models.Model):
 	listed = models.CharField(max_length=8, null=True, blank=True, verbose_name='Listed', choices=LISTED_CHOICES, default='NO')
 	count = models.PositiveSmallIntegerField(default=0)
 	categories = models.ManyToManyField(Category, blank=True)
-	site = models.ForeignKey(Site, blank=True, null=True)
+	site = models.ForeignKey(Site, blank=True, null=True, on_delete=models.SET_NULL)
 	thumbnail = models.ImageField(upload_to=feature_directory_path, null=True, blank=True, verbose_name='Thumbnail Image')
 	THUMBNAIL_POSITION_CHOICES = (
 		('TOP', 'Top'),
@@ -146,7 +146,7 @@ class Feature(models.Model):
 	thumbnail_position = models.CharField(max_length=6, choices=THUMBNAIL_POSITION_CHOICES, default='CENTRE', verbose_name='Header Image Alignment')
 	tags = TaggableManager(blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		if (self.b_name == None) or (self.b_name == ''):
 			return self.address
 		else:
@@ -158,7 +158,10 @@ class Feature(models.Model):
 		
 
 	def get_absolute_url(self):
-		return reverse('map.views.detail', args=[str(self.id)])
+		return reverse('detail', args=[str(self.id)])
+
+	def get_search_str(self):
+		return self.__str__()
 
 	class Meta:
 		verbose_name = 'Building'
@@ -190,8 +193,8 @@ feature_mapping = {
 
 class Document(models.Model):
 	"""A user-submitted or Survey of London text document attached to a feature."""
-	feature = models.ForeignKey(Feature, related_name='documents')
-	author = models.ForeignKey(User, related_name='documents')
+	feature = models.ForeignKey(Feature, related_name='documents', null=True, on_delete=models.SET_NULL)
+	author = models.ForeignKey(User, related_name='documents', null=True, on_delete=models.SET_NULL)
 	title = models.CharField(max_length=128)
 	body = RichTextUploadingField(blank=False)
 	body_processed = models.TextField(null=True, blank=True)
@@ -212,7 +215,7 @@ class Document(models.Model):
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
 	tags = TaggableManager(blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		#try: 
 		#	author_name = self.author.userprofile.display_name
 		#except:
@@ -242,8 +245,8 @@ class Document(models.Model):
 
 class Image(models.Model):
 	"""A user-submitted image"""
-	feature = models.ForeignKey(Feature, related_name='images')
-	author = models.ForeignKey(User, related_name='images')
+	feature = models.ForeignKey(Feature, related_name='images', null=True, on_delete=models.SET_NULL)
+	author = models.ForeignKey(User, related_name='images', null=True, on_delete=models.SET_NULL)
 	title = models.CharField(max_length=128)
 	description = models.TextField(null=True, blank=True)
 	file = models.ImageField(upload_to=feature_directory_path, null=True, blank=False, verbose_name='Image')
@@ -256,7 +259,7 @@ class Image(models.Model):
 	copyright = models.BooleanField(default=False)
 	order = models.PositiveSmallIntegerField(default=0)
 
-	def __unicode__(self):
+	def __str__(self):
 		#try: 
 		#	author_name = self.author.userprofile.display_name
 		#except:
@@ -278,8 +281,8 @@ class Image(models.Model):
 
 class Media(models.Model):
 	"""A user-submitted video or audio"""
-	feature = models.ForeignKey(Feature, related_name='media')
-	author = models.ForeignKey(User, related_name='media')
+	feature = models.ForeignKey(Feature, related_name='media', null=True, on_delete=models.SET_NULL)
+	author = models.ForeignKey(User, related_name='media', null=True, on_delete=models.SET_NULL)
 	title = models.CharField(max_length=128)
 	description = models.TextField(null=True, blank=True)
 	url = EmbedVideoField()
@@ -290,7 +293,7 @@ class Media(models.Model):
 	last_edited = models.DateField(auto_now=True, null=True, blank=True)
 	tags = TaggableManager(blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		#try:
 		#	author_name = self.author.userprofile.display_name
 		#except:

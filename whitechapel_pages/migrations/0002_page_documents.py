@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='page',
             name='documents',
-            field=models.ForeignKey(blank=True, to='map.Document', null=True),
+            field=models.ForeignKey(blank=True, to='map.Document', null=True, on_delete=models.SET_NULL),
         ),
     ]

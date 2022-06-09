@@ -36,12 +36,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='document',
             name='os_id',
-            field=models.ForeignKey(to='map.Feature'),
+            field=models.ForeignKey(to='map.Feature', on_delete=models.SET_NULL),
         ),
         migrations.AlterField(
             model_name='story',
             name='os_id',
-            field=models.ForeignKey(blank=True, to='map.Feature', null=True),
+            field=models.ForeignKey(blank=True, to='map.Feature', null=True, on_delete=models.SET_NULL),
         ),
         migrations.DeleteModel(
             name='OS_Feature',

@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='page',
             name='features',
-            field=models.ForeignKey(blank=True, to='map.Feature', null=True),
+            field=models.ForeignKey(blank=True, to='map.Feature', null=True, on_delete=models.SET_NULL),
         ),
     ]

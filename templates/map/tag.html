@@ -10,7 +10,7 @@
 			<h3><a href="{% url 'detail' feature.id %}">{{ feature }}</a></h3>
 			<p class="results-preview">{{ feature.short_description }}</p>
 			{% for tag in feature.tags.all %}
-				<a href="{% url 'tag' tag %}" class="btn btn-default btn-xs tag">{{ tag }}</a> 
+				<a href="{% url 'tag' tag.slug %}" class="btn btn-default btn-xs tag">{{ tag }}</a> 
 			{% endfor %}
 			<hr />
 		{% endfor %}
@@ -23,7 +23,7 @@
 <script>
 	var title_box_title = 'Showing all places tagged "{{ tag }}"';
 
-	var jsonUrl = '{% url "features_by_tag" tag %}';
+	var jsonUrl = '{% url "features_by_tag" tag.slug %}';
 	loadFeatures(jsonUrl, 'main', false);
 </script>
 

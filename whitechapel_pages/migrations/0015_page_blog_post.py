@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='page',
             name='blog_post',
-            field=models.ForeignKey(verbose_name=b'Featured Event', blank=True, to='whitechapel_blog.Post', null=True),
+            field=models.ForeignKey(verbose_name=b'Featured Event', blank=True, to='whitechapel_blog.Post', null=True, on_delete=models.SET_NULL),
         ),
     ]

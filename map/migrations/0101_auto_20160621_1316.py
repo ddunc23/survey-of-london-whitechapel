@@ -18,6 +18,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='feature',
             name='site',
-            field=models.ForeignKey(blank=True, to='map.Site', null=True),
+            field=models.ForeignKey(blank=True, to='map.Site', null=True, on_delete=models.SET_NULL),
         ),
     ]

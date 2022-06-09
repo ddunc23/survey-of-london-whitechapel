@@ -20,31 +20,31 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='document',
             name='author',
-            field=models.ForeignKey(related_name='documents', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(related_name='documents', to=settings.AUTH_USER_MODEL, on_delete=models.SET_NULL),
         ),
         migrations.AlterField(
             model_name='document',
             name='feature',
-            field=models.ForeignKey(related_name='documents', to='map.Feature'),
+            field=models.ForeignKey(related_name='documents', to='map.Feature', on_delete=models.SET_NULL),
         ),
         migrations.AlterField(
             model_name='image',
             name='author',
-            field=models.ForeignKey(related_name='images', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(related_name='images', to=settings.AUTH_USER_MODEL, on_delete=models.SET_NULL),
         ),
         migrations.AlterField(
             model_name='image',
             name='feature',
-            field=models.ForeignKey(related_name='images', to='map.Feature'),
+            field=models.ForeignKey(related_name='images', to='map.Feature', on_delete=models.SET_NULL),
         ),
         migrations.AlterField(
             model_name='media',
             name='author',
-            field=models.ForeignKey(related_name='media', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(related_name='media', to=settings.AUTH_USER_MODEL, on_delete=models.SET_NULL),
         ),
         migrations.AlterField(
             model_name='media',
             name='feature',
-            field=models.ForeignKey(related_name='media', to='map.Feature'),
+            field=models.ForeignKey(related_name='media', to='map.Feature', on_delete=models.SET_NULL),
         ),
     ]

@@ -1,7 +1,7 @@
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 class Category(models.Model):
 	"""A category that blog posts can be categorised in"""
@@ -11,7 +11,7 @@ class Category(models.Model):
 	class Meta:
 		verbose_name_plural = "Categories"
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.title
 
 
@@ -19,7 +19,7 @@ class Post(models.Model):
 	"""A blog post"""
 	title = models.CharField(max_length=140)
 	slug = models.SlugField(unique=True)
-	author = models.ForeignKey(User)
+	author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
 	body = RichTextUploadingField(blank=True, null=True)
 	post_preview = models.CharField(max_length=140, blank=True)
 	post_thumbnail = models.ImageField(null=True, blank=True, verbose_name='Thumbnail Image')
@@ -35,7 +35,7 @@ class Post(models.Model):
 	class Meta:
 		ordering = ['-date_published']
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.title
 
 	def get_absolute_url(self):

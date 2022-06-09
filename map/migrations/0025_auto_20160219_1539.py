@@ -14,11 +14,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='story',
             name='neighbourhood',
-            field=models.ForeignKey(blank=True, to='map.Neighbourhood', null=True),
+            field=models.ForeignKey(blank=True, to='map.Neighbourhood', null=True, on_delete=models.SET_NULL),
         ),
         migrations.AlterField(
             model_name='story',
             name='os_id',
-            field=models.ForeignKey(blank=True, to='map.OS_Feature', null=True),
+            field=models.ForeignKey(blank=True, to='map.OS_Feature', null=True, on_delete=models.SET_NULL),
         ),
     ]

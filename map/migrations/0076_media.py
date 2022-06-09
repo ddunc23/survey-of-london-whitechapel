@@ -22,8 +22,8 @@ class Migration(migrations.Migration):
                 ('url', models.URLField()),
                 ('published', models.BooleanField(default=False)),
                 ('pending', models.BooleanField(default=False)),
-                ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
-                ('feature', models.ForeignKey(to='map.Feature')),
+                ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.SET_NULL)),
+                ('feature', models.ForeignKey(to='map.Feature', on_delete=models.SET_NULL)),
             ],
         ),
     ]

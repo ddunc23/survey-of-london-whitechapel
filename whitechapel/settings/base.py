@@ -65,20 +65,39 @@ INSTALLED_APPS = (
     'whitechapel_pages',
     'whitechapel_users',
     'whitechapel_blog',
+    # Distill
+    'django_distill',
 )
 
-MIDDLEWARE_CLASSES = (
+#MIDDLEWARE_CLASSES = (
+#    'corsheaders.middleware.CorsMiddleware',
+#    'django.contrib.sessions.middleware.SessionMiddleware',
+#    'django.middleware.common.CommonMiddleware',
+#    'django.middleware.csrf.CsrfViewMiddleware',
+#    'django.contrib.auth.middleware.AuthenticationMiddleware',
+#    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+#    'django.contrib.messages.middleware.MessageMiddleware',
+#    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+#    'django.middleware.security.SecurityMiddleware',
+#    'debug_toolbar.middleware.DebugToolbarMiddleware',
+#    #'honeypot.middleware.HoneypotMiddleware',
+#)
+
+#MIDDLEWARE = (
+#    'debug_toolbar.middleware.DebugToolbarMiddleware',
+#)
+
+MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    #'honeypot.middleware.HoneypotMiddleware',
-)
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+]
 
 ROOT_URLCONF = 'whitechapel.urls'
 
@@ -153,10 +172,10 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = BASE_DIR.child('static')
 
-#STATICFILES_DIRS = [
-#    BASE_DIR.child('static'),
-#    'static/',
-#]
+
+STATICFILES_DIRS = [
+    BASE_DIR.child('project_static'),
+]
 
 # Media Settings
 
@@ -244,18 +263,27 @@ CORS_ALLOW_METHODS = (
 
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://127.0.0.1:8080/solr',
+        'ENGINE': 'haystack.backends.elasticsearch7_backend.Elasticsearch7SearchEngine',
+        'URL': 'http://127.0.0.1:9200/',
+        'INDEX_NAME': 'haystack',
     },
 }
+
+
+#HAYSTACK_CONNECTIONS = {
+#    'default': {
+#        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+#        'URL': 'http://127.0.0.1:8080/solr',
+#    },
+#}
 
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 # Grapelli
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.core.context_processors.request",
-)
+#TEMPLATE_CONTEXT_PROCESSORS = (
+#    "django.core.context_processors.request",
+#)
 
 GRAPPELLI_ADMIN_TITLE = 'Survey of London Whitechapel'
 

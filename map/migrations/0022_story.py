@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=128)),
                 ('body', ckeditor_uploader.fields.RichTextUploadingField(blank=True)),
                 ('author', models.CharField(max_length=128)),
-                ('os_id', models.ForeignKey(to='map.OS_Feature')),
+                ('os_id', models.ForeignKey(to='map.OS_Feature', on_delete=models.SET_NULL)),
             ],
         ),
     ]

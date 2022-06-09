@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import  HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from map.models import Feature, Document, Category, Image, Media
 from map.utils import get_similar_features
 from whitechapel_blog.models import Post
@@ -10,7 +10,7 @@ from itertools import chain
 from operator import attrgetter
 import datetime
 from django.contrib.sitemaps import Sitemap
-from forms import QuickContributionForm
+from .forms import QuickContributionForm
 from django.core.mail import send_mail
 from django.db.models import Q
 

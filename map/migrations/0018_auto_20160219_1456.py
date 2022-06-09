@@ -21,6 +21,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='os_feature',
             name='neighbourhood',
-            field=models.ForeignKey(to='map.Neighbourhood', null=True),
+            field=models.ForeignKey(to='map.Neighbourhood', null=True, on_delete=models.SET_NULL),
         ),
     ]
