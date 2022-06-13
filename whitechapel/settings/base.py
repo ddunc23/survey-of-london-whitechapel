@@ -326,3 +326,5 @@ ACCOUNT_FORMS = {
 # django-honeypot 
 
 HONEYPOT_FIELD_NAME = 'phone_number'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

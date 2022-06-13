@@ -147,7 +147,6 @@ function onSearchLocationFound(layer, e) {
 	getDocument(layer.feature.id);
 }
 
-
 var info = L.control({'position': 'topleft'});
 
 info.onAdd = function(map) {
@@ -165,6 +164,7 @@ info.update = function(properties) {
     		snippet = properties.address;
     	}
     }
+    console.log(this);
     this._div.innerHTML =  (properties ? '<b>' + snippet + '</b>' : '');
 };
 
@@ -305,7 +305,7 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 				
 				map.addControl(new infobox());
 
-				map.addControl(new wheresMyStuff());
+				/*map.addControl(new wheresMyStuff());*/
 				
 				/*if (allFeatures == false) {
 					map.addControl(new show_all_buildings());
