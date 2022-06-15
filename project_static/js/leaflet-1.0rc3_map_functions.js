@@ -164,7 +164,6 @@ info.update = function(properties) {
     		snippet = properties.address;
     	}
     }
-    console.log(this);
     this._div.innerHTML =  (properties ? '<b>' + snippet + '</b>' : '');
 };
 
