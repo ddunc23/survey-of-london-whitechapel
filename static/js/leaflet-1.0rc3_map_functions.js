@@ -255,11 +255,11 @@ function loadFeatures(jsonUrl, mapType, allFeatures) {
 
 				geojson = data;
 
-				sketchylayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/whitechapel_2017_05_02/{z}/{x}/{y}.png', {maxZoom: 20});
+				sketchylayer = L.tileLayer('https://{s}.memorymapper.org/tileserver.php?/index.json?/whitechapel_2017_05_02/{z}/{x}/{y}.png', {maxZoom: 20});
 
-				scanlayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/os_1873/{z}/{x}/{y}.png', {maxZoom: 20});
+				scanlayer = L.tileLayer('https://{s}.memorymapper.org/tileserver.php?/index.json?/os_1873/{z}/{x}/{y}.png', {maxZoom: 20});
 
-				rocquelayer = L.tileLayer('https://{s}.surveyoflondon.org/tileserver.php?/index.json?/rocque/{z}/{x}/{y}.png', {maxZoom: 20});
+				rocquelayer = L.tileLayer('https://{s}.memorymapper.org/tileserver.php?/index.json?/rocque/{z}/{x}/{y}.png', {maxZoom: 20});
 				
 				/*rocquelayer = L.tileLayer('http://tile.casa.ucl.ac.uk/duncan/Whitechapel/OS_1873/{z}/{x}/{y}.png', {maxZoom: 20});*/
 
